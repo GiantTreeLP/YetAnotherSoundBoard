@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2">
+
+    <item
+        jar="C:\Java\YetAnotherSoundBoard\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.0\classes.jar"
+        jumboMode="false" revision="21.1.1" sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
+        <dex
+            dex="C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-cbe28521c277cf7cf0a63c965131650a6d35f140.jar" />
+    </item>
+    <item
+        jar="C:\Java\YetAnotherSoundBoard\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.1.71\classes.jar"
+        jumboMode="false" revision="21.1.1" sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex
+            dex="C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-025472177c598abf208aa747aa8b062a76642a05.jar" />
+    </item>
+    <item
+        jar="C:\Java\YetAnotherSoundBoard\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0\classes.jar"
+        jumboMode="false" revision="21.1.1" sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex
+            dex="C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-14d214de6eae7e72515d9eceb675617e3779f033.jar" />
+    </item>
+    <item
+        jar="E:\ADT\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.0\support-annotations-21.0.0.jar"
+        jumboMode="false" revision="21.1.1" sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex
+            dex="C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-8359587b0421ed2d7870d5d7719490a8f20e530a.jar" />
+    </item>
+    <item
+        jar="C:\Java\YetAnotherSoundBoard\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0\libs\internal_impl-21.0.0.jar"
+        jumboMode="false" revision="21.1.1" sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex
+            dex="C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-b3379b170d3ae0e2c7fa14ce27d17258abb38c4d.jar" />
+    </item>
+
+</items>

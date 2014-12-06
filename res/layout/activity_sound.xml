@@ -1,0 +1,11 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="org.gtlp.yasb.SoundActivity" tools:ignore="MergeRootFrame">
+
+    <com.google.android.gms.ads.AdView android:id="@+id/adView" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
+
+</FrameLayout>

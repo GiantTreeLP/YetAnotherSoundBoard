@@ -1,0 +1,5 @@
+<root>
+    <item name='android.content.ContextWrapper java.io.File getExternalFilesDir(java.lang.String)'>
+        <annotation name='org.jetbrains.annotations.NotNull' />
+    </item>
+</root>
