@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="PlaySoundButton">
+        <attr name="resID" format="string" />
+    </declare-styleable>
+</resources>

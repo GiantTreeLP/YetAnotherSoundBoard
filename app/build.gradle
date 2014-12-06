@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'gianttree'
+            keyPassword 'Birth1997'
+            storeFile file('E:/ADT/eclipse/keystore')
+            storePassword 'Birth1997'
+        }
+    }
+    compileSdkVersion 'Google Inc.:Google APIs:21'
+    buildToolsVersion "21.1.1"
+    defaultConfig {
+        applicationId "org.gtlp.yasb"
+        minSdkVersion 9
+        targetSdkVersion 21
+        signingConfig signingConfigs.config
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            zipAlignEnabled true
+        }
+        debug {
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+            minifyEnabled false
+            pseudoLocalesEnabled true
+            zipAlignEnabled true
+        }
+    }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.google.android.gms:play-services:+'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+}
