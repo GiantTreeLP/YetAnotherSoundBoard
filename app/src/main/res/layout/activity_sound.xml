@@ -35,14 +35,6 @@
         android:max="100"
         android:progress="0" />
 
-    <MediaController
-        android:id="@+id/mediaController"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/seekBar"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal" />
-
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
@@ -53,7 +45,7 @@
         android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/mediaController"
+        android:layout_above="@+id/ctrl_container"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
@@ -61,4 +53,48 @@
         android:translationZ="-1dp">
 
     </ScrollView>
+
+    <TableRow
+        android:id="@+id/ctrl_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBar"
+        android:layout_centerHorizontal="true">
+
+        <ImageButton
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/bt_play"
+            android:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/pauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/bt_pause"
+            android:src="@android:drawable/ic_media_pause" />
+    </TableRow>
+
+    <TextView
+        android:id="@+id/current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBar"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/ctrl_container"
+        android:focusableInTouchMode="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/timetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/seekBar"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/ctrl_container"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:typeface="monospace" />
+
 </RelativeLayout>

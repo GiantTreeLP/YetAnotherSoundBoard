@@ -2,7 +2,7 @@ package org.gtlp.yasb;
 
 public class UniqueID {
 
-    private static int counter = 0;
+    private static int counter = 0x10c;
 
     public static int getNext() {
         return next();

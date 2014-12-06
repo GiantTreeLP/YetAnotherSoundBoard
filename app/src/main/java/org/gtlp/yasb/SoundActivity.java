@@ -1,5 +1,7 @@
 package org.gtlp.yasb;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -47,15 +52,48 @@ public class SoundActivity extends ActionBarActivity {
             adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
             adView.loadAd(adRequest.build());
         }
-        SoundPlayer.init();
+        SoundPlayer.setInstance(new SoundPlayer(this));
         ih = new InitHelper();
         ih.execute();
+
+        findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoundPlayer.getInstance().start();
+            }
+        });
+
+        findViewById(R.id.pauseButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoundPlayer.getInstance().pause();
+            }
+        });
+        ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            boolean oldState;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) SoundPlayer.player.seekTo(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                oldState = SoundPlayer.player.isPlaying();
+                SoundPlayer.player.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (oldState) SoundPlayer.player.start();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         ih.cancel(true);
-        SoundPlayer.mediaPlayer.release();
+        SoundPlayer.getInstance().release();
         super.onDestroy();
     }
 
@@ -73,23 +111,6 @@ public class SoundActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public View finalView;
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            //return inflater.inflate(R.layout.fragment_sound, container, false);
-            return finalView;
-        }
     }
 
     private class InitHelper extends AsyncTask<Void, Integer, Void> {
@@ -132,6 +153,12 @@ public class SoundActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void result) {
             Collections.sort(localFiles);
+            Collections.sort(remoteHashes, new Comparator<String[]>() {
+                @Override
+                public int compare(String[] lhs, String[] rhs) {
+                    return lhs[1].compareTo(rhs[1]);
+                }
+            });
             PlaceholderFragment pf = new PlaceholderFragment();
             RelativeLayout layout = new RelativeLayout(getApplicationContext());
             layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -139,18 +166,21 @@ public class SoundActivity extends ActionBarActivity {
             for (int i = 0; i < localFiles.size(); i++) {
                 psb[i] = new PlaySoundButton(getApplicationContext());
                 psb[i].setId(UniqueID.getNext());
-                psb[i].setIndex(i);
                 psb[i].setText(remoteHashes.get(i)[2]);
                 psb[i].setSound(localFiles.get(i));
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                if (i % 2 != 0 && i != 0) {
-                    params.addRule(RelativeLayout.RIGHT_OF, i > 0 ? psb[i - 1].getId() : RelativeLayout.ALIGN_LEFT);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    params.addRule(RelativeLayout.BELOW, i > 1 ? psb[i - 2].getId() : RelativeLayout.ALIGN_LEFT);
-                } else {
+                if (i % 2 == 0) {
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    if (i > 0) params.addRule(RelativeLayout.BELOW, psb[i - 1].getId());
-                    else params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.BELOW, i > 0 ? psb[i - 1].getId() : RelativeLayout.TRUE);
+                } else {
+                    params.addRule(RelativeLayout.RIGHT_OF, psb[i - 1].getId());
+
+                    RelativeLayout.LayoutParams temp = (RelativeLayout.LayoutParams) psb[i - 1].getLayoutParams();
+                    temp.addRule(RelativeLayout.ALIGN_BOTTOM, psb[i].getId());
+                    psb[i - 1].setLayoutParams(temp);
+
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(i > 0 ? RelativeLayout.BELOW : RelativeLayout.ALIGN_PARENT_TOP, i > 1 ? psb[i - 2].getId() : RelativeLayout.TRUE);
                 }
                 psb[i].setLayoutParams(params);
                 layout.addView(psb[i], params);
@@ -162,31 +192,35 @@ public class SoundActivity extends ActionBarActivity {
         }
 
         private void downloadMissingAssets() {
-            if (downloadQueue.size() > 0) {
-                int index = 0;
-                for (String s : downloadQueue) {
-                    publishProgress(1, index);
-                    index++;
-                    if (BuildConfig.DEBUG) Log.d("YASB", "Downloading: " + s);
-                    File f = new File(getExternalFilesDir("sounds"), s);
-                    try {
-                        FileOutputStream fos = new FileOutputStream(f);
-                        BufferedInputStream is = new BufferedInputStream(new URL("http://gtlp.4b4u.com/assets/sounds/" + f.getName()).openStream(), 8192);
-                        byte[] buffer = new byte[8192];
-                        int byteCount;
+            if (((ConnectivityManager) (getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo().isAvailable()) {
+                if (downloadQueue.size() > 0) {
+                    int index = 0;
+                    for (String s : downloadQueue) {
+                        publishProgress(1, index);
+                        index++;
+                        if (BuildConfig.DEBUG) Log.d("YASB", "Downloading: " + s);
+                        File f = new File(getExternalFilesDir("sounds"), s);
+                        try {
+                            FileOutputStream fos = new FileOutputStream(f);
+                            BufferedInputStream is = new BufferedInputStream(new URL("http://gtlp.4b4u.com/assets/sounds/" + f.getName()).openStream(), 8192);
+                            byte[] buffer = new byte[8192];
+                            int byteCount;
 
-                        while ((byteCount = is.read(buffer)) != -1) {
-                            fos.write(buffer, 0, byteCount);
+                            while ((byteCount = is.read(buffer)) != -1) {
+                                fos.write(buffer, 0, byteCount);
+                            }
+                            fos.flush();
+                            is.close();
+                            fos.close();
+                            localFiles.add(f);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        fos.flush();
-                        is.close();
-                        fos.close();
-                        localFiles.add(f);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                    publishProgress(1, index);
                 }
-                publishProgress(1, index);
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.no_network), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -247,4 +281,21 @@ public class SoundActivity extends ActionBarActivity {
 
     }
 
+}
+
+/**
+ * A placeholder fragment containing a simple view.
+ */
+class PlaceholderFragment extends Fragment {
+
+    public View finalView;
+
+    public PlaceholderFragment() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //return inflater.inflate(R.layout.fragment_sound, container, false);
+        return finalView;
+    }
 }

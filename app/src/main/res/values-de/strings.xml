@@ -3,4 +3,7 @@
     <string name="app_name">YetAnotherSoundBoard</string>
     <string name="action_settings">Einstellungen</string>
     <string name="text_loading">%x von %y Dateien geladen.</string>
+    <string name="no_network">Fehler beim Laden: Keine Netzwerkverbindung vorhanden.</string>
+    <string name="bt_play">Play</string>
+    <string name="bt_pause">Pause</string>
 </resources>

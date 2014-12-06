@@ -17,7 +17,6 @@ import static android.widget.RemoteViews.RemoteView;
 @RemoteView
 public class PlaySoundButton extends Button implements OnClickListener {
 
-    private int index = 1;
     private Uri resId;
 
     public PlaySoundButton(Context context) {
@@ -46,34 +45,17 @@ public class PlaySoundButton extends Button implements OnClickListener {
 
     public void setSound(File u) {
         if (BuildConfig.DEBUG) Log.d("YASB", "Added " + u.toString());
-        //setText(u.getName().replace(".mp3", ""));
         resId = Uri.parse(u.toURI().toString());
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        //   setTranslationY(getIndex() * getHeight());
-        // } else {
-        //super.onLayout(true, 10, getIndex() * getHeight(), getLeft() + getWidth(), getIndex() * getHeight() + getHeight());
-        // }
-        //if (BuildConfig.DEBUG) Log.d("YASB", "Height: " + getHeight());
-    }
 
     @Override
     public void onClick(View v) {
-        SoundPlayer.mediaPlayer.reset();
-        SoundPlayer.mediaPlayer = MediaPlayer.create(v.getContext(), resId);
-        SoundPlayer.mediaPlayer.start();
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int i) {
-        index = i;
+        if (SoundPlayer.player != null) SoundPlayer.player.release();
+        SoundPlayer.getInstance().prepared = false;
+        SoundPlayer.setPlayer(MediaPlayer.create(v.getContext(), resId), getText());
+        SoundPlayer.getInstance().initialized = true;
+        SoundPlayer.getInstance().start();
     }
 
 }
