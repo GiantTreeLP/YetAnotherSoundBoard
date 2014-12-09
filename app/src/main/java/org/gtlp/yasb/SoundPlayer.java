@@ -3,6 +3,7 @@ package org.gtlp.yasb;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -10,10 +11,9 @@ import android.widget.TextView;
 public class SoundPlayer extends MediaPlayer {
 
     public static MediaPlayer player;
+    public static Uri selectedSound;
     private static SoundPlayer instance;
-
     Activity viewContainer;
-    String currentlyPlaying;
     boolean prepared = false;
     boolean initialized = false;
 
@@ -49,6 +49,7 @@ public class SoundPlayer extends MediaPlayer {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mp.seekTo(0);
+                ((SeekBar) getInstance().viewContainer.findViewById(R.id.seekBar)).setProgress(0);
                 getInstance().viewContainer.findViewById(R.id.playButton).setEnabled(true);
                 getInstance().viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
             }
@@ -76,13 +77,10 @@ public class SoundPlayer extends MediaPlayer {
 
         @Override
         protected Void doInBackground(Void... params) {
-            while (player != null) {
+            while ((player != null) && !isCancelled()) try {
+                Thread.sleep(66);
                 if ((prepared && initialized) && player.isPlaying()) publishProgress();
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception ignored) {
             }
             return null;
         }

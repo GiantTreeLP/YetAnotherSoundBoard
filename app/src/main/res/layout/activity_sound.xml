@@ -10,7 +10,8 @@
         android:id="@+id/adView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        ads:adSize="BANNER"
+        android:theme="@android:style/Theme.Translucent"
+        ads:adSize="SMART_BANNER"
         ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
 
     <TextView
@@ -25,31 +26,28 @@
         android:textSize="@dimen/abc_text_size_medium_material"
         android:textStyle="italic" />
 
-    <ProgressBar
+    <org.gtlp.yasb.SmoothProgressBar
         android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_alignParentLeft="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView1"
-        android:max="100"
-        android:progress="0" />
+        android:layout_below="@+id/textView1" />
 
     <SeekBar
         android:id="@+id/seekBar"
+        style="?android:attr/seekBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:theme="@style/Base.V21.Theme.AppCompat" />
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ctrl_container"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/adView"
         android:translationZ="-1dp">
 
     </ScrollView>

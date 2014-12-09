@@ -6,4 +6,12 @@
     <string name="no_network">Fehler beim Laden: Keine Netzwerkverbindung vorhanden.</string>
     <string name="bt_play">Play</string>
     <string name="bt_pause">Pause</string>
+    <string name="dialog_info_title">Information</string>
+    <string name="msg_name">"Name: "</string>
+    <string name="msg_filename">"Dateiname: "</string>
+    <string name="msg_source">"Quelle: "</string>
+    <string name="msg_hash">"Prüfsumme: "</string>
+    <string name="action_about">Über</string>
+    <string name="dialog_about_title">Über</string>
+    <string name="text_about">"Über diese App:\n\nDiese App wurde mit Android Studio erstellt.\n\nVielen Dank an Alle, die die Töne hochgeladen haben, um unser Leben noch lustiger zu gestalten!"</string>
 </resources>

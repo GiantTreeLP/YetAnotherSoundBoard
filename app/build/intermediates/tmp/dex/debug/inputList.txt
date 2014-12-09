@@ -1,6 +1,8 @@
 C:\Java\YetAnotherSoundBoard\app\build\intermediates\classes\debug
-C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-8359587b0421ed2d7870d5d7719490a8f20e530a.jar
-C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-b3379b170d3ae0e2c7fa14ce27d17258abb38c4d.jar
-C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-cbe28521c277cf7cf0a63c965131650a6d35f140.jar
-C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-14d214de6eae7e72515d9eceb675617e3779f033.jar
-C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-025472177c598abf208aa747aa8b062a76642a05.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.2-b03b80cada03a889a9789c16585601c725382e30.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-862527185d41c705337570c89625e2f72c1a47e4.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.2-7948e5dcb3b385698bef9f9ee88bcf1f2342684e.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-ab3592c6d6915c72c2a44974d3b5f6fe1b8c5f21.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-fc76b4e9dbc196bce4fb55a7bb9c1940df9b1eb6.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-c2660469f665d8ad19b33151dbb134324ef77d9a.jar
+C:\Java\YetAnotherSoundBoard\app\build\intermediates\pre-dexed\debug\classes-9ab175b33a2fae9278ffff216b902efd46d7c468.jar
