@@ -64,12 +64,12 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundPlayer.getInstance().start();
         } else if (SoundPlayer.player != null) {
             SoundPlayer.player.release();
+            SoundPlayer.getInstance().prepared = false;
+            SoundPlayer.setPlayer(MediaPlayer.create(v.getContext(), resId), getText());
+            SoundPlayer.selectedSound = resId;
+            SoundPlayer.getInstance().initialized = true;
+            SoundPlayer.getInstance().start();
         }
-        SoundPlayer.getInstance().prepared = false;
-        SoundPlayer.setPlayer(MediaPlayer.create(v.getContext(), resId), getText());
-        SoundPlayer.selectedSound = resId;
-        SoundPlayer.getInstance().initialized = true;
-        SoundPlayer.getInstance().start();
     }
 
     @Override
