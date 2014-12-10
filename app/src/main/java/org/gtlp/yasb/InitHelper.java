@@ -61,7 +61,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     public static BufferedInputStream OpenHttpConnection(String strURL)
             throws IOException {
-        URLConnection conn = null;
+        URLConnection conn;
         BufferedInputStream inputStream = null;
         URL url = new URL(strURL);
         conn = url.openConnection();

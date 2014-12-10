@@ -58,6 +58,7 @@ public class NetworkChecker extends AsyncTask<Void, Void, Void> {
             }
             fos.close();
             sc.close();
+            if (BuildConfig.DEBUG) Log.d("YASB", "Loaded info.");
         } catch (IOException e) {
             e.printStackTrace();
         }
