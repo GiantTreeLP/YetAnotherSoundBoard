@@ -2,6 +2,8 @@ package org.gtlp.yasb;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,30 +21,24 @@ public class NetworkChecker extends AsyncTask<Void, Void, Void> {
     protected void onProgressUpdate(Void... params) {
         try {
             if (BuildConfig.DEBUG) Log.d("YASB", "Checking network");
-            /*URL url = new URL("http://gtlp.lima-city.de/");
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestProperty("User-Agent", System.getProperty("http.agent"));
-            http.setRequestMethod("GET");
-            http.connect();
-            if (http.getResponseCode() == HTTP_OK) { */
             SoundActivity.webView.loadUrl("http://gtlp.lima-city.de");
+            SoundActivity.webView.setWebViewClient(new WebViewClient() {
+                boolean done = false;
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (!done) {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Referer", "http://gltp.lima-city.de");
+                        SoundActivity.webView.loadUrl("http://www.4b42.com/", headers);
+                        if (BuildConfig.DEBUG) Log.d("YASB", "Check #2: PASS");
+                        done = true;
+                    }
+                }
+            });
             if (BuildConfig.DEBUG) Log.d("YASB", "Check #1: PASS");
             downloadInfoFile();
-            /*}
-            url = new URL("http://www.4b42.com/");
-            http = (HttpURLConnection) url.openConnection();
-            http.setRequestProperty("User-Agent", System.getProperty("http.agent"));
-            http.setRequestProperty("Referer", "http://gtlp.lima-city.de/");
-            http.setRequestMethod("GET");
-            http.connect();
-            if (http.getResponseCode() == HTTP_OK) { */
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Referer", "http://gltp.lima-city.de");
-            SoundActivity.webView.loadUrl("http://www.4b42.com/", headers);
-            if (BuildConfig.DEBUG) Log.d("YASB", "Check #2: PASS");
-            //int byteCount = http.getInputStream().read(new byte[http.getContentLength()]);
-            //if (BuildConfig.DEBUG) Log.d("YASB", "Bytes: " + byteCount);
-            //}
         } catch (Exception ignored) {
 
         }
