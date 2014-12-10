@@ -59,12 +59,17 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     public void onClick(View v) {
         Tracker t = ((SoundActivity) SoundPlayer.getInstance().viewContainer).getTracker(SoundActivity.TrackerName.APP_TRACKER);
         t.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(info[2]).build());
-        if (SoundPlayer.selectedSound == resId) {
+        if (SoundPlayer.selectedSound == this.resId) {
             SoundPlayer.player.seekTo(0);
             SoundPlayer.getInstance().start();
         } else if (SoundPlayer.player != null) {
             SoundPlayer.player.release();
             SoundPlayer.getInstance().prepared = false;
+            SoundPlayer.setPlayer(MediaPlayer.create(v.getContext(), resId), getText());
+            SoundPlayer.selectedSound = resId;
+            SoundPlayer.getInstance().initialized = true;
+            SoundPlayer.getInstance().start();
+        } else {
             SoundPlayer.setPlayer(MediaPlayer.create(v.getContext(), resId), getText());
             SoundPlayer.selectedSound = resId;
             SoundPlayer.getInstance().initialized = true;

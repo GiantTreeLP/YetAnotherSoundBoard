@@ -16,6 +16,7 @@ public class SoundPlayer extends MediaPlayer {
     Activity viewContainer;
     boolean prepared = false;
     boolean initialized = false;
+    private Seeker seeker = new Seeker();
 
     private SoundPlayer() {
         super();
@@ -61,7 +62,7 @@ public class SoundPlayer extends MediaPlayer {
             player.start();
             viewContainer.findViewById(R.id.playButton).setEnabled(false);
             viewContainer.findViewById(R.id.pauseButton).setEnabled(true);
-            new Seeker().execute();
+            if (seeker.getStatus() != AsyncTask.Status.RUNNING) (seeker = new Seeker()).execute();
         }
     }
 
@@ -70,6 +71,7 @@ public class SoundPlayer extends MediaPlayer {
             player.pause();
             viewContainer.findViewById(R.id.playButton).setEnabled(true);
             viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
+            seeker.cancel(true);
         }
     }
 
