@@ -1,9 +1,14 @@
 package org.gtlp.yasb;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +31,17 @@ public class SoundActivity extends ActionBarActivity {
     protected static File soundsDir;
     protected static WebView webView;
     protected static SharedPreferences preferences;
-    InitHelper ih;
+    InitHelper initHelper;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+
+            return;
+        }
+
         soundsDir = getExternalFilesDir("sounds");
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_sound);
@@ -45,8 +55,8 @@ public class SoundActivity extends ActionBarActivity {
         }
         webView = new WebView(getApplicationContext());
         SoundPlayer.setInstance(new SoundPlayer(this));
-        ih = new InitHelper(this);
-        ih.execute();
+        initHelper = new InitHelper(this);
+        initHelper.execute();
         new NetworkChecker().execute();
 
         findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
@@ -87,7 +97,7 @@ public class SoundActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        ih.cancel(true);
+        initHelper.cancel(true);
         SoundPlayer.getInstance().release();
         super.onDestroy();
     }
@@ -95,11 +105,29 @@ public class SoundActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (initHelper.getStatus() == AsyncTask.Status.RUNNING)
+            initHelper.cancel(true);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
