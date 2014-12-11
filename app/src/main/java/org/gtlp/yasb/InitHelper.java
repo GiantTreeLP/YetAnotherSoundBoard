@@ -137,7 +137,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             if (BuildConfig.DEBUG)
                 Log.d("YASB", "Below " + (i > 0 ? psb[i - 1].getId() : "Nothing"));
         }
-
         for (int i = 1; i < psb.length; i += 2) {
             int tempI = (psb[i].getText().length() < psb[i - 1].getText().length() ? i : i - 1);
             RelativeLayout.LayoutParams temp = (RelativeLayout.LayoutParams) psb[tempI].getLayoutParams();

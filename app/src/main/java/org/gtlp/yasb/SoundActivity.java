@@ -32,17 +32,18 @@ public class SoundActivity extends ActionBarActivity {
     protected static WebView webView;
     protected static SharedPreferences preferences;
     InitHelper initHelper;
+    int orientation;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
+    boolean initialized;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-
             return;
         }
-
         soundsDir = getExternalFilesDir("sounds");
+        orientation = getRequestedOrientation();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_sound);
         TextView lt = (TextView) findViewById(R.id.textView1);
@@ -95,9 +96,16 @@ public class SoundActivity extends ActionBarActivity {
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        onCreate(savedInstanceState);
+    }
+
     @Override
     protected void onDestroy() {
-        initHelper.cancel(true);
+        if (initHelper != null) initHelper.cancel(true);
         SoundPlayer.getInstance().release();
         super.onDestroy();
     }
@@ -105,9 +113,8 @@ public class SoundActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (initHelper.getStatus() == AsyncTask.Status.RUNNING)
+        if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
             initHelper.cancel(true);
-
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
