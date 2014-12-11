@@ -1,10 +1,10 @@
 package org.gtlp.yasb;
 
-import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -13,7 +13,7 @@ public class SoundPlayer extends MediaPlayer {
     public static MediaPlayer player;
     public static Uri selectedSound;
     private static SoundPlayer instance;
-    Activity viewContainer;
+    FragmentActivity viewContainer;
     boolean prepared = false;
     boolean initialized = false;
     private Seeker seeker = new Seeker();
@@ -23,7 +23,7 @@ public class SoundPlayer extends MediaPlayer {
         setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
 
-    public SoundPlayer(Activity view) {
+    public SoundPlayer(FragmentActivity view) {
         this();
         viewContainer = view;
     }

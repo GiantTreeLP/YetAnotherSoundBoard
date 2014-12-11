@@ -7,6 +7,7 @@ import android.webkit.WebViewClient;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -46,14 +47,23 @@ public class NetworkChecker extends AsyncTask<Void, Void, Void> {
 
     private void downloadInfoFile() {
         try {
-            Scanner sc = new Scanner(InitHelper.OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/info"));
-            FileOutputStream fos = new FileOutputStream(InitHelper.infoFile);
-            while (sc.hasNext()) {
-                String s = sc.nextLine() + "\n";
-                fos.write(s.getBytes());
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(InitHelper.infoFile.lastModified());
+            cal.add(GregorianCalendar.HOUR, Integer.parseInt(SoundActivity.preferences.getString("update_interval", "24")));
+            if (BuildConfig.DEBUG) {
+                Log.d("YASB", cal.getTime().toString());
+                Log.d("YASB", cal.getTimeInMillis() + "<" + System.currentTimeMillis());
             }
-            fos.close();
-            sc.close();
+            if (cal.getTimeInMillis() > System.currentTimeMillis()) {
+                Scanner sc = new Scanner(InitHelper.OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/info"));
+                FileOutputStream fos = new FileOutputStream(InitHelper.infoFile);
+                while (sc.hasNext()) {
+                    String s = sc.nextLine() + "\n";
+                    fos.write(s.getBytes());
+                }
+                fos.close();
+                sc.close();
+            }
             if (BuildConfig.DEBUG) Log.d("YASB", "Loaded info.");
         } catch (IOException e) {
             e.printStackTrace();

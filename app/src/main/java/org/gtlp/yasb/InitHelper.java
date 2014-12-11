@@ -24,7 +24,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
@@ -200,7 +199,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         if (infoFile.exists()) {
             GregorianCalendar cal = new GregorianCalendar();
             cal.setTimeInMillis(infoFile.lastModified());
-            cal.add(Calendar.HOUR, 24);
+            cal.add(GregorianCalendar.HOUR, Integer.parseInt(SoundActivity.preferences.getString("update_interval", "24")));
             if (BuildConfig.DEBUG) {
                 Log.d("YASB", cal.getTime().toString());
                 Log.d("YASB", cal.getTimeInMillis() + "<" + System.currentTimeMillis());

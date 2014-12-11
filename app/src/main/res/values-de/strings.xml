@@ -14,4 +14,9 @@
     <string name="action_about">Über</string>
     <string name="dialog_about_title">Über</string>
     <string name="text_about">"Über diese App:\n\nDiese App wurde mit Android Studio erstellt.\n\nVielen Dank an Alle, die die Töne hochgeladen haben, um unser Leben noch lustiger zu gestalten!"</string>
+    <string name="pref_opt_out">Anonyme Statistiken deaktivieren</string>
+    <string name="pref_opt_out_summ">Aktiviere dies, damit keine anonymen Daten zur Verbesserung dieser App gesammelt werden.</string>
+    <string name="pref_update">Aktualisierungsintervall</string>
+    <string name="pref_update_summ">Stelle hier ein, wie häufig nach Aktualisierungen innerhalb dieser App gesucht werden soll. Niedrige Werte können den Akku- und datenverbrauch erhöhen.</string>
+    <string name="pref_title">Einstellungen</string>
 </resources>

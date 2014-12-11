@@ -1,6 +1,9 @@
 package org.gtlp.yasb;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ public class SoundActivity extends ActionBarActivity {
 
     protected static File soundsDir;
     protected static WebView webView;
+    protected static SharedPreferences preferences;
     InitHelper ih;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
 
@@ -29,6 +33,7 @@ public class SoundActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         soundsDir = getExternalFilesDir("sounds");
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_sound);
         TextView lt = (TextView) findViewById(R.id.textView1);
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
@@ -59,6 +64,7 @@ public class SoundActivity extends ActionBarActivity {
         });
         ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean oldState;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser && SoundPlayer.player != null) SoundPlayer.player.seekTo(progress);
@@ -87,6 +93,16 @@ public class SoundActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.sound, menu);
@@ -102,6 +118,11 @@ public class SoundActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_about:
                 new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
+                return true;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,6 +130,7 @@ public class SoundActivity extends ActionBarActivity {
     synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            analytics.setAppOptOut(preferences.getBoolean("opt_out", false));
             if (BuildConfig.DEBUG) {
                 analytics.setDryRun(true);
                 analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);

@@ -81,7 +81,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         InfoDialogFragment idf = new InfoDialogFragment();
         idf.setInfo(info, SoundPlayer.getInstance().viewContainer);
-        idf.show(SoundPlayer.getInstance().viewContainer.getFragmentManager(), "InfoDialogFragment");
+        idf.show(SoundPlayer.getInstance().viewContainer.getSupportFragmentManager(), "InfoDialogFragment");
         Tracker t = ((SoundActivity) SoundPlayer.getInstance().viewContainer).getTracker(SoundActivity.TrackerName.APP_TRACKER);
         t.setScreenName("InfoDialog-".concat(info[2]));
         t.send(new HitBuilders.AppViewBuilder().build());
