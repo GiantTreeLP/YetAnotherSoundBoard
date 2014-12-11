@@ -19,5 +19,6 @@
     <string name="pref_update">Update interval</string>
     <string name="pref_update_summ">Set the interval of how often this app checks for updates. Setting this lower than the default value may increase battery and data usage.</string>
     <string name="pref_title">Settings</string>
+    <string name="copyright">GiantTree © 2014. All rights reserved.</string>
 
 </resources>

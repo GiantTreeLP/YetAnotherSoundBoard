@@ -15,4 +15,7 @@
             android:summary="@string/pref_opt_out_summ"
             android:title="@string/pref_opt_out" />
     </PreferenceCategory>
+    <Preference
+        android:summary="@string/copyright"
+        android:title="@string/app_name" />
 </PreferenceScreen>
