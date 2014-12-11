@@ -39,7 +39,7 @@ public class SoundActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.getBoolean("saved")) {
             return;
         }
         soundsDir = getExternalFilesDir("sounds");
@@ -119,11 +119,13 @@ public class SoundActivity extends ActionBarActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean("saved", true);
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("saved", true);
         super.onSaveInstanceState(outState);
     }
 

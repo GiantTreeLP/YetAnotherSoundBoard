@@ -68,7 +68,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         httpConn.setRequestMethod("GET");
         httpConn.connect();
         if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            inputStream = new BufferedInputStream(httpConn.getInputStream(), 8192);
+            inputStream = new BufferedInputStream(httpConn.getInputStream(), 1024);
         }
         return inputStream;
     }
