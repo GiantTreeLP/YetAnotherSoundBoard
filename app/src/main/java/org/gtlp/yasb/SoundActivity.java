@@ -101,7 +101,7 @@ public class SoundActivity extends ActionBarActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_about:
-                new AboutDialogFragment().show(getFragmentManager(), "AboutDialogFragment");
+                new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
         }
         return super.onOptionsItemSelected(item);
     }
