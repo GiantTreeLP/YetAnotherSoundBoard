@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -70,6 +71,16 @@ public class SoundActivity extends ActionBarActivity {
         initHelper = new InitHelper(this);
         initHelper.execute();
         new NetworkChecker().execute();
+
+        ((ListView) findViewById(R.id.listView)).setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 0:
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                    startActivity(intent);
+                case 1:
+                    new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
+            }
+        });
 
         findViewById(R.id.playButton).setOnClickListener(v -> SoundPlayer.getInstance().start());
 
