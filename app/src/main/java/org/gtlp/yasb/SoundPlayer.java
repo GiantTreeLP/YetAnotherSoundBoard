@@ -40,20 +40,12 @@ public class SoundPlayer extends MediaPlayer {
         SoundPlayer.player = player;
         ((TextView) getInstance().viewContainer.findViewById(R.id.current)).setText(text);
 
-        SoundPlayer.player.setOnPreparedListener(new OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                getInstance().prepared = true;
-            }
-        });
-        SoundPlayer.player.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.seekTo(0);
-                ((SeekBar) getInstance().viewContainer.findViewById(R.id.seekBar)).setProgress(0);
-                getInstance().viewContainer.findViewById(R.id.playButton).setEnabled(true);
-                getInstance().viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
-            }
+        SoundPlayer.player.setOnPreparedListener(mp -> getInstance().prepared = true);
+        SoundPlayer.player.setOnCompletionListener(mp -> {
+            mp.seekTo(0);
+            ((SeekBar) getInstance().viewContainer.findViewById(R.id.seekBar)).setProgress(0);
+            getInstance().viewContainer.findViewById(R.id.playButton).setEnabled(true);
+            getInstance().viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
         });
     }
 

@@ -114,11 +114,8 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
+        android:background="@android:drawable/screen_background_dark_transparent"
         android:divider="@drawable/abc_list_divider_mtrl_alpha"
-        android:drawSelectorOnTop="false"
         android:elevation="@dimen/cardview_default_elevation"
-        android:fastScrollAlwaysVisible="false"
-        android:fastScrollEnabled="false"
         android:smoothScrollbar="true" />
 </android.support.v4.widget.DrawerLayout>

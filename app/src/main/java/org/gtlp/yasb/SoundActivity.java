@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -72,19 +71,9 @@ public class SoundActivity extends ActionBarActivity {
         initHelper.execute();
         new NetworkChecker().execute();
 
-        findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SoundPlayer.getInstance().start();
-            }
-        });
+        findViewById(R.id.playButton).setOnClickListener(v -> SoundPlayer.getInstance().start());
 
-        findViewById(R.id.pauseButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SoundPlayer.getInstance().pause();
-            }
-        });
+        findViewById(R.id.pauseButton).setOnClickListener(v -> SoundPlayer.getInstance().pause());
         ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean oldState;
 

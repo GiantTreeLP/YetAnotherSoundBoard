@@ -1,7 +1,6 @@
 package org.gtlp.yasb;
 
 import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -41,13 +40,7 @@ public class SmoothProgressBar extends ProgressBar {
         if (animator == null) {
             animator = ValueAnimator.ofInt(getProgress(), progress);
             animator.setInterpolator(DEFAULT_INTERPOLATOR);
-            animator.addUpdateListener(new AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    SmoothProgressBar.super.setProgress((Integer) animation.getAnimatedValue());
-                }
-            });
+            animator.addUpdateListener(animation -> SmoothProgressBar.super.setProgress((Integer) animation.getAnimatedValue()));
         } else
             animator.setIntValues(getProgress(), progress);
         animator.start();
@@ -65,13 +58,7 @@ public class SmoothProgressBar extends ProgressBar {
         if (animatorSecondary == null) {
             animatorSecondary = ValueAnimator.ofInt(getProgress(), secondaryProgress);
             animatorSecondary.setInterpolator(DEFAULT_INTERPOLATOR);
-            animatorSecondary.addUpdateListener(new AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    SmoothProgressBar.super.setSecondaryProgress((Integer) animation.getAnimatedValue());
-                }
-            });
+            animatorSecondary.addUpdateListener(animation -> SmoothProgressBar.super.setSecondaryProgress((Integer) animation.getAnimatedValue()));
         } else
             animatorSecondary.setIntValues(getProgress(), secondaryProgress);
         animatorSecondary.start();
