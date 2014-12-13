@@ -76,6 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/bt_play"
+                    android:filterTouchesWhenObscured="true"
                     android:src="@android:drawable/ic_media_play"
                     android:theme="@style/Theme.AppCompat" />
 
@@ -84,6 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/bt_pause"
+                    android:filterTouchesWhenObscured="true"
                     android:src="@android:drawable/ic_media_pause"
                     android:theme="@style/Theme.AppCompat" />
             </TableRow>

@@ -122,6 +122,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             psb[i].info = remoteHashes.toArray(new String[0][3])[i];
             psb[i].setText(remoteHashes.toArray(new String[0][3])[i][2]);
             psb[i].setSound(localFiles.toArray(new File[2])[i]);
+            psb[i].setFilterTouchesWhenObscured(true);
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i % 2 == 0) {
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

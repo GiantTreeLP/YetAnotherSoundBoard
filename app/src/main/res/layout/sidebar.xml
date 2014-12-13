@@ -7,6 +7,7 @@
     android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
     android:background="@color/background_material_dark"
     android:baselineAligned="false"
+    android:clickable="true"
     android:orientation="vertical"
     tools:showIn="@layout/activity_sound">
 
