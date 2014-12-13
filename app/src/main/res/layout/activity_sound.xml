@@ -50,11 +50,9 @@
 
         <SeekBar
             android:id="@+id/seekBar"
-            style="?android:attr/seekBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:theme="@style/Base.V21.Theme.AppCompat" />
+            android:layout_alignParentBottom="true" />
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/container"
