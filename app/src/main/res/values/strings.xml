@@ -12,7 +12,7 @@
     <string name="msg_source">"Source: "</string>
     <string name="msg_hash">"Hash: "</string>
     <string name="action_about">About</string>
-    <string name="dialog_about_title">About</string>
+    <string name="dialog_about_title">About...</string>
     <string name="text_about">"About this app:\n\nThis app was created using the Android Studio.\n\nMany thanks to all the people who have uploaded the sounds to make our lives even more funnier!"</string>
     <string name="pref_opt_out">Disable anonymous statistics</string>
     <string name="pref_opt_out_summ">Check this if you do not want to send any anonymous data to improve this application.</string>
@@ -20,5 +20,7 @@
     <string name="pref_update_summ">Set the interval of how often this app checks for updates. Setting this lower than the default value may increase battery and data usage.</string>
     <string name="pref_title">Settings</string>
     <string name="copyright">GiantTree © 2014. All rights reserved.</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
 
 </resources>
