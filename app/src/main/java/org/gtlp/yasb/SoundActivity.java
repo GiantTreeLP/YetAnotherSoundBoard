@@ -77,6 +77,7 @@ public class SoundActivity extends ActionBarActivity {
                 case 0:
                     Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
+                    return;
                 case 1:
                     new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
             }
