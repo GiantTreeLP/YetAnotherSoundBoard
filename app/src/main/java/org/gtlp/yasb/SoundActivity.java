@@ -40,7 +40,6 @@ public class SoundActivity extends ActionBarActivity {
     int orientation;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -63,13 +62,10 @@ public class SoundActivity extends ActionBarActivity {
         }
         webView = new WebView(getApplicationContext());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toolbar = (Toolbar) findViewById(R.id.bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
 
         SoundPlayer.setInstance(new SoundPlayer(this));
         initHelper = new InitHelper(this);

@@ -24,7 +24,6 @@
             android:layout_alignParentStart="false"
             android:layout_alignParentTop="false"
             android:layout_below="@+id/bar"
-            android:theme="@android:style/Theme.Translucent"
             ads:adSize="SMART_BANNER"
             ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
 
@@ -76,14 +75,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/bt_play"
-                android:src="@android:drawable/ic_media_play" />
+                android:src="@android:drawable/ic_media_play"
+                android:theme="@style/Theme.AppCompat" />
 
             <ImageButton
                 android:id="@+id/pauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/bt_pause"
-                android:src="@android:drawable/ic_media_pause" />
+                android:src="@android:drawable/ic_media_pause"
+                android:theme="@style/Theme.AppCompat" />
         </TableRow>
 
         <TextView

@@ -2,7 +2,9 @@ package org.gtlp.yasb;
 
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -28,6 +30,7 @@ public class SmoothProgressBar extends ProgressBar {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public synchronized void setProgress(int progress) {
         if (!animate) {
@@ -51,6 +54,7 @@ public class SmoothProgressBar extends ProgressBar {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public synchronized void setSecondaryProgress(int secondaryProgress) {
         if (!animate) {
@@ -73,6 +77,7 @@ public class SmoothProgressBar extends ProgressBar {
         animatorSecondary.start();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
