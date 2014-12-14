@@ -31,7 +31,7 @@ public class NetworkChecker extends AsyncTask<Void, Void, Void> {
                     super.onPageFinished(view, url);
                     if (!done) {
                         Map<String, String> headers = new HashMap<>();
-                        headers.put("Referer", "http://gltp.lima-city.de");
+                        headers.put("Referer", "http://gtlp.lima-city.de");
                         SoundActivity.webView.loadUrl("http://www.4b42.com/", headers);
                         if (BuildConfig.DEBUG) Log.d("YASB", "Check #2: PASS");
                         done = true;
