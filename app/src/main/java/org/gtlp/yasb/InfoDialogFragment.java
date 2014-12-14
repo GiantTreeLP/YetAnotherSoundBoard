@@ -3,6 +3,7 @@ package org.gtlp.yasb;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -29,7 +30,12 @@ public class InfoDialogFragment extends DialogFragment {
         tv.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setTitle(R.string.dialog_info_title);
         builder.setView(tv);
-        builder.setNeutralButton(android.R.string.ok, (dialog, which) -> InfoDialogFragment.this.getDialog().dismiss());
+        builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                InfoDialogFragment.this.getDialog().dismiss();
+            }
+        });
         return builder.create();
     }
 

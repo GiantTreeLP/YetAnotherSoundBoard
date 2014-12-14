@@ -17,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -72,20 +74,33 @@ public class SoundActivity extends ActionBarActivity {
         initHelper.execute();
         new NetworkChecker().execute();
 
-        ((ListView) findViewById(R.id.listView)).setOnItemClickListener((parent, view, position, id) -> {
-            switch (position) {
-                case 0:
-                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                    startActivity(intent);
-                    return;
-                case 1:
-                    new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
+        ((ListView) findViewById(R.id.listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Intent intent = new Intent(SoundActivity.this.getApplicationContext(), SettingsActivity.class);
+                        SoundActivity.this.startActivity(intent);
+                        return;
+                    case 1:
+                        new AboutDialogFragment().show(SoundActivity.this.getSupportFragmentManager(), "AboutDialogFragment");
+                }
             }
         });
 
-        findViewById(R.id.playButton).setOnClickListener(v -> SoundPlayer.getInstance().start());
+        findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoundPlayer.getInstance().start();
+            }
+        });
 
-        findViewById(R.id.pauseButton).setOnClickListener(v -> SoundPlayer.getInstance().pause());
+        findViewById(R.id.pauseButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SoundPlayer.getInstance().pause();
+            }
+        });
         ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean oldState;
 
