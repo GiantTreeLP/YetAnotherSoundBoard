@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
-    android:background="@color/background_material_dark"
-    android:baselineAligned="false"
+    android:background="@color/background_material_light"
     android:clickable="true"
     android:orientation="vertical"
     tools:showIn="@layout/activity_sound">
@@ -29,10 +28,8 @@
         android:layout_gravity="right"
         android:layout_toRightOf="@+id/imageView"
         android:gravity="center"
-        android:labelFor="@id/imageView"
         android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:theme="@style/Theme.AppCompat" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ListView
         android:id="@+id/listView"
@@ -42,6 +39,5 @@
         android:choiceMode="singleChoice"
         android:elevation="@dimen/cardview_default_elevation"
         android:entries="@array/sidebar_entries"
-        android:smoothScrollbar="true"
-        android:theme="@style/Theme.AppCompat" />
+        android:smoothScrollbar="true" />
 </RelativeLayout>

@@ -80,6 +80,7 @@
                     android:src="@android:drawable/ic_media_play"
                     android:theme="@style/Theme.AppCompat" />
 
+
                 <ImageButton
                     android:id="@+id/pauseButton"
                     android:layout_width="wrap_content"
@@ -88,6 +89,7 @@
                     android:filterTouchesWhenObscured="true"
                     android:src="@android:drawable/ic_media_pause"
                     android:theme="@style/Theme.AppCompat" />
+
             </TableRow>
 
             <TextView
@@ -97,7 +99,6 @@
                 android:layout_above="@+id/seekBar"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/ctrl_container"
-                android:focusableInTouchMode="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 

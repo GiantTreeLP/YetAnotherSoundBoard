@@ -52,7 +52,8 @@
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/ctrl_container" />
 
             <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/container"
@@ -68,7 +69,8 @@
                 android:id="@+id/ctrl_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/seekBar"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
                 android:layout_centerHorizontal="true">
 
                 <ImageButton
@@ -93,9 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/ctrl_container"
-                android:focusableInTouchMode="true"
+                android:layout_toRightOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 
@@ -105,7 +105,6 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 

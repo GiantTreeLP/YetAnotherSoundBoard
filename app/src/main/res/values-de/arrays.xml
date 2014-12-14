@@ -10,8 +10,8 @@
         <item>Alle 3 Stunden</item>
     </string-array>
     <string-array name="sidebar_entries">
-        <item>Einstellungen</item>
-        <item>Über…</item>
+        <item>@string/action_settings</item>
+        <item>@string/action_about</item>
         <item>@string/copyright</item>
     </string-array>
 </resources>
