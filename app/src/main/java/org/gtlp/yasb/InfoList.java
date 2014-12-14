@@ -8,7 +8,7 @@ public class InfoList<E> extends ArrayList<E> {
         try {
             return super.get(index);
         } catch (IndexOutOfBoundsException e) {
-            return String.class.isInstance(super.get(index)) ? ((E) "") : (E) null;
+            return (E) String.class.cast("");
         }
     }
 }
