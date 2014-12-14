@@ -18,18 +18,56 @@ allprojects {
     }
     task('increaseVersionCode') << {
         def manifestFile = file("src\\main\\AndroidManifest.xml")
-        def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+        def patternVersionNumber = Pattern.compile("versionName=\"(\\d+)\\.(\\d+)\\.(\\d+)\"")
         def manifestText = manifestFile.getText()
-        def matcher = pattern.matcher(manifestText)
-        matcher.find()
-        def versionCode = Integer.parseInt(matcher.group(1))
-        def manifestContent = matcher.replaceAll("versionCode=\"" + ++versionCode + "\"")
-        manifestFile.write(manifestContent)
+        def matcherVersionNumber = patternVersionNumber.matcher(manifestText)
+        matcherVersionNumber.find()
+        def majorVersion = Integer.parseInt(matcherVersionNumber.group(1))
+        def minorVersion = Integer.parseInt(matcherVersionNumber.group(2))
+        def pointVersion = Integer.parseInt(matcherVersionNumber.group(3))
+
+        def mVersionName = majorVersion + "." + minorVersion + "." + pointVersion
+        def mNextVersionName = majorVersion + "." + (minorVersion + 1) + "." + pointVersion
+        def manifestContent = matcherVersionNumber.replaceAll("versionName=\"" + mNextVersionName + "\"")
+        def patternVersionCode = Pattern.compile("versionCode=\"(\\d+)\"")
+        def matcherVersionCode = patternVersionCode.matcher(manifestContent)
+        matcherVersionCode.find()
+        def versionCode = Integer.parseInt(matcherVersionCode.group(1))
+        manifestContent = matcherVersionCode.replaceAll("versionCode=\"" + versionCode++ + "\"")
+        println(":incrementVersionName - current versionName=" + mVersionName)
+        println(":incrementVersionName - new versionName=" + mNextVersionName)
+        manifestFile.write(manifestContent);
+    }
+
+    task('increaseDebugVersionCode') << {
+        def manifestFile = file("src\\main\\AndroidManifest.xml")
+        def patternVersionNumber = Pattern.compile("versionName=\"(\\d+)\\.(\\d+)\\.(\\d+)\"")
+        def manifestText = manifestFile.getText()
+        def matcherVersionNumber = patternVersionNumber.matcher(manifestText)
+        matcherVersionNumber.find()
+        def majorVersion = Integer.parseInt(matcherVersionNumber.group(1))
+        def minorVersion = Integer.parseInt(matcherVersionNumber.group(2))
+        def pointVersion = Integer.parseInt(matcherVersionNumber.group(3))
+
+        def mVersionName = majorVersion + "." + minorVersion + "." + pointVersion
+        def mNextVersionName = majorVersion + "." + minorVersion + "." + (pointVersion + 1)
+        def manifestContent = matcherVersionNumber.replaceAll("versionName=\"" + mNextVersionName + "\"")
+
+        def patternVersionCode = Pattern.compile("versionCode=\"(\\d+)\"")
+        def matcherVersionCode = patternVersionCode.matcher(manifestContent)
+        matcherVersionCode.find()
+        def versionCode = Integer.parseInt(matcherVersionCode.group(1))
+        manifestContent = matcherVersionCode.replaceAll("versionCode=\"" + ++versionCode + "\"")
+        println(":incrementVersionName - current versionName=" + mVersionName)
+        println(":incrementVersionName - new versionName=" + mNextVersionName)
+        manifestFile.write(manifestContent);
     }
 
     tasks.whenTaskAdded { task ->
         if (task.name == 'generateReleaseBuildConfig') {
             task.dependsOn 'increaseVersionCode'
+        } else if (task.name == 'generateDebugBuildConfig') {
+            task.dependsOn 'increaseDebugVersionCode'
         }
     }
 }
