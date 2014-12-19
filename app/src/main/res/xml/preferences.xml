@@ -3,7 +3,7 @@
     android:title="@string/pref_title">
     <PreferenceCategory android:title="@string/pref_title">
         <ListPreference
-            android:defaultValue="3"
+            android:defaultValue="24"
             android:entries="@array/intervals"
             android:entryValues="@array/interval_values"
             android:key="update_interval"
