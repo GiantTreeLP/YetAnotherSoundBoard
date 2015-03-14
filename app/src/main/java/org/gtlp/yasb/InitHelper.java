@@ -34,6 +34,7 @@ import java.util.TreeSet;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
+    public static final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/assets/sounds/info";
     public static File infoFile;
     final protected char[] hexArray = "0123456789ABCDEF".toCharArray();
     TreeSet<File> localFiles = new TreeSet<>(new Comparator<File>() {
@@ -78,9 +79,9 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         checkLocalAssets();
         downloadMissingAssets();
         if (BuildConfig.DEBUG) {
-            Log.d("YASB", Arrays.toString(localHashes.toArray()));
-            Log.d("YASB", Arrays.toString(localFiles.toArray()));
-            Log.d("YASB", Arrays.deepToString(remoteHashes.toArray()));
+            Log.d(SoundActivity.YASB, Arrays.toString(localHashes.toArray()));
+            Log.d(SoundActivity.YASB, Arrays.toString(localFiles.toArray()));
+            Log.d(SoundActivity.YASB, Arrays.deepToString(remoteHashes.toArray()));
         }
         return null;
     }
@@ -101,7 +102,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        if (BuildConfig.DEBUG) Log.d("YASB", localFiles.size() + ";" + remoteHashes.size());
+        if (BuildConfig.DEBUG)
+            Log.d(SoundActivity.YASB, localFiles.size() + ";" + remoteHashes.size());
         PlaceholderFragment pf = new PlaceholderFragment();
         RelativeLayout layout = new RelativeLayout(soundActivity.getApplicationContext());
         layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -122,7 +124,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             psb[i].info = remoteHashes.toArray(new String[0][3])[i];
             psb[i].setText(remoteHashes.toArray(new String[0][3])[i][2]);
             psb[i].setSound(localFiles.toArray(new File[2])[i]);
-            psb[i].setFilterTouchesWhenObscured(true);
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i % 2 == 0) {
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -136,7 +137,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             psb[i].setLayoutParams(params);
             layout.addView(psb[i], params);
             if (BuildConfig.DEBUG)
-                Log.d("YASB", "Below " + (i > 0 ? psb[i - 1].getId() : "Nothing"));
+                Log.d(SoundActivity.YASB, "Below " + (i > 0 ? psb[i - 1].getId() : "Nothing"));
         }
         for (int i = 1; i < psb.length; i += 2) {
             int tempI = (psb[i].getText().length() < psb[i - 1].getText().length() ? i : i - 1);
@@ -158,7 +159,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 for (String s : downloadQueue) {
                     publishProgress(1, index);
                     index++;
-                    if (BuildConfig.DEBUG) Log.d("YASB", "Downloading: " + s.split(";")[0]);
+                    if (BuildConfig.DEBUG)
+                        Log.d(SoundActivity.YASB, "Downloading: " + s.split(";")[0]);
                     File f = new File(SoundActivity.soundsDir, s.split(";")[0]);
                     try {
                         FileOutputStream fos = new FileOutputStream(f);
@@ -186,7 +188,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     private void checkLocalAssets() {
         if (BuildConfig.DEBUG)
-            Log.d("YASB", Arrays.toString(SoundActivity.soundsDir.listFiles()));
+            Log.d(SoundActivity.YASB, Arrays.toString(SoundActivity.soundsDir.listFiles()));
         for (File f : SoundActivity.soundsDir.listFiles()) {
             if (f.exists() && f.isFile() && f.canRead()) {
                 localFiles.add(f);
@@ -201,8 +203,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             cal.setTimeInMillis(infoFile.lastModified());
             cal.add(GregorianCalendar.HOUR, Integer.parseInt(SoundActivity.preferences.getString("update_interval", "24")));
             if (BuildConfig.DEBUG) {
-                Log.d("YASB", cal.getTime().toString());
-                Log.d("YASB", cal.getTimeInMillis() + "<" + System.currentTimeMillis());
+                Log.d(SoundActivity.YASB, cal.getTime().toString());
+                Log.d(SoundActivity.YASB, cal.getTimeInMillis() + "<" + System.currentTimeMillis());
             }
             if (cal.getTimeInMillis() > System.currentTimeMillis()) {
                 try {
@@ -212,7 +214,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 }
             } else {
                 try {
-                    sc = new Scanner(OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/info"));
+                    sc = new Scanner(OpenHttpConnection(HTTP_SOUNDS_INFO_FILE));
                     try {
                         fos = new FileOutputStream(infoFile);
                     } catch (FileNotFoundException e) {
@@ -225,7 +227,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             }
         } else {
             try {
-                sc = new Scanner(OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/info"));
+                sc = new Scanner(OpenHttpConnection(HTTP_SOUNDS_INFO_FILE));
                 try {
                     fos = new FileOutputStream(infoFile);
                 } catch (FileNotFoundException e) {
@@ -280,7 +282,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         }
 
         if (BuildConfig.DEBUG)
-            Log.d("YASB", "To download: " + Arrays.toString(downloadQueue.toArray()));
+            Log.d(SoundActivity.YASB, "To download: " + Arrays.toString(downloadQueue.toArray()));
     }
 
     private void generateHash(File f) {
@@ -293,7 +295,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             fis.close();
             String hash = bytesToHex(md.digest());
             localHashes.add(hash);
-            if (BuildConfig.DEBUG) Log.d("YASB", f.getName() + ": " + hash);
+            if (BuildConfig.DEBUG) Log.d(SoundActivity.YASB, f.getName() + ": " + hash);
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

@@ -22,8 +22,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentTop="false"
                 android:layout_below="@+id/bar"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />

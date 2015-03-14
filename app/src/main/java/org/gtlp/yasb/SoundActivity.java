@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 public class SoundActivity extends ActionBarActivity {
 
+    public static final String YASB = "YASB";
     protected static File soundsDir;
     protected static WebView webView;
     protected static SharedPreferences preferences;
@@ -56,12 +57,13 @@ public class SoundActivity extends ActionBarActivity {
         setContentView(R.layout.activity_sound);
         TextView lt = (TextView) findViewById(R.id.textView1);
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
-        if (!BuildConfig.DEBUG) {
-            AdView adView = (AdView) this.findViewById(R.id.adView);
-            AdRequest.Builder adRequest = new AdRequest.Builder();
-            adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
-            adView.loadAd(adRequest.build());
-        }
+
+        AdView adView = (AdView) this.findViewById(R.id.adView);
+        AdRequest.Builder adRequest = new AdRequest.Builder();
+        adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+        adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
+        adView.loadAd(adRequest.build());
+
         webView = new WebView(getApplicationContext());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
@@ -172,6 +174,8 @@ public class SoundActivity extends ActionBarActivity {
     @Override
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        actionBarDrawerToggle.syncState();
     }
 
     @Override
