@@ -7,8 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'me.tatarka:gradle-retrolambda:1.3.+'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
 
@@ -33,7 +32,7 @@ allprojects {
         def matcherVersionCode = patternVersionCode.matcher(manifestContent)
         matcherVersionCode.find()
         def versionCode = Integer.parseInt(matcherVersionCode.group(1))
-        manifestContent = matcherVersionCode.replaceAll("versionCode=\"" + versionCode++ + "\"")
+        manifestContent = matcherVersionCode.replaceAll("versionCode=\"" + versionCode + "\"")
         println(":incrementVersionName - current versionName=" + mVersionName)
         println(":incrementVersionName - new versionName=" + mNextVersionName)
         manifestFile.write(manifestContent);

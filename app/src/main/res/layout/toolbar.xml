@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
+    android:navigationIcon="?attr/navigationIcon"
     app:theme="@style/Theme.AppCompat" />

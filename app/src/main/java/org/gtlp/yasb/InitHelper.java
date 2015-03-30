@@ -31,9 +31,9 @@ import java.util.Scanner;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
-    public static final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/assets/sounds/info";
     public static File infoFile;
-    final protected char[] hexArray = "0123456789ABCDEF".toCharArray();
+    final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/assets/sounds/info";
+    final char[] hexArray = "0123456789ABCDEF".toCharArray();
     ArrayList<File> localFiles = new ArrayList<>();
     ArrayList<String> localHashes = new ArrayList<>();
     ArrayList<String[]> remoteHashes = new ArrayList<>();

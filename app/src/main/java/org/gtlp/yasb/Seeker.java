@@ -27,6 +27,6 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
     private String formatMillis(int millis) {
         int minutes = millis / 1000 / 60;
         int seconds = millis / 1000;
-        return minutes + ":" + (seconds <= 9 ? "0" + seconds : seconds);
+        return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
     }
 }
