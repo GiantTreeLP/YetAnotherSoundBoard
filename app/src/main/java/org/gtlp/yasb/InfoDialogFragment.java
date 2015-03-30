@@ -12,8 +12,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import java.util.Arrays;
-
 public class InfoDialogFragment extends DialogFragment {
 
     String message = "";
@@ -40,11 +38,9 @@ public class InfoDialogFragment extends DialogFragment {
     }
 
     public void setInfo(String[] info, Activity a) {
-        InfoList<String> list = new InfoList<>();
-        list.addAll(Arrays.asList(info));
-        message = a.getString(R.string.msg_filename) + list.get(1) + "\n\n";
-        message += a.getString(R.string.msg_name) + list.get(2) + "\n\n";
-        message += a.getString(R.string.msg_source) + list.get(3) + "\n\n";
-        message += a.getString(R.string.msg_hash) + list.get(0) + "\n\n";
+        message = a.getString(R.string.msg_filename) + info[0] + "\n\n";
+        message += a.getString(R.string.msg_name) + info[2] + "\n\n";
+        message += a.getString(R.string.msg_source) + info[3] + "\n\n";
+        message += a.getString(R.string.msg_hash) + info[0] + "\n\n";
     }
 }
