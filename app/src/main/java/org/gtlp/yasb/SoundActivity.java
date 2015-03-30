@@ -36,6 +36,7 @@ import java.util.HashMap;
 public class SoundActivity extends ActionBarActivity {
 
     public static final String YASB = "YASB";
+    public static SoundPlayer soundPlayerInstance;
     protected static File soundsDir;
     protected static WebView webView;
     protected static SharedPreferences preferences;
@@ -44,7 +45,6 @@ public class SoundActivity extends ActionBarActivity {
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public static SoundPlayer soundPlayerInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class SoundActivity extends ActionBarActivity {
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -166,7 +166,7 @@ public class SoundActivity extends ActionBarActivity {
         super.onPause();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putBoolean("saved", true);
         super.onSaveInstanceState(outState, outPersistentState);
@@ -178,7 +178,7 @@ public class SoundActivity extends ActionBarActivity {
         super.onSaveInstanceState(outState);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
     }
