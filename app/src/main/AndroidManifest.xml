@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gtlp.yasb"
-    android:versionCode="66"
-    android:versionName="1.6.45">
+    android:versionCode="115"
+    android:versionName="1.7.94">
 
-<uses-sdk
+    <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="21" />
 
@@ -45,7 +45,7 @@
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:immersive="true" />
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@ public class AboutDialogFragment extends DialogFragment {
         builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AboutDialogFragment.this.getDialog().dismiss();
+                dialog.dismiss();
             }
         });
         return builder.create();

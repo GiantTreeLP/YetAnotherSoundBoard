@@ -44,10 +44,15 @@ public class SoundActivity extends ActionBarActivity {
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    public static SoundPlayer soundPlayerInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createFragment(savedInstanceState);
+    }
+
+    private void createFragment(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.getBoolean("saved")) {
             return;
         }
@@ -71,10 +76,10 @@ public class SoundActivity extends ActionBarActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        SoundPlayer.setInstance(new SoundPlayer(this));
+        soundPlayerInstance = new SoundPlayer(this);
         initHelper = new InitHelper(this);
         initHelper.execute();
-        new NetworkChecker().execute();
+        new NetworkChecker(this).execute();
 
         ((ListView) findViewById(R.id.listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,7 +90,7 @@ public class SoundActivity extends ActionBarActivity {
                         SoundActivity.this.startActivity(intent);
                         return;
                     case 1:
-                        new AboutDialogFragment().show(SoundActivity.this.getSupportFragmentManager(), "AboutDialogFragment");
+                        new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
                 }
             }
         });
@@ -93,14 +98,14 @@ public class SoundActivity extends ActionBarActivity {
         findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SoundPlayer.getInstance().start();
+                soundPlayerInstance.start();
             }
         });
 
         findViewById(R.id.pauseButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SoundPlayer.getInstance().pause();
+                soundPlayerInstance.pause();
             }
         });
         ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -108,20 +113,22 @@ public class SoundActivity extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && SoundPlayer.player != null) SoundPlayer.player.seekTo(progress);
+                if (fromUser && soundPlayerInstance != null)
+                    soundPlayerInstance.seekTo(progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if (SoundPlayer.player != null) {
-                    oldState = SoundPlayer.player.isPlaying();
-                    SoundPlayer.player.pause();
+                if (soundPlayerInstance != null) {
+                    oldState = soundPlayerInstance.isPlaying();
+                    soundPlayerInstance.pause();
                 }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (oldState && SoundPlayer.player != null) SoundPlayer.player.start();
+                if (oldState && soundPlayerInstance != null)
+                    soundPlayerInstance.start();
             }
         });
     }
@@ -142,16 +149,21 @@ public class SoundActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        if (initHelper != null) initHelper.cancel(true);
-        SoundPlayer.getInstance().release();
+        if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
+            initHelper.cancel(true);
+        soundPlayerInstance.release();
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
             initHelper.cancel(true);
+
+        if (soundPlayerInstance.isPlaying()) {
+            soundPlayerInstance.pause();
+        }
+        super.onPause();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -208,6 +220,7 @@ public class SoundActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         actionBarDrawerToggle.onConfigurationChanged(configuration);
+        createFragment(null);
     }
 
     @Override

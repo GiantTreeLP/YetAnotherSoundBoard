@@ -21,6 +21,7 @@
                 android:id="@+id/adView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/bar"
                 ads:adSize="SMART_BANNER"
@@ -44,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textView1" />
 
             <SeekBar
@@ -93,7 +95,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_toStartOf="@+id/ctrl_container"
                 android:layout_toLeftOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
@@ -104,7 +108,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_toRightOf="@+id/ctrl_container"
+                android:layout_toEndOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 

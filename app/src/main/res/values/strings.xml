@@ -22,5 +22,7 @@
     <string name="copyright">GiantTree © 2014. All rights reserved.</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
+    <string name="connection_error_title">Connection Error!</string>
+    <string name="connection_error_text">There was an error connecting to the server. Unfortunately, a connection to the server is required for this app to work.</string>
 
 </resources>

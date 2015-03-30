@@ -22,4 +22,6 @@
     <string name="copyright">GiantTree © 2014. Alle Rechte vorbehalten.</string>
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
+    <string name="connection_error_title">Verbindungsfehler!</string>
+    <string name="connection_error_text">Die Verbindung zum Server ist fehlgeschlagen. Leider ist eine solche Verbindung notwendig, damit diese App funktioniert.</string>
 </resources>

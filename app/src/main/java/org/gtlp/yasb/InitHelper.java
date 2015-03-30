@@ -19,38 +19,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     public static final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/assets/sounds/info";
     public static File infoFile;
     final protected char[] hexArray = "0123456789ABCDEF".toCharArray();
-    TreeSet<File> localFiles = new TreeSet<>(new Comparator<File>() {
-        @Override
-        public int compare(File lhs, File rhs) {
-            return lhs.getName().compareTo(rhs.getName());
-        }
-    });
-    List<String> localHashes = new ArrayList<>();
-    TreeSet<String[]> remoteHashes = new TreeSet<>(new Comparator<String[]>() {
-        @Override
-        public int compare(String[] lhs, String[] rhs) {
-            return lhs[1].compareTo(rhs[1]);
-        }
-    });
-    List<String> downloadQueue = new ArrayList<>();
+    ArrayList<File> localFiles = new ArrayList<>();
+    ArrayList<String> localHashes = new ArrayList<>();
+    ArrayList<String[]> remoteHashes = new ArrayList<>();
+    ArrayList<String> downloadQueue = new ArrayList<>();
     MessageDigest md;
     private SoundActivity soundActivity;
 
@@ -61,17 +48,13 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     public static BufferedInputStream OpenHttpConnection(String strURL)
             throws IOException {
-        URLConnection conn;
-        BufferedInputStream inputStream = null;
-        URL url = new URL(strURL);
-        conn = url.openConnection();
-        HttpURLConnection httpConn = (HttpURLConnection) conn;
+        HttpURLConnection httpConn = (HttpURLConnection) new URL(strURL).openConnection();
         httpConn.setRequestMethod("GET");
         httpConn.connect();
         if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            inputStream = new BufferedInputStream(httpConn.getInputStream(), 1024);
+            return new BufferedInputStream(httpConn.getInputStream(), 1024);
         }
-        return inputStream;
+        return null;
     }
 
     @Override
@@ -113,43 +96,29 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         dummy.setId(UniqueID.counter++);
         dummy.setLayoutParams(params);
-        layout.addView(dummy, params);
+        layout.addView(dummy, dummy.getLayoutParams());
 
-        PlaySoundButton[] psb = new PlaySoundButton[localFiles.size()];
+        ArrayList<PlaySoundButton> psb = new ArrayList<>(localFiles.size());
         for (int i = 0; i < localFiles.size(); i++) {
-            if (!new File(SoundActivity.soundsDir, remoteHashes.toArray(new String[0][3])[i][1]).exists())
+            if (!new File(SoundActivity.soundsDir, remoteHashes.get(i)[1]).exists())
                 continue;
-            psb[i] = new PlaySoundButton(soundActivity.getApplicationContext());
-            psb[i].setId(UniqueID.counter++);
-            psb[i].info = remoteHashes.toArray(new String[0][3])[i];
-            psb[i].setText(remoteHashes.toArray(new String[0][3])[i][2]);
-            psb[i].setSound(localFiles.toArray(new File[2])[i]);
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (i % 2 == 0) {
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                params.addRule(RelativeLayout.ALIGN_RIGHT, dummy.getId());
-            } else {
-                params.addRule(RelativeLayout.RIGHT_OF, dummy.getId());
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            }
-            params.addRule(i > 0 ? RelativeLayout.BELOW : RelativeLayout.ALIGN_PARENT_TOP, i > 1 ? psb[i - 2].getId() : RelativeLayout.TRUE);
-
-            psb[i].setLayoutParams(params);
-            layout.addView(psb[i], params);
-            if (BuildConfig.DEBUG)
-                Log.d(SoundActivity.YASB, "Below " + (i > 0 ? psb[i - 1].getId() : "Nothing"));
+            psb.add(i, new PlaySoundButton(soundActivity.getApplicationContext(), remoteHashes, localFiles, dummy, i));
+            layout.addView(psb.get(i), psb.get(i).getLayoutParams());
         }
-        for (int i = 1; i < psb.length; i += 2) {
-            int tempI = (psb[i].getText().length() < psb[i - 1].getText().length() ? i : i - 1);
-            RelativeLayout.LayoutParams temp = (RelativeLayout.LayoutParams) psb[tempI].getLayoutParams();
-            temp.addRule(RelativeLayout.ALIGN_BOTTOM, psb[(tempI == i ? i - 1 : i)].getId());
-            psb[tempI].setLayoutParams(temp);
+        for (int i = 1; i < psb.size(); i += 2) {
+            int tempI = (psb.get(i).getText().length() < psb.get(i - 1).getText().length() ? i : i - 1);
+            RelativeLayout.LayoutParams temp = (RelativeLayout.LayoutParams) psb.get(tempI).getLayoutParams();
+            temp.addRule(RelativeLayout.ALIGN_BOTTOM, psb.get((tempI == i ? i - 1 : i)).getId());
+            psb.get(tempI).setLayoutParams(temp);
         }
 
         pf.finalView = layout;
+        psb.clear();
         soundActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, pf).commit();
         soundActivity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
         soundActivity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
+        remoteHashes.clear();
+        downloadQueue.clear();
     }
 
     private void downloadMissingAssets() {
@@ -168,13 +137,15 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                         byte[] buffer = new byte[8192];
                         int byteCount;
 
-                        while ((byteCount = is.read(buffer)) > 0) {
-                            fos.write(buffer, 0, byteCount);
+                        if (is != null) {
+                            while ((byteCount = is.read(buffer)) > 0) {
+                                fos.write(buffer, 0, byteCount);
+                            }
+                            fos.flush();
+                            is.close();
+                            fos.close();
+                            localFiles.add(f);
                         }
-                        fos.flush();
-                        is.close();
-                        fos.close();
-                        localFiles.add(f);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -213,30 +184,15 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                     e.printStackTrace();
                 }
             } else {
-                try {
-                    sc = new Scanner(OpenHttpConnection(HTTP_SOUNDS_INFO_FILE));
-                    try {
-                        fos = new FileOutputStream(infoFile);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    download = true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                download = true;
             }
         } else {
-            try {
-                sc = new Scanner(OpenHttpConnection(HTTP_SOUNDS_INFO_FILE));
-                try {
-                    fos = new FileOutputStream(infoFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                download = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            download = true;
+        }
+        if (download) {
+            InfoFileDownloader infoFileDownloader = new InfoFileDownloader().invoke();
+            sc = infoFileDownloader.getSc();
+            fos = infoFileDownloader.getFos();
         }
         while (sc.hasNext()) {
             String s = sc.nextLine() + "\n";
@@ -258,13 +214,26 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         }
         sc.close();
 
-        Set<String> setItems = new LinkedHashSet<>(localHashes);
-        localHashes.clear();
-        localHashes.addAll(setItems);
+        Collections.sort(localFiles, new Comparator<File>() {
+            @Override
+            public int compare(File lhs, File rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+        Collections.sort(remoteHashes, new Comparator<String[]>() {
+            @Override
+            public int compare(String[] lhs, String[] rhs) {
+                return lhs[1].compareTo(rhs[1]);
+            }
+        });
 
-        Set<File> setItems1 = new LinkedHashSet<>(localFiles);
+        LinkedHashSet<String> localHashesSet = new LinkedHashSet<>(localHashes);
+        localHashes.clear();
+        localHashes.addAll(localHashesSet);
+
+        LinkedHashSet<File> localFilesSet = new LinkedHashSet<>(localFiles);
         localFiles.clear();
-        localFiles.addAll(setItems1);
+        localFiles.addAll(localFilesSet);
 
 
         for (String[] strings : remoteHashes) {
@@ -311,4 +280,34 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         return new String(hexChars);
     }
 
+    private class InfoFileDownloader {
+        private FileOutputStream fos;
+        private Scanner sc;
+
+        public FileOutputStream getFos() {
+            return fos;
+        }
+
+        public Scanner getSc() {
+            return sc;
+        }
+
+        public InfoFileDownloader invoke() {
+            try {
+                BufferedInputStream infoInputStream = OpenHttpConnection(HTTP_SOUNDS_INFO_FILE);
+
+                if (infoInputStream != null) {
+                    sc = new Scanner(infoInputStream);
+                }
+                try {
+                    fos = new FileOutputStream(infoFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+    }
 }

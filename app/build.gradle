@@ -9,12 +9,12 @@ android {
             storePassword 'Birth1997'
         }
     }
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.0'
     defaultConfig {
         applicationId "org.gtlp.yasb"
         minSdkVersion 9
-        targetSdkVersion 21
+        targetSdkVersion 22
         signingConfig signingConfigs.config
         useJack = false
     }
@@ -26,6 +26,7 @@ android {
             jniDebuggable false
             renderscriptDebuggable false
             zipAlignEnabled true
+            signingConfig signingConfigs.config
         }
         debug {
             debuggable true
