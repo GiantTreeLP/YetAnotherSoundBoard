@@ -252,17 +252,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             }
         }
 
-        if (localFiles.size() > 0) {
-            for (String[] strings : remoteHashes) {
-                for (File file : localFiles) {
-                    if (!file.getName().equals(strings[1]) || !localHashes.contains(strings[0])) {
-                        downloadQueue.add(strings[1]);
-                        break;
-                    }
-                }
-            }
-        }
-
         if (BuildConfig.DEBUG)
             Log.d(SoundActivity.YASB, "To download: " + Arrays.toString(downloadQueue.toArray()));
     }
