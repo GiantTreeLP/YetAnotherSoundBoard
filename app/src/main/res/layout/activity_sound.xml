@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     tools:context=".SoundActivity.PlaceHolderFragment">
 
     <android.support.v4.widget.DrawerLayout
@@ -21,8 +22,8 @@
                 android:id="@+id/adView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/bar"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
@@ -44,8 +45,8 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/textView1" />
 
             <SeekBar
@@ -95,10 +96,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:layout_toStartOf="@+id/ctrl_container"
+                android:layout_alignParentStart="true"
                 android:layout_toLeftOf="@+id/ctrl_container"
+                android:layout_toStartOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 
@@ -107,10 +108,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/seekBar"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/ctrl_container"
+                android:layout_alignParentRight="true"
                 android:layout_toEndOf="@+id/ctrl_container"
+                android:layout_toRightOf="@+id/ctrl_container"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:typeface="monospace" />
 

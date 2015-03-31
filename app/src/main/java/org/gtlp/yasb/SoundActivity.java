@@ -22,6 +22,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -41,7 +42,6 @@ public class SoundActivity extends ActionBarActivity {
     protected static WebView webView;
     protected static SharedPreferences preferences;
     InitHelper initHelper;
-    int orientation;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -49,16 +49,17 @@ public class SoundActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createFragment(savedInstanceState);
-    }
-
-    private void createFragment(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.getBoolean("saved")) {
             return;
         }
         soundsDir = getExternalFilesDir("sounds");
-        orientation = getRequestedOrientation();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        new NetworkChecker(this).execute();
+        soundPlayerInstance = new SoundPlayer(this);
+        initUI();
+    }
+
+    private void initUI() {
         setContentView(R.layout.activity_sound);
         TextView lt = (TextView) findViewById(R.id.textView1);
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
@@ -73,14 +74,17 @@ public class SoundActivity extends ActionBarActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
         setSupportActionBar(toolbar);
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        soundPlayerInstance = new SoundPlayer(this);
         initHelper = new InitHelper(this);
         initHelper.execute();
-        new NetworkChecker(this).execute();
 
+        setListeners();
+    }
+
+    private void setListeners() {
         ((ListView) findViewById(R.id.listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,7 +112,7 @@ public class SoundActivity extends ActionBarActivity {
                 soundPlayerInstance.pause();
             }
         });
-        ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             boolean oldState;
 
             @Override
@@ -220,7 +224,7 @@ public class SoundActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         actionBarDrawerToggle.onConfigurationChanged(configuration);
-        createFragment(null);
+        initUI();
     }
 
     @Override

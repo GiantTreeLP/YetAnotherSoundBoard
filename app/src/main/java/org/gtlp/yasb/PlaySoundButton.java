@@ -1,7 +1,6 @@
 package org.gtlp.yasb;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
@@ -22,7 +21,8 @@ import java.util.ArrayList;
 
 import static android.view.View.OnClickListener;
 import static android.widget.RemoteViews.RemoteView;
-import static org.gtlp.yasb.SoundActivity.*;
+import static org.gtlp.yasb.SoundActivity.TrackerName;
+import static org.gtlp.yasb.SoundActivity.YASB;
 import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
 
 @RemoteView
@@ -53,6 +53,9 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     public PlaySoundButton(Context applicationContext, ArrayList<String[]> remoteHashes, ArrayList<File> localFiles, TextView dummy, int i) {
         this(applicationContext, null);
+        if (i > Math.min(remoteHashes.size(), localFiles.size())) {
+            throw new IndexOutOfBoundsException("Index i (" + i + ") is too big");
+        }
         setId(UniqueID.counter++);
         info = remoteHashes.get(i);
         setText(remoteHashes.get(i)[2]);

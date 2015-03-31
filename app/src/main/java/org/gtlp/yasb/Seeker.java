@@ -10,7 +10,8 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         while (!isCancelled()) try {
             Thread.sleep(66);
-            if ((SoundActivity.soundPlayerInstance.isPrepared && SoundActivity.soundPlayerInstance.isInitialized) && SoundActivity.soundPlayerInstance.isPlaying()) publishProgress();
+            if ((SoundActivity.soundPlayerInstance.isPrepared && SoundActivity.soundPlayerInstance.isInitialized) && SoundActivity.soundPlayerInstance.isPlaying())
+                publishProgress();
         } catch (Exception ignored) {
         }
         return null;

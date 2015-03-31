@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;

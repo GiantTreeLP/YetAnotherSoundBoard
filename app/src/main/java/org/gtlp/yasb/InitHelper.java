@@ -3,6 +3,7 @@ package org.gtlp.yasb;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,27 +24,25 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
+    final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     public static File infoFile;
     final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/assets/sounds/info";
-    final char[] hexArray = "0123456789ABCDEF".toCharArray();
     ArrayList<File> localFiles = new ArrayList<>();
     ArrayList<String> localHashes = new ArrayList<>();
     ArrayList<String[]> remoteHashes = new ArrayList<>();
     ArrayList<String> downloadQueue = new ArrayList<>();
     MessageDigest md;
-    private SoundActivity soundActivity;
+    private ActionBarActivity actionBarActivity;
 
-    public InitHelper(SoundActivity soundActivity) {
-        this.soundActivity = soundActivity;
-        infoFile = new File(soundActivity.getExternalFilesDir("info"), "info");
+    public InitHelper(ActionBarActivity actionBarActivity) {
+        this.actionBarActivity = actionBarActivity;
+        infoFile = new File(actionBarActivity.getExternalFilesDir("info"), "info");
     }
 
     public static BufferedInputStream OpenHttpConnection(String strURL)
@@ -73,13 +72,13 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
     protected void onProgressUpdate(Integer... params) {
         switch (params[0]) {
             case 0:
-                soundActivity.findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
+                actionBarActivity.findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
             case 1:
-                ProgressBar pb = (ProgressBar) soundActivity.findViewById(R.id.progressBar1);
+                ProgressBar pb = (ProgressBar) actionBarActivity.findViewById(R.id.progressBar1);
                 pb.setMax(downloadQueue.size());
                 pb.setProgress(params[1]);
-                TextView tv = (TextView) soundActivity.findViewById(R.id.textView1);
-                tv.setText(soundActivity.getString(R.string.text_loading).replace("%x", Integer.toString(params[1])).replace("%y", Integer.toString(downloadQueue.size())));
+                TextView tv = (TextView) actionBarActivity.findViewById(R.id.textView1);
+                tv.setText(actionBarActivity.getString(R.string.text_loading).replace("%x", Integer.toString(params[1])).replace("%y", Integer.toString(downloadQueue.size())));
         }
     }
 
@@ -87,23 +86,21 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
     protected void onPostExecute(Void result) {
         if (BuildConfig.DEBUG)
             Log.d(SoundActivity.YASB, localFiles.size() + ";" + remoteHashes.size());
-        PlaceholderFragment pf = new PlaceholderFragment();
-        RelativeLayout layout = new RelativeLayout(soundActivity.getApplicationContext());
-        layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        TextView dummy = new TextView(soundActivity.getApplicationContext());
+        PlaceholderFragment placeholderFragment = new PlaceholderFragment();
+        RelativeLayout layout = new RelativeLayout(actionBarActivity.getApplicationContext());
+        layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        TextView dummy = new TextView(actionBarActivity.getApplicationContext());
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         dummy.setId(UniqueID.counter++);
         dummy.setLayoutParams(params);
         layout.addView(dummy, dummy.getLayoutParams());
-
         ArrayList<PlaySoundButton> psb = new ArrayList<>(localFiles.size());
-        for (int i = 0; i < localFiles.size(); i++) {
+        for (int i = 0; i < remoteHashes.size(); i++) {
             if (!new File(SoundActivity.soundsDir, remoteHashes.get(i)[1]).exists())
                 continue;
-            psb.add(i, new PlaySoundButton(soundActivity.getApplicationContext(), remoteHashes, localFiles, dummy, i));
-            layout.addView(psb.get(i), psb.get(i).getLayoutParams());
+            psb.add(i, new PlaySoundButton(actionBarActivity.getApplicationContext(), remoteHashes, localFiles, dummy, i));
         }
         for (int i = 1; i < psb.size(); i += 2) {
             int tempI = (psb.get(i).getText().length() < psb.get(i - 1).getText().length() ? i : i - 1);
@@ -112,17 +109,18 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             psb.get(tempI).setLayoutParams(temp);
         }
 
-        pf.finalView = layout;
-        psb.clear();
-        soundActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, pf).commit();
-        soundActivity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
-        soundActivity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
-        remoteHashes.clear();
-        downloadQueue.clear();
+        for (int i = 0; i < psb.size(); i++) {
+            layout.addView(psb.get(i), psb.get(i).getLayoutParams());
+        }
+        placeholderFragment.finalView = layout;
+
+        actionBarActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment).commit();
+        actionBarActivity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
+        actionBarActivity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
     }
 
     private void downloadMissingAssets() {
-        if (((ConnectivityManager) (soundActivity.getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo().isConnected()) {
+        if (((ConnectivityManager) (actionBarActivity.getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo().isConnected()) {
             if (downloadQueue.size() > 0) {
                 int index = 0;
                 for (String s : downloadQueue) {
@@ -153,7 +151,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 publishProgress(1, index);
             }
         } else {
-            Toast.makeText(soundActivity.getApplicationContext(), soundActivity.getString(R.string.no_network), Toast.LENGTH_SHORT).show();
+            Toast.makeText(actionBarActivity.getApplicationContext(), actionBarActivity.getString(R.string.no_network), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -168,16 +166,18 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         }
         boolean download = false;
         FileOutputStream fos = null;
-        Scanner sc = new Scanner("");
+        Scanner sc = null;
         if (infoFile.exists()) {
             GregorianCalendar cal = new GregorianCalendar();
             cal.setTimeInMillis(infoFile.lastModified());
             cal.add(GregorianCalendar.HOUR, Integer.parseInt(SoundActivity.preferences.getString("update_interval", "24")));
+
             if (BuildConfig.DEBUG) {
                 Log.d(SoundActivity.YASB, cal.getTime().toString());
                 Log.d(SoundActivity.YASB, cal.getTimeInMillis() + "<" + System.currentTimeMillis());
             }
-            if (cal.getTimeInMillis() > System.currentTimeMillis()) {
+
+            if (System.currentTimeMillis() < cal.getTimeInMillis()) {
                 try {
                     sc = new Scanner(infoFile);
                 } catch (FileNotFoundException e) {
@@ -194,7 +194,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             sc = infoFileDownloader.getSc();
             fos = infoFileDownloader.getFos();
         }
-        while (sc.hasNext()) {
+        while (sc != null && sc.hasNext()) {
             String s = sc.nextLine() + "\n";
             remoteHashes.add(s.split(";"));
             if (download && fos != null) {
@@ -212,9 +212,11 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 e.printStackTrace();
             }
         }
-        sc.close();
+        if (sc != null) {
+            sc.close();
+        }
 
-        Collections.sort(localFiles, new Comparator<File>() {
+        /*Collections.sort(localFiles, new Comparator<File>() {
             @Override
             public int compare(File lhs, File rhs) {
                 return lhs.getName().compareTo(rhs.getName());
@@ -225,7 +227,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             public int compare(String[] lhs, String[] rhs) {
                 return lhs[1].compareTo(rhs[1]);
             }
-        });
+        });*/
 
         LinkedHashSet<String> localHashesSet = new LinkedHashSet<>(localHashes);
         localHashes.clear();
@@ -244,6 +246,17 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 for (File file : localFiles) {
                     if (file.getName().equals(strings[1]) && localHashes.contains(strings[0])) {
                         downloadQueue.remove(strings[1]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (localFiles.size() > 0) {
+            for (String[] strings : remoteHashes) {
+                for (File file : localFiles) {
+                    if (!file.getName().equals(strings[1]) || !localHashes.contains(strings[0])) {
+                        downloadQueue.add(strings[1]);
                         break;
                     }
                 }
@@ -299,11 +312,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 if (infoInputStream != null) {
                     sc = new Scanner(infoInputStream);
                 }
-                try {
-                    fos = new FileOutputStream(infoFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                fos = new FileOutputStream(infoFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
