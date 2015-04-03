@@ -11,14 +11,18 @@ import android.view.ViewGroup;
  */
 public class PlaceholderFragment extends Fragment {
 
-    public View finalView;
+	public View finalView;
 
-    public PlaceholderFragment() {
-    }
+	public PlaceholderFragment() {
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return inflater.inflate(R.layout.fragment_sound, container, false);
-        return finalView;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return finalView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle instance) {
+		super.onSaveInstanceState(instance);
+	}
 }
