@@ -11,4 +11,9 @@ public class FileInfo {
 	public File localFile;
 	public int id;
 	public boolean needsToBeDownloaded;
+
+	@Override
+	public String toString() {
+		return id + ": name=" + name + ", localHash=" + localHash + ", remoteHash=" + remoteHash + ", filename=" + fileName + ", needsToBeDownloaded=" + needsToBeDownloaded;
+	}
 }

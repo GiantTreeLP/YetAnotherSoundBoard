@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar
+    drawerArrowStyle="@style/Widget.AppCompat.DrawerArrowToggle"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
+    android:background="@color/material_blue_grey_800"
     android:clickable="true"
-    android:minHeight="?attr/actionBarSize" />
+    android:fitsSystemWindows="true"
+    android:minHeight="?attr/actionBarSize"
+    android:title="@string/app_name"
+    android:titleTextAppearance="@style/TextAppearance.AppCompat"/>

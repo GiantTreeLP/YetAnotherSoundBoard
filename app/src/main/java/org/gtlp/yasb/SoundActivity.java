@@ -16,8 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -61,7 +59,7 @@ public class SoundActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null && savedInstanceState.getBoolean("saved")) {
-			return;
+			onRestoreInstanceState(savedInstanceState);
 		}
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		new NetworkChecker(this).execute();
@@ -157,8 +155,9 @@ public class SoundActivity extends ActionBarActivity {
 	@Override
 	public void onConfigurationChanged(Configuration configuration) {
 		super.onConfigurationChanged(configuration);
-		actionBarDrawerToggle.onConfigurationChanged(configuration);
-		initUI();
+		//actionBarDrawerToggle.onConfigurationChanged(configuration);
+		//actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+		//actionBarDrawerToggle.syncState();
 	}
 
 	@Override
@@ -182,15 +181,20 @@ public class SoundActivity extends ActionBarActivity {
 	public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-		actionBarDrawerToggle.syncState();
+		if (savedInstanceState.getBoolean("saved")) {
+			((SeekBar) findViewById(R.id.seekBar)).setMax(savedInstanceState.getInt("seekMax"));
+			((SeekBar) findViewById(R.id.seekBar)).setProgress(savedInstanceState.getInt("seekProgress"));
+		}
+		//actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+		//actionBarDrawerToggle.syncState();
 	}
 
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
 		super.onRestoreInstanceState(savedInstanceState, persistentState);
 	}
 
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+	@Override
 	public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
 		super.onSaveInstanceState(outState, outPersistentState);
 		saveInstance(outState);
@@ -200,32 +204,6 @@ public class SoundActivity extends ActionBarActivity {
 		outState.putBoolean("saved", true);
 		outState.putInt("seekMax", ((SeekBar) findViewById(R.id.seekBar)).getMax());
 		outState.putInt("seekProgress", ((SeekBar) findViewById(R.id.seekBar)).getProgress());
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.sound, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		if (actionBarDrawerToggle.onOptionsItemSelected(item)) return true;
-		int id = item.getItemId();
-		switch (id) {
-			case R.id.action_about:
-				new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
-				return true;
-			case R.id.action_settings:
-				Intent intent = new Intent(this, SettingsActivity.class);
-				startActivity(intent);
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

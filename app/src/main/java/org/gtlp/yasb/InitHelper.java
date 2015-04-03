@@ -29,6 +29,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
@@ -55,10 +56,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 	protected Void doInBackground(Void... params) {
 		checkLocalAssets();
 		downloadMissingAssets();
-
-		//SoundActivity.Log(Arrays.toString(localFiles.entrySet().toArray()));
-		//SoundActivity.Log(Arrays.deepToString(fileInfos.toArray()));
-
 		return null;
 	}
 
@@ -156,6 +153,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 					fi.remoteHash = array.getString("hash");
 					fi.source = array.getString("url");
 					fi.localFile = new File(soundsDir, fi.fileName);
+					fi.localHash = generateHash(fi.localFile);
 					fileInfos.add(fi);
 				}
 			}
@@ -176,12 +174,12 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			}
 		}
 
-		SoundActivity.Log("To download: " + FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
+		SoundActivity.Log("To download: " + Arrays.toString(FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
 			@Override
 			public boolean apply(FileInfo input) {
 				return input.needsToBeDownloaded;
 			}
-		}).toString());
+		}).toArray(FileInfo.class)));
 	}
 
 	private void downloadMissingAssets() {
@@ -207,7 +205,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 								}
 								is.close();
 								fos.close();
-								info.localHash = generateHash(info.localFile);
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -240,6 +237,25 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		return null;
 	}
 
+	private String generateHash(File f) {
+		if (f.exists()) {
+			try {
+				FileInputStream fis = new FileInputStream(f);
+				byte[] buffer = new byte[8192];
+				int byteCount;
+				md = MessageDigest.getInstance("SHA-1");
+				while ((byteCount = fis.read(buffer)) != -1) md.update(buffer, 0, byteCount);
+				fis.close();
+				String hash = bytesToHex(md.digest());
+				SoundActivity.Log(f.getName() + ": " + hash);
+				return hash;
+			} catch (IOException | NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+		}
+		return "";
+	}
+
 	public static BufferedInputStream OpenHttpConnection(String strURL)
 			throws IOException {
 		HttpURLConnection httpConn = (HttpURLConnection) new URL(strURL).openConnection();
@@ -247,23 +263,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			SoundActivity.Log(httpConn.getResponseMessage());
 			return new BufferedInputStream(httpConn.getInputStream());
-		}
-		return null;
-	}
-
-	private String generateHash(File f) {
-		try {
-			FileInputStream fis = new FileInputStream(f);
-			byte[] buffer = new byte[8192];
-			int byteCount;
-			md = MessageDigest.getInstance("SHA-1");
-			while ((byteCount = fis.read(buffer)) != -1) md.update(buffer, 0, byteCount);
-			fis.close();
-			String hash = bytesToHex(md.digest());
-			SoundActivity.Log(f.getName() + ": " + hash);
-			return hash;
-		} catch (IOException | NoSuchAlgorithmException e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
