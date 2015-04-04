@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:id="@+id/activity_sound"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -40,7 +41,7 @@
                 android:textSize="@dimen/abc_text_size_medium_material"
                 android:textStyle="italic" />
 
-            <org.gtlp.yasb.SmoothProgressBar
+            <ProgressBar
                 android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
@@ -55,8 +56,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true" />
 
-            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            <ScrollView
                 android:id="@+id/container"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/ctrl_container"

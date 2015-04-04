@@ -41,8 +41,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 	final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static File infoFile;
 	private static File soundsDir;
-	ArrayList<FileInfo> fileInfos = new ArrayList<>();
-	MessageDigest md;
+	public ArrayList<FileInfo> fileInfos = new ArrayList<>();
+	public boolean fileInfoSupplied = false;
 	private ActionBarActivity actionBarActivity;
 	private int numberOfFilesToDownload = 0;
 
@@ -54,14 +54,15 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		checkLocalAssets();
-		downloadMissingAssets();
+		if (!fileInfoSupplied) {
+			checkLocalAssets();
+			downloadMissingAssets();
+		}
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Void result) {
-
 		PlaceholderFragment placeholderFragment = new PlaceholderFragment();
 		RelativeLayout layout = new RelativeLayout(actionBarActivity.getApplicationContext());
 		layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -73,7 +74,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		layout.addView(dummy, dummy.getLayoutParams());
 		ArrayList<PlaySoundButton> psb = new ArrayList<>(fileInfos.size());
 		for (int i = 0; i < fileInfos.size(); i++) {
-			if (!new File(soundsDir, fileInfos.get(i).fileName).exists())
+			if (!fileInfos.get(i).localFile.exists())
 				continue;
 			psb.add(i, new PlaySoundButton(actionBarActivity.getApplicationContext(), fileInfos, dummy, i));
 		}
@@ -146,14 +147,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 				JSONArray jsonArray = new JSONArray(s.toString());
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject array = jsonArray.getJSONObject(i);
-					FileInfo fi = new FileInfo();
-					fi.id = array.getInt("id");
-					fi.name = array.getString("name");
-					fi.fileName = array.getString("path");
-					fi.remoteHash = array.getString("hash");
-					fi.source = array.getString("url");
-					fi.localFile = new File(soundsDir, fi.fileName);
-					fi.localHash = generateHash(fi.localFile);
+					File file = new File(soundsDir, array.getString("path"));
+					FileInfo fi = new FileInfo(array.getString("hash"), generateHash(file), array.getString("url"), array.getString("name"), file.getPath(), array.getInt("id"), file);
 					fileInfos.add(fi);
 				}
 			}
@@ -191,11 +186,11 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 						publishProgress(1, index);
 						index++;
 
-						SoundActivity.Log("Downloading: " + info.fileName);
+						SoundActivity.Log("Downloading: " + info.filePath);
 
 						try {
 							FileOutputStream fos = new FileOutputStream(info.localFile);
-							BufferedInputStream is = OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/" + info.fileName);
+							BufferedInputStream is = OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/" + info.filePath);
 							byte[] buffer = new byte[8192];
 							int byteCount;
 
@@ -243,7 +238,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 				FileInputStream fis = new FileInputStream(f);
 				byte[] buffer = new byte[8192];
 				int byteCount;
-				md = MessageDigest.getInstance("SHA-1");
+				MessageDigest md = MessageDigest.getInstance("SHA-1");
 				while ((byteCount = fis.read(buffer)) != -1) md.update(buffer, 0, byteCount);
 				fis.close();
 				String hash = bytesToHex(md.digest());

@@ -1,9 +1,7 @@
 package org.gtlp.yasb;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,31 +33,16 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
 	public PlaySoundButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init();
-	}
-
-	private void init() {
 		setOnClickListener(this);
 		setOnLongClickListener(this);
-	}
-
-	public PlaySoundButton(Context context, AttributeSet attrs, int defStyleAttr) {
-		this(context, attrs, defStyleAttr, 0);
-		init();
-	}
-
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	public PlaySoundButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		init();
 	}
 
 	public PlaySoundButton(Context applicationContext, ArrayList<FileInfo> fileInfos, TextView dummy, int i) {
 		this(applicationContext, null);
 		setId(UniqueID.counter++);
 		info = fileInfos.get(i);
-		setText(fileInfos.get(i).name);
-		setSound(fileInfos.get(i).localFile);
+		setText(info.name);
+		setSound(info.localFile);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		if (i % 2 == 0) {
 			params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

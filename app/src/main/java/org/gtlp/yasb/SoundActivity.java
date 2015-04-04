@@ -1,15 +1,12 @@
 package org.gtlp.yasb;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,12 +27,18 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SoundActivity extends ActionBarActivity {
 
 	public static final String YASB = "YASB";
+	private static final String KEY_SAVED = "saved";
+	private static final String KEY_SEEK_MAX = "seekMax";
+	private static final String KEY_SEEK_PROGRESS = "seekProgress";
+	private static final String KEY_FILE_INFOS = "fileInfos";
 	public static SoundPlayer soundPlayerInstance;
+	public static ArrayList<FileInfo> fileInfoArrayList;
 	public static WebView webView;
 	public static SharedPreferences preferences;
 	private InitHelper initHelper;
@@ -43,28 +46,31 @@ public class SoundActivity extends ActionBarActivity {
 	private DrawerLayout drawerLayout;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 
-	public static void Log(String message) {
-		if (BuildConfig.DEBUG)
-			Log.d(YASB, message);
-	}
-
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-	@Override
-	public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-		super.onCreate(savedInstanceState, persistentState);
-		onCreate(savedInstanceState);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null && savedInstanceState.getBoolean("saved")) {
-			onRestoreInstanceState(savedInstanceState);
-		}
+		restoreInstance(savedInstanceState);
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		new NetworkChecker(this).execute();
 		soundPlayerInstance = new SoundPlayer(this);
 		initUI();
+	}
+
+	private void restoreInstance(Bundle savedInstanceState) {
+		initHelper = new InitHelper(this);
+		if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_SAVED)) {
+			((SeekBar) findViewById(R.id.seekBar)).setMax(savedInstanceState.getInt(KEY_SEEK_MAX));
+			((SeekBar) findViewById(R.id.seekBar)).setProgress(savedInstanceState.getInt(KEY_SEEK_PROGRESS));
+			initHelper.fileInfos = savedInstanceState.getParcelableArrayList(KEY_FILE_INFOS);
+			initHelper.fileInfoSupplied = true;
+			Log("seekMax: " + savedInstanceState.getInt(KEY_SEEK_MAX));
+			Log("seekProgress: " + savedInstanceState.getInt(KEY_SEEK_PROGRESS));
+			Log("Restored instance");
+		} else if (fileInfoArrayList != null) {
+			initHelper.fileInfos = fileInfoArrayList;
+			initHelper.fileInfoSupplied = true;
+		}
+		initHelper.execute();
 	}
 
 	private void initUI() {
@@ -86,10 +92,12 @@ public class SoundActivity extends ActionBarActivity {
 		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-		initHelper = new InitHelper(this);
-		initHelper.execute();
-
 		setListeners();
+	}
+
+	public static void Log(String message) {
+		if (BuildConfig.DEBUG)
+			Log.d(YASB, message);
 	}
 
 	private void setListeners() {
@@ -98,8 +106,8 @@ public class SoundActivity extends ActionBarActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 					case 0:
-						Intent intent = new Intent(SoundActivity.this.getApplicationContext(), SettingsActivity.class);
-						SoundActivity.this.startActivity(intent);
+						Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+						startActivity(intent);
 						return;
 					case 1:
 						new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
@@ -150,14 +158,18 @@ public class SoundActivity extends ActionBarActivity {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		actionBarDrawerToggle.syncState();
+		if (initHelper == null) {
+			initHelper = new InitHelper(this);
+			initHelper.execute();
+		}
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration configuration) {
 		super.onConfigurationChanged(configuration);
-		//actionBarDrawerToggle.onConfigurationChanged(configuration);
-		//actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-		//actionBarDrawerToggle.syncState();
+		actionBarDrawerToggle.onConfigurationChanged(configuration);
+		restoreInstance(null);
+		initUI();
 	}
 
 	@Override
@@ -178,43 +190,31 @@ public class SoundActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		if (savedInstanceState.getBoolean("saved")) {
-			((SeekBar) findViewById(R.id.seekBar)).setMax(savedInstanceState.getInt("seekMax"));
-			((SeekBar) findViewById(R.id.seekBar)).setProgress(savedInstanceState.getInt("seekProgress"));
-		}
-		//actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
-		//actionBarDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-		super.onRestoreInstanceState(savedInstanceState, persistentState);
-	}
-
-	@Override
 	public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
 		super.onSaveInstanceState(outState, outPersistentState);
 		saveInstance(outState);
 	}
 
 	private void saveInstance(Bundle outState) {
-		outState.putBoolean("saved", true);
-		outState.putInt("seekMax", ((SeekBar) findViewById(R.id.seekBar)).getMax());
-		outState.putInt("seekProgress", ((SeekBar) findViewById(R.id.seekBar)).getProgress());
+		if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.FINISHED) {
+			outState.putBoolean(KEY_SAVED, true);
+			outState.putInt(KEY_SEEK_MAX, ((SeekBar) findViewById(R.id.seekBar)).getMax());
+			outState.putInt(KEY_SEEK_PROGRESS, ((SeekBar) findViewById(R.id.seekBar)).getProgress());
+			outState.putParcelableArrayList(KEY_FILE_INFOS, initHelper.fileInfos);
+			fileInfoArrayList = initHelper.fileInfos;
+			Log("Saved instance");
+		}
 	}
 
 	@Override
 	protected void onPause() {
+		super.onPause();
 		if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
 			initHelper.cancel(true);
 
 		if (soundPlayerInstance.isPlaying()) {
 			soundPlayerInstance.pause();
 		}
-		super.onPause();
 	}
 
 	@Override

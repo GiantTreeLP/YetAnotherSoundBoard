@@ -9,6 +9,7 @@ public class SettingsActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		setSupportActionBar((Toolbar) findViewById(R.id.bar));
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportFragmentManager().beginTransaction().add(R.id.container_settings, new SettingsFragment()).commit();
 	}
 }

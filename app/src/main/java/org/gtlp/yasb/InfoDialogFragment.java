@@ -21,7 +21,7 @@ public class InfoDialogFragment extends DialogFragment {
 	}
 
 	public void setInfo(FileInfo info, Activity activity) {
-		message = activity.getString(R.string.msg_filename) + info.fileName + "\n\n";
+		message = activity.getString(R.string.msg_filename) + info.localFile.getName() + "\n\n";
 		message += activity.getString(R.string.msg_name) + info.name + "\n\n";
 		message += activity.getString(R.string.msg_source) + info.source + "\n\n";
 		message += activity.getString(R.string.msg_hash) + info.remoteHash + "\n\n";

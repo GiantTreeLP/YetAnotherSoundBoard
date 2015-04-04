@@ -2,8 +2,8 @@
 <manifest
     package="org.gtlp.yasb"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="237"
-    android:versionName="1.7.216">
+    android:versionCode="274"
+    android:versionName="1.7.253">
 
     <uses-sdk
         android:minSdkVersion="9"
