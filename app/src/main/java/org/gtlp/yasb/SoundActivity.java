@@ -2,6 +2,7 @@ package org.gtlp.yasb;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 public class SoundActivity extends ActionBarActivity {
 
 	public static final String YASB = "YASB";
+	public static final String PREFKEY_VERSION_CODE = "versionCode";
 	private static final String KEY_SAVED = "saved";
 	private static final String KEY_SEEK_MAX = "seekMax";
 	private static final String KEY_SEEK_PROGRESS = "seekProgress";
@@ -76,6 +78,13 @@ public class SoundActivity extends ActionBarActivity {
 
 	private void initUI() {
 		setContentView(R.layout.activity_sound);
+		try {
+			if (preferences.getInt(PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode || BuildConfig.DEBUG) {
+				new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
+			}
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
 		TextView lt = (TextView) findViewById(R.id.textView1);
 		lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
 

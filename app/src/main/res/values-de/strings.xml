@@ -25,4 +25,5 @@
     <string name="connection_error_title">Verbindungsfehler!</string>
     <string name="connection_error_text">Die Verbindung zum Server ist fehlgeschlagen. Leider ist eine solche Verbindung notwendig, damit diese App funktioniert.</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
+    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:\n</h2><ul><li>Zahlreiche Fehlerbehebungen\n</li><li>Verbesserte Benutzeroberfl&auml;chenlogik\n</li><li>Aktualisierte Bibliotheken Dritter\n</li></ul>]]>"</string>
 </resources>
