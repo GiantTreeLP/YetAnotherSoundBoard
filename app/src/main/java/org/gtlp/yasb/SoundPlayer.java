@@ -1,18 +1,24 @@
 package org.gtlp.yasb;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
+import android.view.animation.LinearInterpolator;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class SoundPlayer extends MediaPlayer {
 	public Uri selectedSound;
 	public boolean isPrepared = false;
 	public boolean isInitialized = false;
 	public FragmentActivity viewContainer;
-	private Seeker seeker = new Seeker();
+	private Seeker seeker;
+	private ObjectAnimator objectAnimator;
 
 	public SoundPlayer(FragmentActivity view) {
 		super();
@@ -26,7 +32,13 @@ public class SoundPlayer extends MediaPlayer {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mp.seekTo(0);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					objectAnimator.cancel();
+				} else if (seeker != null) {
+					seeker.pause = true;
+				}
 				((SeekBar) viewContainer.findViewById(R.id.seekBar)).setProgress(0);
+				((TextView) viewContainer.findViewById(R.id.timetext)).setText(getFormattedProgressText());
 				viewContainer.findViewById(R.id.playButton).setEnabled(true);
 				viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
 			}
@@ -35,17 +47,53 @@ public class SoundPlayer extends MediaPlayer {
 		viewContainer = view;
 	}
 
+	public String getFormattedProgressText() {
+		return formatMillis(getCurrentPosition()) + "/" + formatMillis(getDuration());
+	}
+
+	public static String formatMillis(int millis) {
+		int minutes = millis / 1000 / 60;
+		int seconds = millis / 1000;
+		return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+	}
+
 	public void start() {
 		super.start();
 		viewContainer.findViewById(R.id.playButton).setEnabled(false);
 		viewContainer.findViewById(R.id.pauseButton).setEnabled(true);
-		if (seeker.getStatus() != AsyncTask.Status.RUNNING) (seeker = new Seeker()).execute();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			SeekBar seekBar = ((SeekBar) viewContainer.findViewById(R.id.seekBar));
+			seekBar.setMax(getDuration());
+			seekBar.setProgress(getCurrentPosition());
+			objectAnimator = ObjectAnimator.ofInt(viewContainer.findViewById(R.id.seekBar), "progress", getCurrentPosition(), getDuration());
+			objectAnimator.setInterpolator(new LinearInterpolator());
+			objectAnimator.setDuration(getDuration() - getCurrentPosition());
+			objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator animation) {
+					((TextView) viewContainer.findViewById(R.id.timetext)).setText(getFormattedProgressText());
+				}
+			});
+			objectAnimator.start();
+		} else {
+			if (seeker != null) {
+				if (seeker.getStatus() != AsyncTask.Status.RUNNING) {
+					(seeker = new Seeker()).execute();
+				} else {
+					seeker.pause = false;
+				}
+			}
+		}
 	}
 
 	public void pause() {
 		super.pause();
 		viewContainer.findViewById(R.id.playButton).setEnabled(true);
 		viewContainer.findViewById(R.id.pauseButton).setEnabled(false);
-		seeker.cancel(true);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			objectAnimator.cancel();
+		} else {
+			seeker.pause = true;
+		}
 	}
 }

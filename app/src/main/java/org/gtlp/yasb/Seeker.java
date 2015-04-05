@@ -8,13 +8,21 @@ import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
 
 public class Seeker extends AsyncTask<Void, Void, Void> {
 
+	public boolean pause = false;
+
 	@Override
 	protected Void doInBackground(Void... params) {
-		while (!isCancelled()) try {
-			Thread.sleep(66);
-			if ((soundPlayerInstance.isPrepared && soundPlayerInstance.isInitialized) && soundPlayerInstance.isPlaying())
-				publishProgress();
-		} catch (Exception ignored) {
+		while (!isCancelled()) {
+			try {
+				Thread.sleep(66);
+			} catch (Exception e) {
+				SoundActivity.Log("Exception in Seeker: " + e.getCause().getMessage());
+				e.printStackTrace();
+			}
+			if (!pause) {
+				if ((soundPlayerInstance.isPrepared && soundPlayerInstance.isInitialized) && soundPlayerInstance.isPlaying())
+					publishProgress();
+			}
 		}
 		return null;
 	}
@@ -24,12 +32,7 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
 		super.onProgressUpdate(values);
 		((SeekBar) soundPlayerInstance.viewContainer.findViewById(R.id.seekBar)).setMax(soundPlayerInstance.getDuration());
 		((SeekBar) soundPlayerInstance.viewContainer.findViewById(R.id.seekBar)).setProgress(soundPlayerInstance.getCurrentPosition());
-		((TextView) soundPlayerInstance.viewContainer.findViewById(R.id.timetext)).setText(formatMillis(soundPlayerInstance.getCurrentPosition()) + "/" + formatMillis(soundPlayerInstance.getDuration()));
+		((TextView) soundPlayerInstance.viewContainer.findViewById(R.id.timetext)).setText(SoundActivity.soundPlayerInstance.getFormattedProgressText());
 	}
 
-	private String formatMillis(int millis) {
-		int minutes = millis / 1000 / 60;
-		int seconds = millis / 1000;
-		return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
-	}
 }

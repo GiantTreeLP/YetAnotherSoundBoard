@@ -19,10 +19,11 @@
     <string name="pref_update">Update interval</string>
     <string name="pref_update_summ">Set the interval of how often this app checks for updates. Setting this lower than the default value may increase battery and data usage.</string>
     <string name="pref_title">Settings</string>
-    <string name="copyright">GiantTree © 2014. All rights reserved.</string>
+    <string name="copyright">GiantTree © 2015. All rights reserved.\nUses Guava library for Android by Google.</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="connection_error_title">Connection Error!</string>
     <string name="connection_error_text">There was an error connecting to the server. Unfortunately, a connection to the server is required for this app to work.</string>
+    <string name="action_github">View project on GitHub.</string>
 
 </resources>

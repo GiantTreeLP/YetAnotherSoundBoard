@@ -3,6 +3,7 @@ package org.gtlp.yasb;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -106,11 +107,13 @@ public class SoundActivity extends ActionBarActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position) {
 					case 0:
-						Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
-						startActivity(intent);
+						startActivity(new Intent(getBaseContext(), SettingsActivity.class));
 						return;
 					case 1:
 						new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
+						return;
+					case 2:
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")));
 				}
 			}
 		});

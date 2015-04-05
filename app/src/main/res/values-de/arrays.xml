@@ -12,6 +12,7 @@
     <string-array name="sidebar_entries">
         <item>@string/action_settings</item>
         <item>@string/action_about</item>
+        <item>@string/action_github</item>
         <item>@string/copyright</item>
     </string-array>
 </resources>

@@ -55,7 +55,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 		setVisibility(VISIBLE);
 
 		setLayoutParams(params);
-		SoundActivity.Log("Below " + (i > 0 ? getId() - 1 : "Nothing"));
+		//SoundActivity.Log("Below " + (i > 0 ? getId() - 1 : "Nothing"));
 	}
 
 	public void setSound(File u) {
