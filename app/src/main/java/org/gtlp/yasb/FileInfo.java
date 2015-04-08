@@ -21,7 +21,8 @@ public class FileInfo implements Parcelable {
 	public String localHash;
 	public String source;
 	public String name;
-	public String filePath;
+	public String remotePath;
+	public String localpath;
 	public File localFile;
 	public int id;
 	public boolean needsToBeDownloaded = false;
@@ -31,26 +32,28 @@ public class FileInfo implements Parcelable {
 		localHash = in.readString();
 		source = in.readString();
 		name = in.readString();
-		filePath = in.readString();
+		remotePath = in.readString();
+		localpath = in.readString();
 		id = in.readInt();
 		needsToBeDownloaded = in.readByte() != 0;
 
-		localFile = new File(filePath);
+		localFile = new File(localpath);
 	}
 
-	protected FileInfo(String remoteHash, String localHash, String source, String name, String filePath, int id, File file) {
+	protected FileInfo(String remoteHash, String localHash, String source, String name, String remotePath, String localpath, int id, File file) {
 		this.remoteHash = remoteHash;
 		this.localHash = localHash;
 		this.source = source;
 		this.name = name;
-		this.filePath = filePath;
+		this.remotePath = remotePath;
+		this.localpath = localpath;
 		this.id = id;
 		this.localFile = file;
 	}
 
 	@Override
 	public String toString() {
-		return id + ": name=" + name + ", localHash=" + localHash + ", remoteHash=" + remoteHash + ", filePath=" + filePath + ", needsToBeDownloaded=" + needsToBeDownloaded;
+		return id + ": name=" + name + ", localHash=" + localHash + ", remoteHash=" + remoteHash + ", remotePath=" + remotePath + ", localpath=" + localpath + ", needsToBeDownloaded=" + needsToBeDownloaded;
 	}
 
 	@Override
@@ -64,7 +67,8 @@ public class FileInfo implements Parcelable {
 		dest.writeString(localHash);
 		dest.writeString(source);
 		dest.writeString(name);
-		dest.writeString(filePath);
+		dest.writeString(remotePath);
+		dest.writeString(localpath);
 		dest.writeInt(id);
 		dest.writeByte((byte) (needsToBeDownloaded ? 1 : 0));
 	}

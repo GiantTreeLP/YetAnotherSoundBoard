@@ -2,18 +2,16 @@
 <manifest
     package="org.gtlp.yasb"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="309"
-    android:versionName="1.7.288">
+    android:versionCode="343"
+    android:versionName="1.7.322">
 
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="22" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"

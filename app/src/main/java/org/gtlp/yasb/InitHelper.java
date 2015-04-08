@@ -1,7 +1,5 @@
 package org.gtlp.yasb;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -37,10 +35,12 @@ import java.util.Scanner;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
-	public static final String HTTP_SOUNDS_INFO_FILE = "http://gtlp.4b4u.com/getsoundsinfo.php";
+	public static final String SERVER_HOST = "http://gianttree.bplaced.net/";
+	public static final String HTTP_SOUNDS_INFO_FILE = SERVER_HOST + "assets/getsoundsinfo.php";
 	final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static File infoFile;
 	private static File soundsDir;
+	private static boolean isNetworkAvailable = false;
 	public ArrayList<FileInfo> fileInfos = new ArrayList<>();
 	public boolean fileInfoSupplied = false;
 	private ActionBarActivity actionBarActivity;
@@ -110,9 +110,9 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 	}
 
 	private void checkLocalAssets() {
-		boolean download = false;
+		boolean shouldDownload = false;
 		StringBuilder s = new StringBuilder();
-		if (infoFile.exists()) {
+		if (infoFile.exists() && !BuildConfig.DEBUG) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTimeInMillis(infoFile.lastModified());
 			cal.add(GregorianCalendar.HOUR, Integer.parseInt(SoundActivity.preferences.getString("update_interval", "24")));
@@ -130,13 +130,13 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 					e.printStackTrace();
 				}
 			} else {
-				download = true;
+				shouldDownload = true;
 			}
 		} else {
-			download = true;
+			shouldDownload = true;
 		}
-		SoundActivity.Log("Download? " + (download));
-		if (download) {
+		SoundActivity.Log("Download? " + shouldDownload);
+		if (shouldDownload) {
 			s = downloadInfoFile();
 			if (s != null) {
 				SoundActivity.Log(s.toString());
@@ -147,8 +147,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 				JSONArray jsonArray = new JSONArray(s.toString());
 				for (int i = 0; i < jsonArray.length(); i++) {
 					JSONObject array = jsonArray.getJSONObject(i);
-					File file = new File(soundsDir, array.getString("path"));
-					FileInfo fi = new FileInfo(array.getString("hash"), generateHash(file), array.getString("url"), array.getString("name"), file.getPath(), array.getInt("id"), file);
+					File file = new File(soundsDir, array.getString("path").substring(array.getString("path").lastIndexOf("/") + 1));
+					FileInfo fi = new FileInfo(array.getString("hash"), generateHash(file), array.getString("url"), array.getString("name"), array.getString("path"), file.getPath(), array.getInt("id"), file);
 					fileInfos.add(fi);
 				}
 			}
@@ -160,6 +160,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			@Override
 			public int compare(FileInfo lhs, FileInfo rhs) {
 				return lhs.name.compareToIgnoreCase(rhs.name);
+
 			}
 		});
 		for (FileInfo info : fileInfos) {
@@ -169,7 +170,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			}
 		}
 
-		SoundActivity.Log("To download: " + Arrays.toString(FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
+		SoundActivity.Log("To shouldDownload: " + Arrays.toString(FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
 			@Override
 			public boolean apply(FileInfo input) {
 				return input.needsToBeDownloaded;
@@ -178,7 +179,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 	}
 
 	private void downloadMissingAssets() {
-		if (((ConnectivityManager) (actionBarActivity.getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo().isConnected()) {
+		if (isNetworkAvailable) {
 			if (numberOfFilesToDownload > 0) {
 				int index = 0;
 				for (FileInfo info : fileInfos) {
@@ -186,11 +187,11 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 						publishProgress(1, index);
 						index++;
 
-						SoundActivity.Log("Downloading: " + info.filePath);
+						SoundActivity.Log("Downloading: " + info.localpath);
 
 						try {
 							FileOutputStream fos = new FileOutputStream(info.localFile);
-							BufferedInputStream is = OpenHttpConnection("http://gtlp.4b4u.com/assets/sounds/" + info.filePath);
+							BufferedInputStream is = OpenHttpConnection(SERVER_HOST + "assets/yasb/" + info.localpath);
 							byte[] buffer = new byte[8192];
 							int byteCount;
 
@@ -224,6 +225,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 				FileWriter fos = new FileWriter(infoFile);
 				fos.write(s.toString());
 				fos.close();
+				isNetworkAvailable = true;
 				return s;
 			}
 		} catch (IOException e) {

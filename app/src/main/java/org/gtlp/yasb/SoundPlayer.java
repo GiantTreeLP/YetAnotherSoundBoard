@@ -1,5 +1,7 @@
 package org.gtlp.yasb;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.media.AudioManager;
@@ -65,16 +67,24 @@ public class SoundPlayer extends MediaPlayer {
 			SeekBar seekBar = ((SeekBar) viewContainer.findViewById(R.id.seekBar));
 			seekBar.setMax(getDuration());
 			seekBar.setProgress(getCurrentPosition());
-			objectAnimator = ObjectAnimator.ofInt(viewContainer.findViewById(R.id.seekBar), "progress", getCurrentPosition(), getDuration());
+			objectAnimator = ObjectAnimator.ofInt(viewContainer.findViewById(R.id.seekBar), "progress", getCurrentPosition(), getDuration())
+					.setDuration(getDuration() - getCurrentPosition());
 			objectAnimator.setInterpolator(new LinearInterpolator());
-			objectAnimator.setDuration(getDuration() - getCurrentPosition());
 			objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 				@Override
 				public void onAnimationUpdate(ValueAnimator animation) {
 					((TextView) viewContainer.findViewById(R.id.timetext)).setText(getFormattedProgressText());
 				}
 			});
+			objectAnimator.addListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					SoundActivity.Log("Ended: " + System.currentTimeMillis());
+				}
+			});
 			objectAnimator.start();
+			SoundActivity.Log("Start: " + getCurrentPosition() + ", End: " + getDuration() + ", Duration: " + objectAnimator.getDuration());
+			SoundActivity.Log("Start: " + System.currentTimeMillis());
 		} else {
 			if (seeker != null) {
 				if (seeker.getStatus() != AsyncTask.Status.RUNNING) {
