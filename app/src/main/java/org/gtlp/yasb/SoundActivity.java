@@ -88,6 +88,9 @@ public class SoundActivity extends ActionBarActivity {
 		TextView lt = (TextView) findViewById(R.id.textView1);
 		lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
 
+		findViewById(R.id.playButton).setEnabled(false);
+		findViewById(R.id.pauseButton).setEnabled(false);
+
 		AdView adView = (AdView) this.findViewById(R.id.adView);
 		AdRequest.Builder adRequest = new AdRequest.Builder();
 		adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
