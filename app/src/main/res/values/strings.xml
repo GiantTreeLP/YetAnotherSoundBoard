@@ -26,5 +26,6 @@
     <string name="connection_error_text">There was an error connecting to the server. Unfortunately, a connection to the server is required for this app to work.</string>
     <string name="action_github">View project on GitHub.</string>
     <string name="text_changelog">"<![CDATA[<h2>What\'s new:\n</h2><ul><li>Various bug fixes\n</li><li>Enhanced UI-logic\n</li><li>Updated Third-Party libraries\n</li></ul>]]>"</string>
+    <string name="desc_sidebar_bg">Sidebar background</string>
 
 </resources>

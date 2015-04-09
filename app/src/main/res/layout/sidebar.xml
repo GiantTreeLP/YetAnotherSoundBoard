@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="match_parent"
@@ -10,35 +11,49 @@
     tools:showIn="@layout/activity_sound">
 
     <ImageView
+        android:id="@+id/sidebar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/desc_sidebar_bg"
+        android:elevation="-2dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sidebar_bg"/>
+
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@id/sidebar_bg"
         android:layout_alignParentLeft="true"
-        android:layout_gravity="start"
+        android:layout_alignParentStart="true"
+        android:background="@color/background_floating_material_light"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"/>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/imageView"
-        android:layout_gravity="end"
         android:layout_toEndOf="@+id/imageView"
         android:layout_toRightOf="@+id/imageView"
+        android:background="@color/background_floating_material_light"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:choiceMode="singleChoice"
+        android:layout_below="@+id/sidebar_bg"
+        android:choiceMode="none"
         android:elevation="@dimen/cardview_default_elevation"
         android:entries="@array/sidebar_entries"
-        android:smoothScrollbar="true" />
+        android:smoothScrollbar="true"/>
+
 </RelativeLayout>

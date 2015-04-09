@@ -92,7 +92,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		}
 		placeholderFragment.finalView = layout;
 
-		actionBarActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment).commit();
+		actionBarActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment, "placeholderFragment").commit();
 		actionBarActivity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
 		actionBarActivity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
 	}
