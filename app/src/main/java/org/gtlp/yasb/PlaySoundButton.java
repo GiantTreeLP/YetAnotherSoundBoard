@@ -39,7 +39,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
 	public PlaySoundButton(Context applicationContext, ArrayList<FileInfo> fileInfos, TextView dummy, int i) {
 		this(applicationContext, null);
-		setId(UniqueID.counter++);
+		setId(SoundActivity.UniqueId++);
 		info = fileInfos.get(i);
 		setText(info.name);
 		setSound(info.localFile);

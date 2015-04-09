@@ -1,5 +1,7 @@
 package org.gtlp.yasb;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -69,7 +71,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		TextView dummy = new TextView(actionBarActivity.getApplicationContext());
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		dummy.setId(UniqueID.counter++);
+		dummy.setId(SoundActivity.UniqueId++);
 		dummy.setLayoutParams(params);
 		layout.addView(dummy, dummy.getLayoutParams());
 		ArrayList<PlaySoundButton> psb = new ArrayList<>(fileInfos.size());
@@ -111,7 +113,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
 	private void checkLocalAssets() {
 		boolean shouldDownload = false;
-		StringBuilder s = new StringBuilder();
+		StringBuilder s = null;
 		if (infoFile.exists() && !BuildConfig.DEBUG) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTimeInMillis(infoFile.lastModified());
@@ -123,6 +125,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			if (System.currentTimeMillis() < cal.getTimeInMillis()) {
 				try {
 					Scanner scanner = new Scanner(infoFile);
+					s = new StringBuilder();
 					while (scanner.hasNextLine()) {
 						s = s.append(scanner.nextLine());
 					}
@@ -140,6 +143,32 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			s = downloadInfoFile();
 			if (s != null) {
 				SoundActivity.Log(s.toString());
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(actionBarActivity.getApplicationContext());
+				builder.setTitle(R.string.connection_error_title);
+				builder.setMessage(R.string.connection_error_text);
+				builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (infoFile.exists()) {
+							dialog.dismiss();
+						} else {
+							System.exit(0);
+						}
+					}
+				});
+				builder.create();
+				if (infoFile.exists()) {
+					try {
+						Scanner scanner = new Scanner(infoFile);
+						s = new StringBuilder();
+						while (scanner.hasNextLine()) {
+							s = s.append(scanner.nextLine());
+						}
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		try {

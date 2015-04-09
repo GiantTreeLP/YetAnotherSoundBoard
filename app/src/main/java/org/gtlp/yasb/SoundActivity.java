@@ -44,6 +44,7 @@ public class SoundActivity extends ActionBarActivity {
 	public static ArrayList<FileInfo> fileInfoArrayList;
 	public static WebView webView;
 	public static SharedPreferences preferences;
+	public static int UniqueId = 0xF;
 	private InitHelper initHelper;
 	private HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
 	private DrawerLayout drawerLayout;
@@ -54,7 +55,6 @@ public class SoundActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		restoreInstance(savedInstanceState);
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		new NetworkChecker(this).execute();
 		soundPlayerInstance = new SoundPlayer(this);
 		initUI();
 	}
