@@ -220,7 +220,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
 						try {
 							FileOutputStream fos = new FileOutputStream(info.localFile);
-							BufferedInputStream is = OpenHttpConnection(SERVER_HOST + "assets/yasb/" + info.localpath);
+							BufferedInputStream is = OpenHttpConnection(SERVER_HOST + "/assets/yasb/" + info.localpath);
 							byte[] buffer = new byte[8192];
 							int byteCount;
 

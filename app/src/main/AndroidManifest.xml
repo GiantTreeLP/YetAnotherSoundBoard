@@ -2,12 +2,8 @@
 <manifest
     package="org.gtlp.yasb"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="386"
-    android:versionName="1.7.365">
-
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="22" />
+    android:versionCode="300"
+    android:versionName="1.6.300">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
