@@ -1,8 +1,8 @@
 <RelativeLayout
-    android:id="@+id/activity_sound"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
@@ -17,6 +17,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_light"
             android:orientation="vertical">
 
             <com.google.android.gms.ads.AdView
@@ -36,7 +37,6 @@
                 android:layout_below="@+id/adView"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
-                android:elegantTextHeight="true"
                 android:text="@string/text_loading"
                 android:textSize="@dimen/abc_text_size_medium_material"
                 android:textStyle="italic" />
@@ -57,8 +57,8 @@
                 android:layout_alignParentBottom="true" />
 
             <ScrollView
-                android:id="@+id/container"
                 xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/ctrl_container"
@@ -76,12 +76,13 @@
 
                 <ImageButton
                     android:id="@+id/playButton"
+                    style="@style/AppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/bt_play"
                     android:enabled="false"
                     android:src="@android:drawable/ic_media_play"
-                    android:theme="@style/Theme.AppCompat" />
+                    android:theme="@style/AppTheme" />
 
 
                 <ImageButton

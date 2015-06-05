@@ -3,7 +3,7 @@ package org.gtlp.yasb;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Scanner;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
@@ -43,42 +44,77 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 	public static File infoFile;
 	private static File soundsDir;
 	private static boolean isNetworkAvailable = false;
-	public ArrayList<FileInfo> fileInfos = new ArrayList<>();
+	public List<FileInfo> fileInfos = new ArrayList<>();
 	public boolean fileInfoSupplied = false;
-	private ActionBarActivity actionBarActivity;
+	private AppCompatActivity activity;
 	private int numberOfFilesToDownload = 0;
 
-	public InitHelper(ActionBarActivity actionBarActivity) {
-		this.actionBarActivity = actionBarActivity;
-		soundsDir = actionBarActivity.getExternalFilesDir("sounds");
-		infoFile = new File(actionBarActivity.getExternalFilesDir("info"), "info.json");
+	public InitHelper(AppCompatActivity activity) {
+		this.activity = activity;
+		soundsDir = activity.getExternalFilesDir("sounds");
+		infoFile = new File(activity.getExternalFilesDir("info"), "info.json");
+	}
+
+	public static StringBuilder downloadInfoFile() {
+		try {
+			StringBuilder s = new StringBuilder();
+			BufferedInputStream bis = OpenHttpConnection(HTTP_SOUNDS_INFO_FILE);
+			if (bis != null) {
+				Scanner scanner = new Scanner(bis);
+				while (scanner.hasNextLine()) {
+					s = s.append(scanner.nextLine()).append("\n");
+				}
+				SoundActivity.Log(s.toString());
+				FileWriter fos = new FileWriter(infoFile);
+				fos.write(s.toString());
+				fos.close();
+				isNetworkAvailable = true;
+				return s;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static BufferedInputStream OpenHttpConnection(String strURL)
+			throws IOException {
+		HttpURLConnection httpConn = (HttpURLConnection) new URL(strURL).openConnection();
+		httpConn.connect();
+		if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			SoundActivity.Log(httpConn.getResponseMessage());
+			return new BufferedInputStream(httpConn.getInputStream());
+		}
+		return null;
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		SoundActivity.Log("InitHelper start");
 		if (!fileInfoSupplied) {
 			checkLocalAssets();
 			downloadMissingAssets();
 		}
+		SoundActivity.Log("InitHelper end");
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Void result) {
 		PlaceholderFragment placeholderFragment = new PlaceholderFragment();
-		RelativeLayout layout = new RelativeLayout(actionBarActivity.getApplicationContext());
+		RelativeLayout layout = new RelativeLayout(activity.getApplicationContext());
 		layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-		TextView dummy = new TextView(actionBarActivity.getApplicationContext());
+		TextView dummy = new TextView(activity.getApplicationContext());
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		dummy.setId(SoundActivity.UniqueId++);
 		dummy.setLayoutParams(params);
 		layout.addView(dummy, dummy.getLayoutParams());
-		ArrayList<PlaySoundButton> psb = new ArrayList<>(fileInfos.size());
+		List<PlaySoundButton> psb = new ArrayList<>(fileInfos.size());
 		for (int i = 0; i < fileInfos.size(); i++) {
 			if (!fileInfos.get(i).localFile.exists())
 				continue;
-			psb.add(i, new PlaySoundButton(actionBarActivity.getApplicationContext(), fileInfos, dummy, i));
+			psb.add(i, new PlaySoundButton(activity.getApplicationContext(), fileInfos, dummy, i));
 		}
 		for (int i = 1; i < psb.size(); i += 2) {
 			int tempI = (psb.get(i).getText().length() < psb.get(i - 1).getText().length() ? i : i - 1);
@@ -92,22 +128,22 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		}
 		placeholderFragment.finalView = layout;
 
-		actionBarActivity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment, "placeholderFragment").commit();
-		actionBarActivity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
-		actionBarActivity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
+		activity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment, "placeholderFragment").commit();
+		activity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
+		activity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... params) {
 		switch (params[0]) {
 			case 0:
-				actionBarActivity.findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
+				activity.findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
 			case 1:
-				ProgressBar pb = (ProgressBar) actionBarActivity.findViewById(R.id.progressBar1);
+				ProgressBar pb = (ProgressBar) activity.findViewById(R.id.progressBar1);
 				pb.setMax(numberOfFilesToDownload);
 				pb.setProgress(params[1]);
-				TextView tv = (TextView) actionBarActivity.findViewById(R.id.textView1);
-				tv.setText(actionBarActivity.getString(R.string.text_loading).replace("%x", Integer.toString(params[1])).replace("%y", Integer.toString(numberOfFilesToDownload)));
+				TextView tv = (TextView) activity.findViewById(R.id.textView1);
+				tv.setText(activity.getString(R.string.text_loading).replace("%x", Integer.toString(params[1])).replace("%y", Integer.toString(numberOfFilesToDownload)));
 		}
 	}
 
@@ -144,7 +180,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			if (s != null) {
 				SoundActivity.Log(s.toString());
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(actionBarActivity.getApplicationContext());
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity.getApplicationContext());
 				builder.setTitle(R.string.connection_error_title);
 				builder.setMessage(R.string.connection_error_text);
 				builder.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -241,28 +277,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 		}
 	}
 
-	public static StringBuilder downloadInfoFile() {
-		try {
-			StringBuilder s = new StringBuilder();
-			BufferedInputStream bis = OpenHttpConnection(HTTP_SOUNDS_INFO_FILE);
-			if (bis != null) {
-				Scanner scanner = new Scanner(bis);
-				while (scanner.hasNextLine()) {
-					s = s.append(scanner.nextLine()).append("\n");
-				}
-				SoundActivity.Log(s.toString());
-				FileWriter fos = new FileWriter(infoFile);
-				fos.write(s.toString());
-				fos.close();
-				isNetworkAvailable = true;
-				return s;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	private String generateHash(File f) {
 		if (f.exists()) {
 			try {
@@ -280,17 +294,6 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
 			}
 		}
 		return "";
-	}
-
-	public static BufferedInputStream OpenHttpConnection(String strURL)
-			throws IOException {
-		HttpURLConnection httpConn = (HttpURLConnection) new URL(strURL).openConnection();
-		httpConn.connect();
-		if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			SoundActivity.Log(httpConn.getResponseMessage());
-			return new BufferedInputStream(httpConn.getInputStream());
-		}
-		return null;
 	}
 
 	private String bytesToHex(byte[] bytes) {

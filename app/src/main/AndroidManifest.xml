@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="org.gtlp.yasb"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="301"
-    android:versionName="1.5.301">
+    package="org.gtlp.yasb"
+    android:versionCode="380"
+    android:versionName="1.6.380">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,7 +20,6 @@
 
         <activity
             android:name=".SoundActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

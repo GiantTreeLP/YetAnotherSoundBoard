@@ -16,7 +16,7 @@
         android:layout_height="180dp"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/desc_sidebar_bg"
-        android:elevation="-2dp"
+        android:elevation="-4dp"
         android:scaleType="centerCrop"
         android:src="@drawable/sidebar_bg"/>
 
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/sidebar_bg"
         android:choiceMode="none"
-        android:elevation="@dimen/cardview_default_elevation"
+        android:elevation="4dp"
         android:entries="@array/sidebar_entries"
         android:smoothScrollbar="true"/>
 
