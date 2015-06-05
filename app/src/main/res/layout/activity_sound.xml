@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_sound"
@@ -56,14 +55,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true" />
 
-            <ScrollView
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/ctrl_container"
                 android:layout_below="@+id/adView"
-                android:translationZ="-1dp">
+                android:translationZ="-2dp">
 
             </ScrollView>
 
@@ -76,13 +74,11 @@
 
                 <ImageButton
                     android:id="@+id/playButton"
-                    style="@style/AppTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/bt_play"
                     android:enabled="false"
-                    android:src="@android:drawable/ic_media_play"
-                    android:theme="@style/AppTheme" />
+                    android:src="@android:drawable/ic_media_play" />
 
 
                 <ImageButton
@@ -91,8 +87,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/bt_pause"
                     android:enabled="false"
-                    android:src="@android:drawable/ic_media_pause"
-                    android:theme="@style/Theme.AppCompat" />
+                    android:src="@android:drawable/ic_media_pause" />
 
             </TableRow>
 

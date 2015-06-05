@@ -95,7 +95,9 @@ public class SoundActivity extends AppCompatActivity {
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
 
         findViewById(R.id.playButton).setEnabled(false);
+        findViewById(R.id.playButton).setBackgroundColor(getResources().getColor(R.color.primary_dark));
         findViewById(R.id.pauseButton).setEnabled(false);
+        findViewById(R.id.pauseButton).setBackgroundColor(getResources().getColor(R.color.primary_dark));
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
         AdRequest.Builder adRequest = new AdRequest.Builder();
