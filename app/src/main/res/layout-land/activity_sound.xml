@@ -1,8 +1,8 @@
 <RelativeLayout
-    android:id="@+id/activity_sound"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -60,8 +60,8 @@
                 android:layout_toRightOf="@+id/ctrl_container" />
 
             <ScrollView
-                android:id="@+id/container"
                 xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/ctrl_container"
@@ -83,17 +83,17 @@
                     android:id="@+id/playButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sound_button_shape"
                     android:contentDescription="@string/bt_play"
-                    android:src="@android:drawable/ic_media_play"
-                    android:theme="@style/Theme.AppCompat" />
+                    android:src="@android:drawable/ic_media_play" />
 
                 <ImageButton
                     android:id="@+id/pauseButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sound_button_shape"
                     android:contentDescription="@string/bt_pause"
-                    android:src="@android:drawable/ic_media_pause"
-                    android:theme="@style/Theme.AppCompat" />
+                    android:src="@android:drawable/ic_media_pause" />
             </TableRow>
 
             <TextView

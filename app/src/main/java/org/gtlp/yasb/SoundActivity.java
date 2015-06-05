@@ -65,6 +65,15 @@ public class SoundActivity extends AppCompatActivity {
         restoreInstance(savedInstanceState);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (soundPlayerInstance != null) {
+            soundPlayerInstance.release();
+            soundPlayerInstance = null;
+        }
+    }
+
     private void restoreInstance(Bundle savedInstanceState) {
         initHelper = new InitHelper(this);
         if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_SAVED)) {
@@ -95,9 +104,7 @@ public class SoundActivity extends AppCompatActivity {
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
 
         findViewById(R.id.playButton).setEnabled(false);
-        findViewById(R.id.playButton).setBackgroundColor(getResources().getColor(R.color.primary_dark));
         findViewById(R.id.pauseButton).setEnabled(false);
-        findViewById(R.id.pauseButton).setBackgroundColor(getResources().getColor(R.color.primary_dark));
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
         AdRequest.Builder adRequest = new AdRequest.Builder();
@@ -176,17 +183,12 @@ public class SoundActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         actionBarDrawerToggle.syncState();
-        if (initHelper == null) {
-            initHelper = new InitHelper(this);
-            initHelper.execute();
-        }
     }
 
     @Override
     protected void onDestroy() {
         if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
             initHelper.cancel(true);
-        soundPlayerInstance.release();
         super.onDestroy();
     }
 
@@ -219,11 +221,19 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
+        if (initHelper != null && initHelper.getStatus().equals(AsyncTask.Status.RUNNING)) {
             initHelper.cancel(true);
-
+        }
         if (soundPlayerInstance.isPlaying()) {
             soundPlayerInstance.pause();
+        }
+        if (soundPlayerInstance.seeker != null && soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
+            soundPlayerInstance.seeker.pause = true;
+            soundPlayerInstance.seeker.cancel(true);
+        }
+        if (soundPlayerInstance != null) {
+            soundPlayerInstance.release();
+            soundPlayerInstance = null;
         }
     }
 

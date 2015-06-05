@@ -13,7 +13,7 @@ public class SoundPlayer extends MediaPlayer {
 	public boolean isPrepared = false;
 	public boolean isInitialized = false;
 	public FragmentActivity viewContainer;
-	private Seeker seeker;
+	public Seeker seeker;
 
 	public SoundPlayer(FragmentActivity view) {
 		super();
@@ -40,14 +40,14 @@ public class SoundPlayer extends MediaPlayer {
 		viewContainer = view;
 	}
 
-	public String getFormattedProgressText() {
-		return formatMillis(getCurrentPosition()) + "/" + formatMillis(getDuration());
-	}
-
 	public static String formatMillis(int millis) {
 		int minutes = millis / 1000 / 60;
 		int seconds = millis / 1000;
 		return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+	}
+
+	public String getFormattedProgressText() {
+		return formatMillis(getCurrentPosition()) + "/" + formatMillis(getDuration());
 	}
 
 	public void start() {
