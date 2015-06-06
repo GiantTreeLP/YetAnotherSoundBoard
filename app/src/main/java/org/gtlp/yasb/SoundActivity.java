@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -33,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric.sdk.android.Fabric;
+
 public class SoundActivity extends AppCompatActivity {
 
     public static final String YASB = "YASB";
@@ -41,17 +44,17 @@ public class SoundActivity extends AppCompatActivity {
     private static final String KEY_SEEK_MAX = "seekMax";
     private static final String KEY_SEEK_PROGRESS = "seekProgress";
     private static final String KEY_FILE_INFOS = "fileInfos";
-    public static SoundPlayer soundPlayerInstance;
-    public static List<FileInfo> fileInfoArrayList;
     public static WebView webView;
-    public static SharedPreferences preferences;
-    public static int UniqueId = 0xF;
+    public static int uniqueId = 0xF;
+    protected static volatile SoundPlayer soundPlayerInstance;
+    static List<FileInfo> fileInfoArrayList;
+    static SharedPreferences preferences;
     private InitHelper initHelper;
     private Map<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    public static void Log(String message) {
+    public static void log(String message) {
         if (BuildConfig.DEBUG)
             Log.d(YASB, message);
     }
@@ -59,6 +62,7 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         soundPlayerInstance = new SoundPlayer(this);
         initUI();
@@ -81,9 +85,9 @@ public class SoundActivity extends AppCompatActivity {
             ((SeekBar) findViewById(R.id.seekBar)).setProgress(savedInstanceState.getInt(KEY_SEEK_PROGRESS));
             initHelper.fileInfos = savedInstanceState.getParcelableArrayList(KEY_FILE_INFOS);
             initHelper.fileInfoSupplied = true;
-            Log("seekMax: " + savedInstanceState.getInt(KEY_SEEK_MAX));
-            Log("seekProgress: " + savedInstanceState.getInt(KEY_SEEK_PROGRESS));
-            Log("Restored instance");
+            log("seekMax: " + savedInstanceState.getInt(KEY_SEEK_MAX));
+            log("seekProgress: " + savedInstanceState.getInt(KEY_SEEK_PROGRESS));
+            log("Restored instance");
         } else if (fileInfoArrayList != null) {
             initHelper.fileInfos = fileInfoArrayList;
             initHelper.fileInfoSupplied = true;
@@ -94,7 +98,7 @@ public class SoundActivity extends AppCompatActivity {
     private void initUI() {
         setContentView(R.layout.activity_sound);
         try {
-            if (preferences.getInt(PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode || BuildConfig.DEBUG) {
+            if (preferences.getInt(PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
                 new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -136,6 +140,9 @@ public class SoundActivity extends AppCompatActivity {
                         return;
                     case 2:
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")));
+                        return;
+                    default:
+                        return;
                 }
             }
         });
@@ -214,7 +221,7 @@ public class SoundActivity extends AppCompatActivity {
             outState.putInt(KEY_SEEK_PROGRESS, ((SeekBar) findViewById(R.id.seekBar)).getProgress());
             outState.putParcelableArrayList(KEY_FILE_INFOS, new ArrayList<>(initHelper.fileInfos));
             fileInfoArrayList = initHelper.fileInfos;
-            Log("Saved instance");
+            log("Saved instance");
         }
     }
 
@@ -224,14 +231,15 @@ public class SoundActivity extends AppCompatActivity {
         if (initHelper != null && initHelper.getStatus().equals(AsyncTask.Status.RUNNING)) {
             initHelper.cancel(true);
         }
-        if (soundPlayerInstance.isPlaying()) {
-            soundPlayerInstance.pause();
-        }
-        if (soundPlayerInstance.seeker != null && soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
-            soundPlayerInstance.seeker.pause = true;
-            soundPlayerInstance.seeker.cancel(true);
-        }
         if (soundPlayerInstance != null) {
+            if (soundPlayerInstance.isPlaying()) {
+                soundPlayerInstance.pause();
+            }
+            if (soundPlayerInstance.seeker != null && soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
+                soundPlayerInstance.seeker.pause = true;
+                soundPlayerInstance.seeker.cancel(true);
+            }
+
             soundPlayerInstance.release();
             soundPlayerInstance = null;
         }

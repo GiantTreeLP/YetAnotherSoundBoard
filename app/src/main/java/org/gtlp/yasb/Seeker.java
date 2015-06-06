@@ -23,8 +23,8 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
 				if ((soundPlayerInstance.isPrepared && soundPlayerInstance.isInitialized) && soundPlayerInstance.isPlaying())
 					publishProgress();
 			}
-			long toSleep = 16 - (System.nanoTime() - sleepTime) / 1000000;
-			SystemClock.sleep(toSleep > 0 ? toSleep : 16);
+			long toSleep = 19 - (System.nanoTime() - sleepTime) / 1000000;
+			SystemClock.sleep(toSleep > 0 ? toSleep : 19);
 		}
 		return null;
 	}

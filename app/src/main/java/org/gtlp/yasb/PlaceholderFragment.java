@@ -18,7 +18,10 @@ public class PlaceholderFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return finalView;
+		if (finalView != null) {
+			return finalView;
+		}
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
