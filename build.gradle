@@ -63,9 +63,7 @@ allprojects {
     }
 
     tasks.whenTaskAdded { task ->
-        if (task.name == 'generateReleaseBuildConfig') {
-            task.dependsOn 'increaseVersionCode'
-        } else if (task.name == 'generateDebugBuildConfig') {
+        if (task.name == 'generateDebugBuildConfig') {
             task.dependsOn 'increaseDebugVersionCode'
         }
     }

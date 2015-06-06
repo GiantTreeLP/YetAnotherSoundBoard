@@ -3,6 +3,7 @@ package org.gtlp.yasb;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,17 +17,18 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.io.Files;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPSClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -42,6 +44,7 @@ import java.util.Scanner;
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
     public static final String SERVER_HOST = "http://gianttree.bplaced.net/";
+    public static final String FTP_SERVER_HOST = "giant.ddns.net";
     public static final String HTTP_SOUNDS_INFO_FILE = SERVER_HOST + "assets/getsoundsinfo.php";
     final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     private static boolean isNetworkAvailable = false;
@@ -59,45 +62,73 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
     }
 
     public static StringBuilder downloadInfoFile(File infoFile) {
-        BufferedWriter fos = null;
         try {
             StringBuilder s = new StringBuilder();
-            BufferedInputStream bis = openHttpConnection(HTTP_SOUNDS_INFO_FILE);
-            if (bis != null) {
-                Scanner scanner = new Scanner(bis, Charsets.UTF_8.name());
-                while (scanner.hasNextLine()) {
-                    s = s.append(scanner.nextLine()).append("\n");
-                }
-                scanner.close();
-                SoundActivity.log(s.toString());
-                fos = Files.newWriter(infoFile, Charsets.UTF_8);
-                fos.write(s.toString());
-                isNetworkAvailable = true;
-                return s;
+            downloadFile(HTTP_SOUNDS_INFO_FILE, infoFile);
+            for (String line : Files.readLines(infoFile, Charsets.UTF_8)) {
+                s.append(line).append('\n');
             }
+            SoundActivity.log(s.toString());
+            isNetworkAvailable = true;
+            return s;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return null;
     }
 
-    public static BufferedInputStream openHttpConnection(String strURL)
+    public static void downloadFile(String strURL, File dest)
             throws IOException {
-        HttpURLConnection httpConn = (HttpURLConnection) new URL(strURL).openConnection();
-        httpConn.connect();
-        if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            SoundActivity.log(httpConn.getResponseMessage());
-            return new BufferedInputStream(httpConn.getInputStream());
+        InputStream inputStream = null;
+        FTPSClient ftpClient = null;
+        HttpURLConnection httpConn = null;
+        if (strURL.startsWith("ftps")) {
+            ftpClient = new FTPSClient();
+            ftpClient.connect(FTP_SERVER_HOST);
+            ftpClient.login("guest", "aNHUPRGvYCu78huFvxXWQBty");
+            ftpClient.execPBSZ(0);
+            ftpClient.execPROT("P");
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            Uri uri = Uri.parse(strURL);
+            List<String> segments = uri.getPathSegments();
+            for (String segment : segments) {
+                if (segment.equals(uri.getLastPathSegment())) {
+                    break;
+                }
+                ftpClient.changeWorkingDirectory(segment);
+            }
+            SoundActivity.log(ftpClient.getReplyString());
+            inputStream = ftpClient.retrieveFileStream(uri.getLastPathSegment());
+            SoundActivity.log(ftpClient.getReplyString());
+        } else {
+            httpConn = (HttpURLConnection) new URL(strURL).openConnection();
+            httpConn.connect();
+            if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                SoundActivity.log(httpConn.getResponseMessage());
+                inputStream = httpConn.getInputStream();
+            }
         }
-        return null;
+        if (inputStream != null) {
+            int read;
+            byte[] buffer = new byte[1024];
+            FileOutputStream fos = new FileOutputStream(dest);
+            while ((read = inputStream.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+            inputStream.close();
+        }
+        if (strURL.startsWith("ftps")) {
+            if (ftpClient != null) {
+                ftpClient.completePendingCommand();
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+        } else {
+            if (httpConn != null) {
+                httpConn.disconnect();
+            }
+        }
     }
 
     @Override
@@ -272,18 +303,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                         SoundActivity.log("Downloading: " + info.localpath);
 
                         try {
-                            FileOutputStream fos = new FileOutputStream(info.localFile);
-                            BufferedInputStream is = openHttpConnection(info.remotePath);
-                            byte[] buffer = new byte[8192];
-                            int byteCount;
-
-                            if (is != null) {
-                                while ((byteCount = is.read(buffer)) > 0) {
-                                    fos.write(buffer, 0, byteCount);
-                                }
-                                is.close();
-                            }
-                            fos.close();
+                            downloadFile(info.remotePath, info.localFile);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

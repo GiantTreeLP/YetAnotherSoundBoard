@@ -46,6 +46,8 @@ public class SoundActivity extends AppCompatActivity {
     private static final String KEY_FILE_INFOS = "fileInfos";
     public static WebView webView;
     public static int uniqueId = 0xF;
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
     protected static volatile SoundPlayer soundPlayerInstance;
     static List<FileInfo> fileInfoArrayList;
     static SharedPreferences preferences;
@@ -63,6 +65,12 @@ public class SoundActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        analytics = GoogleAnalytics.getInstance(this);
+        analytics.setLocalDispatchPeriod(1800);
+        tracker = analytics.newTracker("UA-26925696-3");
+        tracker.enableExceptionReporting(true);
+        tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         soundPlayerInstance = new SoundPlayer(this);
         initUI();
