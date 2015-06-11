@@ -26,13 +26,10 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -45,36 +42,51 @@ public class SoundActivity extends AppCompatActivity {
     private static final String KEY_SEEK_PROGRESS = "seekProgress";
     private static final String KEY_FILE_INFOS = "fileInfos";
     public static WebView webView;
-    public static int uniqueId = 0xF;
-    public static GoogleAnalytics analytics;
-    public static Tracker tracker;
+    public static volatile int uniqueId = 0xF;
+    protected static GoogleAnalytics analytics;
     protected static volatile SoundPlayer soundPlayerInstance;
+    protected static Tracker tracker;
+    protected static SeekBar seekBar;
+    protected static TextView timeText;
+    protected static TextView current;
+    protected static View playButton;
+    protected static View pauseButton;
     static List<FileInfo> fileInfoArrayList;
     static SharedPreferences preferences;
     private InitHelper initHelper;
-    private Map<TrackerName, Tracker> mTrackers = new HashMap<>();
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     public static void log(String message) {
-        if (BuildConfig.DEBUG)
-            Log.d(YASB, message);
+        Crashlytics.log(Log.DEBUG, YASB, message);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Fabric.with(this, new Crashlytics());
+        setContentView(R.layout.activity_sound);
+        pauseButton = findViewById(R.id.pauseButton);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        playButton = findViewById(R.id.playButton);
+        timeText = (TextView) findViewById(R.id.timetext);
+        current = (TextView) findViewById(R.id.current);
+        if (soundPlayerInstance != null) {
+            soundPlayerInstance.release();
+        }
+        soundPlayerInstance = new SoundPlayer();
+        initUI();
+        restoreInstance(savedInstanceState);
+
         analytics = GoogleAnalytics.getInstance(this);
+        analytics.enableAutoActivityReports(getApplication());
         analytics.setLocalDispatchPeriod(1800);
+        analytics.setAppOptOut(preferences.getBoolean("opt_out", false));
         tracker = analytics.newTracker("UA-26925696-3");
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
         tracker.enableAutoActivityTracking(true);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        soundPlayerInstance = new SoundPlayer(this);
-        initUI();
-        restoreInstance(savedInstanceState);
     }
 
     @Override
@@ -89,8 +101,10 @@ public class SoundActivity extends AppCompatActivity {
     private void restoreInstance(Bundle savedInstanceState) {
         initHelper = new InitHelper(this);
         if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_SAVED)) {
-            ((SeekBar) findViewById(R.id.seekBar)).setMax(savedInstanceState.getInt(KEY_SEEK_MAX));
-            ((SeekBar) findViewById(R.id.seekBar)).setProgress(savedInstanceState.getInt(KEY_SEEK_PROGRESS));
+            if (seekBar != null) {
+                seekBar.setMax(savedInstanceState.getInt(KEY_SEEK_MAX));
+                seekBar.setProgress(savedInstanceState.getInt(KEY_SEEK_PROGRESS));
+            }
             initHelper.fileInfos = savedInstanceState.getParcelableArrayList(KEY_FILE_INFOS);
             initHelper.fileInfoSupplied = true;
             log("seekMax: " + savedInstanceState.getInt(KEY_SEEK_MAX));
@@ -104,7 +118,6 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        setContentView(R.layout.activity_sound);
         try {
             if (preferences.getInt(PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
                 new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
@@ -112,11 +125,10 @@ public class SoundActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        TextView lt = (TextView) findViewById(R.id.textView1);
+        TextView lt = (TextView) findViewById(R.id.textProgress);
         lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
-
-        findViewById(R.id.playButton).setEnabled(false);
-        findViewById(R.id.pauseButton).setEnabled(false);
+        playButton.setEnabled(false);
+        pauseButton.setEnabled(false);
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
         AdRequest.Builder adRequest = new AdRequest.Builder();
@@ -155,20 +167,24 @@ public class SoundActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPlayerInstance.start();
+                if (soundPlayerInstance != null && !soundPlayerInstance.isPlaying()) {
+                    soundPlayerInstance.start();
+                }
             }
         });
 
-        findViewById(R.id.pauseButton).setOnClickListener(new View.OnClickListener() {
+        pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                soundPlayerInstance.pause();
+                if (soundPlayerInstance != null && soundPlayerInstance.isPlaying()) {
+                    soundPlayerInstance.pause();
+                }
             }
         });
-        ((SeekBar) findViewById(R.id.seekBar)).setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+        seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             boolean oldState;
 
             @Override
@@ -225,8 +241,8 @@ public class SoundActivity extends AppCompatActivity {
     private void saveInstance(Bundle outState) {
         if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.FINISHED) {
             outState.putBoolean(KEY_SAVED, true);
-            outState.putInt(KEY_SEEK_MAX, ((SeekBar) findViewById(R.id.seekBar)).getMax());
-            outState.putInt(KEY_SEEK_PROGRESS, ((SeekBar) findViewById(R.id.seekBar)).getProgress());
+            outState.putInt(KEY_SEEK_MAX, seekBar.getMax());
+            outState.putInt(KEY_SEEK_PROGRESS, seekBar.getProgress());
             outState.putParcelableArrayList(KEY_FILE_INFOS, new ArrayList<>(initHelper.fileInfos));
             fileInfoArrayList = initHelper.fileInfos;
             log("Saved instance");
@@ -259,22 +275,4 @@ public class SoundActivity extends AppCompatActivity {
         saveInstance(outState);
     }
 
-    synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            analytics.setAppOptOut(preferences.getBoolean("opt_out", false));
-            if (BuildConfig.DEBUG) {
-                analytics.setDryRun(true);
-                analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
-            }
-            Tracker t = analytics.newTracker(R.xml.app_tracker);
-            t.enableAdvertisingIdCollection(true);
-            mTrackers.put(trackerId, t);
-        }
-        return mTrackers.get(trackerId);
-    }
-
-    public enum TrackerName {
-        APP_TRACKER
-    }
 }

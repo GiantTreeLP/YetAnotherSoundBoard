@@ -3,7 +3,6 @@ package org.gtlp.yasb;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,8 +16,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.io.Files;
 
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPSClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,18 +31,20 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class InitHelper extends AsyncTask<Void, Integer, Void> {
 
-    public static final String SERVER_HOST = "http://gianttree.bplaced.net/";
-    public static final String FTP_SERVER_HOST = "giant.ddns.net";
-    public static final String HTTP_SOUNDS_INFO_FILE = SERVER_HOST + "assets/getsoundsinfo.php";
+    public static final String SERVER_HOST = "http://giant.111mb.de/";
+    public static final String HTTP_SOUNDS_INFO_FILE = SERVER_HOST + "getsoundsinfo.php";
     final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     private static boolean isNetworkAvailable = false;
     public List<FileInfo> fileInfos = new ArrayList<>();
@@ -77,57 +76,34 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         return null;
     }
 
-    public static void downloadFile(String strURL, File dest)
-            throws IOException {
+    public static void downloadFile(String strURL, File dest) {
         InputStream inputStream = null;
-        FTPSClient ftpClient = null;
-        HttpURLConnection httpConn = null;
-        if (strURL.startsWith("ftps")) {
-            ftpClient = new FTPSClient();
-            ftpClient.connect(FTP_SERVER_HOST);
-            ftpClient.login("guest", "aNHUPRGvYCu78huFvxXWQBty");
-            ftpClient.execPBSZ(0);
-            ftpClient.execPROT("P");
-            ftpClient.enterLocalPassiveMode();
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            Uri uri = Uri.parse(strURL);
-            List<String> segments = uri.getPathSegments();
-            for (String segment : segments) {
-                if (segment.equals(uri.getLastPathSegment())) {
-                    break;
-                }
-                ftpClient.changeWorkingDirectory(segment);
-            }
-            SoundActivity.log(ftpClient.getReplyString());
-            inputStream = ftpClient.retrieveFileStream(uri.getLastPathSegment());
-            SoundActivity.log(ftpClient.getReplyString());
-        } else {
+        HttpURLConnection httpConn;
+        try {
             httpConn = (HttpURLConnection) new URL(strURL).openConnection();
             httpConn.connect();
+            SoundActivity.log(httpConn.getResponseMessage());
             if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                SoundActivity.log(httpConn.getResponseMessage());
                 inputStream = httpConn.getInputStream();
             }
-        }
-        if (inputStream != null) {
-            int read;
-            byte[] buffer = new byte[1024];
-            FileOutputStream fos = new FileOutputStream(dest);
-            while ((read = inputStream.read(buffer)) > 0) {
-                fos.write(buffer, 0, read);
+            if (inputStream != null) {
+                FileOutputStream fos = new FileOutputStream(dest);
+                int numRead;
+                byte[] buffer = new byte[1024];
+                try {
+                    while ((numRead = inputStream.read(buffer)) >= 0) {
+                        fos.write(buffer, 0, numRead);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    fos.close();
+                }
+                inputStream.close();
             }
-            inputStream.close();
-        }
-        if (strURL.startsWith("ftps")) {
-            if (ftpClient != null) {
-                ftpClient.completePendingCommand();
-                ftpClient.logout();
-                ftpClient.disconnect();
-            }
-        } else {
-            if (httpConn != null) {
-                httpConn.disconnect();
-            }
+            httpConn.disconnect();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 
@@ -147,7 +123,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         PlaceholderFragment placeholderFragment = new PlaceholderFragment();
         RelativeLayout layout = new RelativeLayout(activity.getApplicationContext());
         layout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        TextView dummy = new TextView(activity.getApplicationContext());
+        View dummy = new android.support.v4.widget.Space(activity.getApplicationContext());
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         dummy.setId(SoundActivity.uniqueId++);
@@ -157,7 +133,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         for (int i = 0; i < fileInfos.size(); i++) {
             if (!fileInfos.get(i).localFile.exists())
                 continue;
-            psb.add(i, new PlaySoundButton(activity.getApplicationContext(), fileInfos, dummy, i));
+            psb.add(i, new PlaySoundButton(activity.getApplicationContext(), fileInfos.get(i), dummy, i));
         }
         for (int i = 1; i < psb.size(); i += 2) {
             int tempI = (psb.get(i).getText().length() < psb.get(i - 1).getText().length() ? i : i - 1);
@@ -172,27 +148,18 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
         placeholderFragment.finalView = layout;
 
         activity.getSupportFragmentManager().beginTransaction().add(R.id.container, placeholderFragment, "placeholderFragment").commit();
-        activity.findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
+        activity.findViewById(R.id.textProgress).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.progressBar1).setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onProgressUpdate(Integer... params) {
-        switch (params[0]) {
-            case 0:
-                activity.findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
-                return;
-            case 1:
-                ProgressBar pb = (ProgressBar) activity.findViewById(R.id.progressBar1);
-                pb.setMax(numberOfFilesToDownload);
-                pb.setProgress(params[1]);
-                TextView tv = (TextView) activity.findViewById(R.id.textView1);
-                tv.setText(activity.getString(R.string.text_loading).replace("%x", Integer.toString(params[1])).replace("%y", Integer.toString(numberOfFilesToDownload)));
-                return;
-            default:
-                super.onProgressUpdate(params);
-                return;
-        }
+        super.onProgressUpdate(params);
+        ProgressBar progressBar = (ProgressBar) activity.findViewById(R.id.progressBar1);
+        TextView textView = (TextView) activity.findViewById(R.id.textProgress);
+        progressBar.setMax(params[1]);
+        progressBar.setProgress(params[0]);
+        textView.setText(activity.getString(R.string.text_loading).replace("%x", Integer.toString(params[0])).replace("%y", Integer.toString(params[1])));
     }
 
     private void checkLocalAssets() {
@@ -241,7 +208,7 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                         }
                     }
                 });
-                builder.create();
+                builder.create().show();
                 if (infoFile.exists()) {
                     try {
                         Scanner scanner = new Scanner(infoFile, Charsets.UTF_8.name());
@@ -260,7 +227,8 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
                 JSONArray jsonArray = new JSONArray(s.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject array = jsonArray.getJSONObject(i);
-                    File file = new File(soundsDir, array.getString("path").substring(array.getString("path").lastIndexOf("/") + 1));
+                    publishProgress(i, jsonArray.length());
+                    File file = new File(soundsDir, array.getString("path").substring(array.getString("path").lastIndexOf(File.separatorChar) + 1));
                     FileInfo fi = new FileInfo(array.getString("hash"), generateHash(file), array.getString("url"), array.getString("name"), array.getString("path"), file.getPath(), array.getInt("id"), file);
                     fileInfos.add(fi);
                 }
@@ -283,32 +251,44 @@ public class InitHelper extends AsyncTask<Void, Integer, Void> {
             }
         }
 
-        SoundActivity.log("To shouldDownload: " + Arrays.toString(FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
+        SoundActivity.log("To download:" + FluentIterable.from(fileInfos).filter(new Predicate<FileInfo>() {
             @Override
             public boolean apply(FileInfo input) {
                 return input.needsToBeDownloaded;
             }
-        }).toArray(FileInfo.class)));
+        }).toString());
     }
 
     private void downloadMissingAssets() {
         if (isNetworkAvailable) {
             if (numberOfFilesToDownload > 0) {
-                int index = 0;
-                for (FileInfo info : fileInfos) {
+                final int[] index = {0};
+                ExecutorService threads = Executors.newFixedThreadPool(4);
+                List<Future> futures = new ArrayList<>();
+                for (final FileInfo info : fileInfos) {
                     if (info.needsToBeDownloaded) {
-                        publishProgress(1, index);
-                        index++;
-
-                        SoundActivity.log("Downloading: " + info.localpath);
-
+                        futures.add(threads.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                SoundActivity.log("Downloading: " + info.localpath);
+                                downloadFile(info.remotePath, info.localFile);
+                                index[0]++;
+                                SoundActivity.log("Thread no. " + index[0] + " done");
+                                publishProgress(index[0], numberOfFilesToDownload);
+                            }
+                        }));
+                    }
+                }
+                try {
+                    for (Future f : futures) {
                         try {
-                            downloadFile(info.remotePath, info.localFile);
-                        } catch (IOException e) {
+                            SoundActivity.log(f.get() == null ? f.toString() : "Not successful");
+                        } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
                     }
-                    publishProgress(1, index);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }

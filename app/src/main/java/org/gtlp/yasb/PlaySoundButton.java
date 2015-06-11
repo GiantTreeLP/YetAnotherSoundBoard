@@ -8,18 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static android.view.View.OnClickListener;
 import static android.widget.RemoteViews.RemoteView;
-import static org.gtlp.yasb.SoundActivity.TrackerName;
 import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
 
 @RemoteView
@@ -38,10 +34,10 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         setOnLongClickListener(this);
     }
 
-    public PlaySoundButton(Context applicationContext, List<FileInfo> fileInfos, TextView dummy, int i) {
+    public PlaySoundButton(Context applicationContext, FileInfo fileInfo, View dummy, int i) {
         this(applicationContext, null);
         setId(SoundActivity.uniqueId++);
-        info = fileInfos.get(i);
+        this.info = fileInfo;
         setText(info.name);
         setSound(info.localFile);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -58,8 +54,10 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         setLayoutParams(params);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setBackground(applicationContext.getDrawable(R.drawable.sound_button_shape));
+        } else {
+            setBackgroundResource(R.drawable.sound_button_shape);
         }
-        //SoundActivity.log("Below " + (i > 0 ? getId() - 1 : "Nothing"));
+        SoundActivity.log("Below " + (i > 0 ? getId() - 1 : "Nothing"));
     }
 
     public void setSound(File u) {
@@ -69,36 +67,37 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     @Override
     public void onClick(View v) {
-        Tracker t = ((SoundActivity) soundPlayerInstance.viewContainer).getTracker(TrackerName.APP_TRACKER);
-        t.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(info.name).build());
-        if (soundPlayerInstance.selectedSound == resId) {
-            soundPlayerInstance.seekTo(0);
-            soundPlayerInstance.start();
-            return;
-        } else if (soundPlayerInstance != null) {
-            soundPlayerInstance.stop();
+        SoundActivity.log("Hit " + resId.toString());
+        SoundActivity.log("SoundPlayer instance is: " + soundPlayerInstance.toString());
+        if (SoundActivity.tracker != null) {
+            SoundActivity.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
+            SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(info.name).build());
         }
-        ((TextView) soundPlayerInstance.viewContainer.findViewById(R.id.current)).setText(getText());
-        try {
-            soundPlayerInstance.reset();
-            soundPlayerInstance.setDataSource(v.getContext(), resId);
-            soundPlayerInstance.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (soundPlayerInstance != null) {
+            try {
+                soundPlayerInstance.playSound(getContext(), resId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            soundPlayerInstance = new SoundPlayer();
+            try {
+                soundPlayerInstance.playSound(getContext(), resId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        soundPlayerInstance.selectedSound = resId;
-        soundPlayerInstance.isInitialized = true;
-        soundPlayerInstance.start();
     }
 
     @Override
     public boolean onLongClick(View v) {
         InfoDialogFragment idf = new InfoDialogFragment();
-        idf.setInfo(info, soundPlayerInstance.viewContainer);
-        idf.show(soundPlayerInstance.viewContainer.getSupportFragmentManager(), "InfoDialogFragment");
-        Tracker t = ((SoundActivity) soundPlayerInstance.viewContainer).getTracker(TrackerName.APP_TRACKER);
-        t.setScreenName("InfoDialog-".concat(info.name));
-        t.send(new HitBuilders.AppViewBuilder().build());
+        idf.setInfo(info, getContext());
+        idf.show(idf.getFragmentManager(), "InfoDialogFragment");
+        if (SoundActivity.tracker != null) {
+            SoundActivity.tracker.setScreenName("InfoDialog-".concat(info.name));
+            SoundActivity.tracker.send(new HitBuilders.AppViewBuilder().build());
+        }
         return true;
     }
 }

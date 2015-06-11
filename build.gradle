@@ -61,10 +61,4 @@ allprojects {
         println(":incrementVersionName - new versionName=" + mNextVersionName)
         manifestFile.write(manifestContent);
     }
-
-    tasks.whenTaskAdded { task ->
-        if (task.name == 'generateDebugBuildConfig') {
-            task.dependsOn 'increaseDebugVersionCode'
-        }
-    }
 }

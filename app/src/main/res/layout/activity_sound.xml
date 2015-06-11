@@ -16,7 +16,6 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_light"
             android:orientation="vertical">
 
             <com.google.android.gms.ads.AdView
@@ -30,7 +29,7 @@
                 ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/textProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/adView"
@@ -47,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/textView1" />
+                android:layout_below="@+id/textProgress" />
 
             <SeekBar
                 android:id="@+id/seekBar"

@@ -1,8 +1,8 @@
 package org.gtlp.yasb;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +16,7 @@ public class InfoDialogFragment extends DialogFragment {
 
 	private String message = "";
 
-	public void setInfo(FileInfo info, Activity activity) {
+	public void setInfo(FileInfo info, Context activity) {
 		message = activity.getString(R.string.msg_filename) + info.localFile.getName() + "\n\n";
 		message += activity.getString(R.string.msg_name) + info.name + "\n\n";
 		message += activity.getString(R.string.msg_source) + info.source + "\n\n";
