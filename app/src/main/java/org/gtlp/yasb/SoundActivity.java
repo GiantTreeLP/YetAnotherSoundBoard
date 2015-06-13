@@ -79,14 +79,14 @@ public class SoundActivity extends AppCompatActivity {
         initUI();
         restoreInstance(savedInstanceState);
 
-        analytics = GoogleAnalytics.getInstance(this);
+        /*analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(getApplication());
         analytics.setLocalDispatchPeriod(1800);
         analytics.setAppOptOut(preferences.getBoolean("opt_out", false));
         tracker = analytics.newTracker("UA-26925696-3");
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
-        tracker.enableAutoActivityTracking(true);
+        tracker.enableAutoActivityTracking(true);*/
     }
 
     @Override

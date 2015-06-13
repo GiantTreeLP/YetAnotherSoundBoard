@@ -25,7 +25,7 @@
     <string name="connection_error_title">Connection Error!</string>
     <string name="connection_error_text">There was an error connecting to the server. Unfortunately, a connection to the server is required for this app to work.</string>
     <string name="action_github">View project on GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>What\'s new:\n</h2><h3>Version 1.7:</h3><ul><li>New fresh green design!</li><li>Sounds are now stored on internal storage</li><li>Numerous bug fixes</li><li>Implementation of Crashlytics to investigate any future application crashes</li></ul><h3>Version 1.6:</h3><ul><li>Various bug fixes\n</li><li>Enhanced UI-logic\n</li><li>Updated Third-Party libraries\n</li></ul>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>What\'s new:</h2><h3>Version 1.8:</h3>We are very sorry for any crashes and tried our best to fix those issues.<ul><li>Hardened code to not crash when an unpredictable error occurs.</li><li>Added support for the new theme on older Android versions.</li><li>Updated the loading routine.</li><li>Removed Google Analytics because of unpredictable crashes</li><li>More in-depth crash analysis with Fabric and Crashlytics</li></ul><h3>Version 1.7:</h3><ul><li>New fresh green design!</li><li>Sounds are now stored on internal storage</li><li>Numerous bug fixes</li><li>Implementation of Crashlytics to investigate any future application crashes</li></ul><h3>Version 1.6:</h3><ul><li>Various bug fixes\n</li><li>Enhanced UI-logic\n</li><li>Updated Third-Party libraries\n</li></ul>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar background</string>
 
 </resources>
