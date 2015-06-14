@@ -2,15 +2,11 @@
 <resources>
     <string name="app_name">YetAnotherSoundBoard</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="text_loading">%x von %y Dateien geladen.</string>
-    <string name="no_network">Fehler beim Laden: Keine Netzwerkverbindung vorhanden.</string>
     <string name="bt_play">Play</string>
     <string name="bt_pause">Pause</string>
     <string name="dialog_info_title">Information</string>
     <string name="msg_name">"Name: "</string>
-    <string name="msg_filename">"Dateiname: "</string>
     <string name="msg_source">"Quelle: "</string>
-    <string name="msg_hash">"Prüfsumme: "</string>
     <string name="action_about">Über</string>
     <string name="dialog_about_title">Über…</string>
     <string name="text_about">"Über diese App:\n\nDiese App wurde mit Android Studio erstellt.\n\nVielen Dank an Alle, die die Töne hochgeladen haben, um unser Leben noch lustiger zu gestalten!"</string>
@@ -22,9 +18,7 @@
     <string name="copyright">GiantTree © 2015. Alle Rechte vorbehalten.\nBenutzt Teile der Guava-Bibliothek für Android von Google.</string>
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
-    <string name="connection_error_title">Verbindungsfehler!</string>
-    <string name="connection_error_text">Die Verbindung zum Server ist fehlgeschlagen. Leider ist eine solche Verbindung notwendig, damit diese App funktioniert.</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Version 1.8:</h3>Wir entschuldigen uns für alle Abstürze in der letzten Version, wir taten unser Bestes, um die Fehler in dieser Version zu beheben.<ul><li>Der Code wurde überarbeitet, um bei unvorhersehbaren Fehlern nicht abzustürzen.</li><li>Das neue Design ist nun auch auf älteren Android Versionen sichtbar.</li><li>Die Ladeprozedur wurde überarbeitet.</li><li>Google Analytics wurde wegen Abstürzen entfernt.</li><li>Tiefere Analyse von Fehlern und Abstürzen mit Hilfe von Fabric und Crashlytics.</li></ul><h3>Version 1.7:</h3><ul><li>Neues frisches, gr&uuml;nes Aussehen!</li><li>T&ouml;ne werden auf dem internen Speicher gespeichert</li><li>Zahlreiche Fehlerbehebungen</li><li>Einf&uuml;hrung von Crashlytics, um zuk&uuml;nftige Fehler schneller zu beheben</li></ul><h3>Version 1.6:</h3><ul><li>Zahlreiche Fehlerbehebungen\n</li><li>Verbesserte Benutzeroberfl&auml;chenlogik\n</li><li>Aktualisierte Bibliotheken Dritter\n</li></ul>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neuer <b>Offline-Modus!</b></h3><p>Wegen der großen Zahl an Nutzern, die zunehmend Probleme mit der alten Methode hatten, wechseln wir zum Offline-Modus. Mehr Arbeit f&uuml;r uns, aber es zahlt sich aus!</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar Hintergrund</string>
 </resources>
