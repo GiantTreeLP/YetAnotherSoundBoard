@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,19 +27,12 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.fabric.sdk.android.Fabric;
 
 public class SoundActivity extends AppCompatActivity {
 
     public static final String YASB = "YASB";
     public static final String PREFKEY_VERSION_CODE = "versionCode";
-    private static final String KEY_SAVED = "saved";
-    private static final String KEY_SEEK_MAX = "seekMax";
-    private static final String KEY_SEEK_PROGRESS = "seekProgress";
-    private static final String KEY_FILE_INFOS = "fileInfos";
     public static WebView webView;
     public static volatile int uniqueId = 0xF;
     protected static GoogleAnalytics analytics;
@@ -51,9 +43,7 @@ public class SoundActivity extends AppCompatActivity {
     protected static TextView current;
     protected static View playButton;
     protected static View pauseButton;
-    static List<FileInfo> fileInfoArrayList;
     static SharedPreferences preferences;
-    private InitHelper initHelper;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -77,7 +67,6 @@ public class SoundActivity extends AppCompatActivity {
         }
         soundPlayerInstance = new SoundPlayer();
         initUI();
-        restoreInstance(savedInstanceState);
 
         /*analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(getApplication());
@@ -98,25 +87,6 @@ public class SoundActivity extends AppCompatActivity {
         }
     }
 
-    private void restoreInstance(Bundle savedInstanceState) {
-        initHelper = new InitHelper(this);
-        if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_SAVED)) {
-            if (seekBar != null) {
-                seekBar.setMax(savedInstanceState.getInt(KEY_SEEK_MAX));
-                seekBar.setProgress(savedInstanceState.getInt(KEY_SEEK_PROGRESS));
-            }
-            initHelper.fileInfos = savedInstanceState.getParcelableArrayList(KEY_FILE_INFOS);
-            initHelper.fileInfoSupplied = true;
-            log("seekMax: " + savedInstanceState.getInt(KEY_SEEK_MAX));
-            log("seekProgress: " + savedInstanceState.getInt(KEY_SEEK_PROGRESS));
-            log("Restored instance");
-        } else if (fileInfoArrayList != null) {
-            initHelper.fileInfos = fileInfoArrayList;
-            initHelper.fileInfoSupplied = true;
-        }
-        initHelper.execute();
-    }
-
     private void initUI() {
         try {
             if (preferences.getInt(PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
@@ -125,8 +95,6 @@ public class SoundActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        TextView lt = (TextView) findViewById(R.id.textProgress);
-        lt.setText(getText(R.string.text_loading).toString().replace("%x", "0").replace("%y", "0"));
         playButton.setEnabled(false);
         pauseButton.setEnabled(false);
 
@@ -135,8 +103,6 @@ public class SoundActivity extends AppCompatActivity {
         adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
         adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
         adView.loadAd(adRequest.build());
-
-        webView = new WebView(getApplicationContext());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
         setSupportActionBar(toolbar);
@@ -217,13 +183,6 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.RUNNING)
-            initHelper.cancel(true);
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
@@ -233,46 +192,20 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        saveInstance(outState);
-    }
-
-    private void saveInstance(Bundle outState) {
-        if (initHelper != null && initHelper.getStatus() == AsyncTask.Status.FINISHED) {
-            outState.putBoolean(KEY_SAVED, true);
-            outState.putInt(KEY_SEEK_MAX, seekBar.getMax());
-            outState.putInt(KEY_SEEK_PROGRESS, seekBar.getProgress());
-            outState.putParcelableArrayList(KEY_FILE_INFOS, new ArrayList<>(initHelper.fileInfos));
-            fileInfoArrayList = initHelper.fileInfos;
-            log("Saved instance");
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        if (initHelper != null && initHelper.getStatus().equals(AsyncTask.Status.RUNNING)) {
-            initHelper.cancel(true);
-        }
         if (soundPlayerInstance != null) {
-            if (soundPlayerInstance.isPlaying()) {
-                soundPlayerInstance.pause();
-            }
             if (soundPlayerInstance.seeker != null && soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
                 soundPlayerInstance.seeker.pause = true;
                 soundPlayerInstance.seeker.cancel(true);
+            }
+            if (soundPlayerInstance.isPlaying()) {
+                soundPlayerInstance.pause();
             }
 
             soundPlayerInstance.release();
             soundPlayerInstance = null;
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        saveInstance(outState);
     }
 
 }
