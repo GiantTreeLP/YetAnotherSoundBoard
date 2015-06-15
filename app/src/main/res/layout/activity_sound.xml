@@ -1,12 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:psb="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_sound"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    tools:context=".SoundActivity.PlaceHolderFragment">
+    android:fitsSystemWindows="false">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -159,7 +157,7 @@
                             android:layout_column="0"
                             android:layout_weight="1"
                             android:background="@drawable/sound_button_shape"
-                            android:text="Darude_DankStorm"
+                            android:text="Darude DankStorm"
                             android:textColor="#ffffff"
                             psb:url="https://www.youtube.com/watch?v=u9ymUX1fJLw" />
 
@@ -549,6 +547,23 @@
                             android:text="Shots fired"
                             android:textColor="#ffffff"
                             psb:url="http://soundboard.panictank.net/SHOTS%20FIRED.mp3" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <org.gtlp.yasb.PlaySoundButton
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_weight="1"
+                            android:background="@drawable/sound_button_shape"
+                            android:text="Turn down for what"
+                            android:textColor="#ffffff"
+                            psb:url="http://montageparodies.net/Turn%20Down%20For%20What.mp3" />
+
+
                     </TableRow>
 
                 </TableLayout>

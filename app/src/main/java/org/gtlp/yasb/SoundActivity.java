@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -24,8 +23,9 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -33,39 +33,44 @@ public class SoundActivity extends AppCompatActivity {
 
     public static final String YASB = "YASB";
     public static final String PREFKEY_VERSION_CODE = "versionCode";
-    public static WebView webView;
-    public static volatile int uniqueId = 0xF;
-    protected static GoogleAnalytics analytics;
-    protected static volatile SoundPlayer soundPlayerInstance;
+    protected static final AtomicReference<SoundPlayer> soundPlayerInstance = new AtomicReference<>();
+    protected static int uniqueId = 0xF;
     protected static Tracker tracker;
-    protected static SeekBar seekBar;
-    protected static TextView timeText;
     protected static TextView current;
-    protected static View playButton;
-    protected static View pauseButton;
+    static SeekBar seekBar;
+    static TextView timeText;
+    static View playButton;
+    static View pauseButton;
     static SharedPreferences preferences;
+    private static Crashlytics crashlytics;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
+    public static void setUniqueId(int uniqueId) {
+        SoundActivity.uniqueId = uniqueId;
+    }
+
     public static void log(String message) {
-        Crashlytics.log(Log.DEBUG, YASB, message);
+        if (crashlytics != null && crashlytics.core != null) {
+            crashlytics.core.log(Log.DEBUG, YASB, message);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, (crashlytics = new Crashlytics()));
         setContentView(R.layout.activity_sound);
         pauseButton = findViewById(R.id.pauseButton);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
         timeText = (TextView) findViewById(R.id.timetext);
         current = (TextView) findViewById(R.id.current);
-        if (soundPlayerInstance != null) {
-            soundPlayerInstance.release();
+        if (soundPlayerInstance.get() != null) {
+            soundPlayerInstance.get().release();
         }
-        soundPlayerInstance = new SoundPlayer();
+        soundPlayerInstance.set(new SoundPlayer());
         initUI();
 
         /*analytics = GoogleAnalytics.getInstance(this);
@@ -81,9 +86,9 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (soundPlayerInstance != null) {
-            soundPlayerInstance.release();
-            soundPlayerInstance = null;
+        if (soundPlayerInstance.get() != null) {
+            soundPlayerInstance.get().release();
+            soundPlayerInstance.set(null);
         }
     }
 
@@ -136,8 +141,8 @@ public class SoundActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (soundPlayerInstance != null && !soundPlayerInstance.isPlaying()) {
-                    soundPlayerInstance.start();
+                if (soundPlayerInstance.get() != null && !soundPlayerInstance.get().isPlaying()) {
+                    soundPlayerInstance.get().start();
                 }
             }
         });
@@ -145,8 +150,8 @@ public class SoundActivity extends AppCompatActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (soundPlayerInstance != null && soundPlayerInstance.isPlaying()) {
-                    soundPlayerInstance.pause();
+                if (soundPlayerInstance.get() != null && soundPlayerInstance.get().isPlaying()) {
+                    soundPlayerInstance.get().pause();
                 }
             }
         });
@@ -155,22 +160,22 @@ public class SoundActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && soundPlayerInstance != null)
-                    soundPlayerInstance.seekTo(progress);
+                if (fromUser && soundPlayerInstance.get() != null)
+                    soundPlayerInstance.get().seekTo(progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if (soundPlayerInstance != null) {
-                    oldState = soundPlayerInstance.isPlaying();
-                    soundPlayerInstance.pause();
+                if (soundPlayerInstance.get() != null) {
+                    oldState = soundPlayerInstance.get().isPlaying();
+                    soundPlayerInstance.get().pause();
                 }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (oldState && soundPlayerInstance != null)
-                    soundPlayerInstance.start();
+                if (oldState && soundPlayerInstance.get() != null)
+                    soundPlayerInstance.get().start();
             }
         });
     }
@@ -194,17 +199,17 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (soundPlayerInstance != null) {
-            if (soundPlayerInstance.seeker != null && soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
-                soundPlayerInstance.seeker.pause = true;
-                soundPlayerInstance.seeker.cancel(true);
+        if (soundPlayerInstance.get() != null) {
+            if (soundPlayerInstance.get().seeker != null && soundPlayerInstance.get().seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
+                soundPlayerInstance.get().seeker.pause = true;
+                soundPlayerInstance.get().seeker.cancel(true);
             }
-            if (soundPlayerInstance.isPlaying()) {
-                soundPlayerInstance.pause();
+            if (soundPlayerInstance.get().isPlaying()) {
+                soundPlayerInstance.get().pause();
             }
 
-            soundPlayerInstance.release();
-            soundPlayerInstance = null;
+            soundPlayerInstance.get().release();
+            soundPlayerInstance.set(null);
         }
     }
 

@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import static android.view.View.OnClickListener;
 import static android.widget.RemoteViews.RemoteView;
+import static org.gtlp.yasb.SoundActivity.setUniqueId;
 import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
 
 @RemoteView
@@ -28,7 +28,8 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     public PlaySoundButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setId(SoundActivity.uniqueId++);
+        setUniqueId(SoundActivity.uniqueId + 1);
+        setId(SoundActivity.uniqueId);
         url = attrs.getAttributeValue("http://schemas.android.com/apk/res-auto", "url");
         setOnClickListener(this);
         setOnLongClickListener(this);
@@ -36,36 +37,22 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     @Override
     public void onClick(View v) {
-        R.raw r = new R.raw();
-        Field f = null;
         SoundActivity.log("Hit " + getText());
         if (SoundActivity.tracker != null) {
             SoundActivity.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
             SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
 
-        try {
-            String field = getText().toString().replace(" ", "").replace("'", "").toLowerCase();
-            f = R.raw.class.getDeclaredField(field);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+        String field = getText().toString().trim().replace(" ", "").replace("'", "").toLowerCase();
 
-        if (soundPlayerInstance != null) {
-            SoundActivity.log("SoundPlayer instance is: " + soundPlayerInstance.toString());
-            try {
-                soundPlayerInstance.playSound(getContext(), Uri.parse("android.resource://org.gtlp.yasb/" + (int) f.get(r)));
-            } catch (IOException | IllegalAccessException e) {
+        if (soundPlayerInstance.get() == null) {
+            soundPlayerInstance.set(new SoundPlayer());
+        }
+        SoundActivity.log("SoundPlayer instance is: " + soundPlayerInstance.get().toString());
+        try {
+            soundPlayerInstance.get().playSound(getContext(), Uri.parse("android.resource://" + getContext().getPackageName() + "/" + TranslationTable.getRaw(field)));
+        } catch (IOException e) {
                 e.printStackTrace();
-            }
-        } else {
-            soundPlayerInstance = new SoundPlayer();
-            SoundActivity.log("SoundPlayer instance is: " + soundPlayerInstance.toString());
-            try {
-                soundPlayerInstance.playSound(getContext(), Uri.parse("android.resource://org.gtlp.yasb/R.raw." + (int) f.get(r)));
-            } catch (IOException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -73,7 +60,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         TextView tv = new TextView(getContext());
-        String message = getResources().getString(R.string.msg_filename) + getText() + "\n\n";
+        String message = getResources().getString(R.string.msg_name) + getText() + "\n\n";
         message += getResources().getString(R.string.msg_source) + url + "\n\n";
         SpannableString msg = new SpannableString(message);
         Linkify.addLinks(msg, Linkify.WEB_URLS);

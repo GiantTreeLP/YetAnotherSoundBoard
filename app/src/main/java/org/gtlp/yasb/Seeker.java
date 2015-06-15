@@ -13,7 +13,7 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		while (!isCancelled()) {
 			long sleepTime = System.nanoTime();
-			if (!pause && soundPlayerInstance.isPrepared && soundPlayerInstance.isPlaying()) {
+			if (!pause && soundPlayerInstance.get().isPrepared && soundPlayerInstance.get().isPlaying()) {
 					publishProgress();
 			}
 			long toSleep = 19 - (System.nanoTime() - sleepTime) / 1000000;
@@ -24,12 +24,14 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected synchronized void onProgressUpdate(Void... values) {
-		if (SoundActivity.seekBar != null) {
-			SoundActivity.seekBar.setMax(soundPlayerInstance.getDuration());
-			SoundActivity.seekBar.setProgress(soundPlayerInstance.getCurrentPosition());
-		}
-		if (SoundActivity.timeText != null) {
-			SoundActivity.timeText.setText(SoundActivity.soundPlayerInstance.getFormattedProgressText());
+		if (soundPlayerInstance.get() != null) {
+			if (SoundActivity.seekBar != null) {
+				SoundActivity.seekBar.setMax(soundPlayerInstance.get().getDuration());
+				SoundActivity.seekBar.setProgress(soundPlayerInstance.get().getCurrentPosition());
+			}
+			if (SoundActivity.timeText != null) {
+				SoundActivity.timeText.setText(SoundActivity.soundPlayerInstance.get().getFormattedProgressText());
+			}
 		}
 	}
 

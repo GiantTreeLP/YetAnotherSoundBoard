@@ -12,13 +12,11 @@
     <string name="text_about">"Über diese App:\n\nDiese App wurde mit Android Studio erstellt.\n\nVielen Dank an Alle, die die Töne hochgeladen haben, um unser Leben noch lustiger zu gestalten!"</string>
     <string name="pref_opt_out">Anonyme Statistiken deaktivieren</string>
     <string name="pref_opt_out_summ">Aktiviere dies, damit keine anonymen Daten zur Verbesserung dieser App gesammelt werden.</string>
-    <string name="pref_update">Aktualisierungsintervall</string>
-    <string name="pref_update_summ">Stelle hier ein, wie häufig nach Aktualisierungen innerhalb dieser App gesucht werden soll. Niedrige Werte können den Akku- und Datenverbrauch erhöhen.</string>
     <string name="pref_title">Einstellungen</string>
     <string name="copyright">GiantTree © 2015. Alle Rechte vorbehalten.\nBenutzt Teile der Guava-Bibliothek für Android von Google.</string>
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neuer <b>Offline-Modus!</b></h3><p>Wegen der großen Zahl an Nutzern, die zunehmend Probleme mit der alten Methode hatten, wechseln wir zum Offline-Modus. Mehr Arbeit f&uuml;r uns, aber es zahlt sich aus!</p>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neuer <b>Offline-Modus!</b></h3><p>Wegen der gro&szlig;en Zahl an Nutzern, die zunehmend Probleme mit der alten Methode hatten, wechseln wir zum Offline-Modus. Mehr Arbeit f&uuml;r uns, aber es zahlt sich aus!</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar Hintergrund</string>
 </resources>

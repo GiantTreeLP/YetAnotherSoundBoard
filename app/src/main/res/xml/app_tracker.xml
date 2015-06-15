@@ -5,10 +5,10 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- The screen names that will appear in reports -->
-    <screenName name="org.gtlp.yasb.InfoDialogFragment">
+    <screenName name="org.gtlp.yasb.InfoDialog">
         YetAnotherSoundBoard InfoDialog
     </screenName>
-    <screenName name="org.gtlp.yasb.PlaceholderFragment">
+    <screenName name="org.gtlp.yasb.SoundActivity">
         YetAnotherSoundBoard ButtonFragment
     </screenName>
     <!--  The following value should be replaced with correct property id. -->
