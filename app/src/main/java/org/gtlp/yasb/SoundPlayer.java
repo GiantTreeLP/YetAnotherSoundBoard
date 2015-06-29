@@ -19,7 +19,7 @@ public class SoundPlayer extends MediaPlayer {
 		setOnPreparedListener(new OnPreparedListener() {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				SoundActivity.log("SoundPlayer prepared");
+				SoundApplication.log("SoundPlayer prepared");
 				isPrepared = true;
 			}
 		});

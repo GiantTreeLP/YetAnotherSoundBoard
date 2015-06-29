@@ -51,6 +51,7 @@ android {
             minifyEnabled true
             pseudoLocalesEnabled true
             zipAlignEnabled true
+            signingConfig signingConfigs.config
         }
     }
     dexOptions {

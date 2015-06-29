@@ -1,53 +1,11 @@
 package org.gtlp.yasb;
 
-import android.support.v4.util.ArrayMap;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
 
 public class TranslationTable {
-    private static ArrayMap<String, Integer> map = new ArrayMap<>();
-
-    static {
-        map.put("airhorn", R.raw.airhorn);
-        map.put("airporn", R.raw.airporn);
-        map.put("aye", R.raw.aye);
-        map.put("butimnotarapper", R.raw.butimnotarapper);
-        map.put("cmonmate", R.raw.cmonmate);
-        map.put("codscream", R.raw.codscream);
-        map.put("crawlinginmyskin", R.raw.crawlinginmyskin);
-        map.put("damnson", R.raw.damnson);
-        map.put("darudedankstorm", R.raw.darude_dankstorm);
-        map.put("dedotadedwam", R.raw.dedotadedwam);
-        map.put("deeznuts", R.raw.deeznuts);
-        map.put("dota", R.raw.dota);
-        map.put("dropthebass", R.raw.dropthebass);
-        map.put("fuckherrightinthepussy", R.raw.fuckherrightinthepussy);
-        map.put("gaylord", R.raw.gaylord);
-        map.put("getnoscoped", R.raw.getnoscoped);
-        map.put("hardscoper", R.raw.hardscoper);
-        map.put("intervention", R.raw.intervention);
-        map.put("justhitmarker", R.raw.justhitmarker);
-        map.put("momgetthecamera", R.raw.momgetthecamera);
-        map.put("ohbabyatriple", R.raw.ohbabyatriple);
-        map.put("ohhhhhh", R.raw.ohhhhhh);
-        map.put("oooooooohmygooood", R.raw.oooooooohmygooood);
-        map.put("quaaad", R.raw.quaaad);
-        map.put("quickscober", R.raw.quickscober);
-        map.put("sanic", R.raw.sanic);
-        map.put("scrubb", R.raw.scrubb);
-        map.put("shotsfired", R.raw.shotsfired);
-        map.put("skrillexscary", R.raw.skrillexscary);
-        map.put("smokeweedeveryday", R.raw.smokeweedeveryday);
-        map.put("spooky", R.raw.spooky);
-        map.put("spookyskellys", R.raw.spookyskellys);
-        map.put("surprisemotherfucker", R.raw.surprisemotherfucker);
-        map.put("tacticalnuke", R.raw.tacticalnuke);
-        map.put("turndownforwhat", R.raw.turndownforwhat);
-        map.put("twosad4me", R.raw.twosad4me);
-        map.put("twosed4airhorn", R.raw.twosed4airhorn);
-        map.put("weed", R.raw.weed);
-        map.put("whatchasay", R.raw.whatchasay);
-        map.put("wombocombo", R.raw.wombocombo);
-        map.put("wow", R.raw.wow);
-    }
+    private static final Map<String, Integer> map = ImmutableMap.<String, Integer>builder().put("airhorn", R.raw.airhorn).put("airporn", R.raw.airporn).put("aye", R.raw.aye).put("butimnotarapper", R.raw.butimnotarapper).put("cmonmate", R.raw.cmonmate).put("codscream", R.raw.codscream).put("crawlinginmyskin", R.raw.crawlinginmyskin).put("damnson", R.raw.damnson).put("darudedankstorm", R.raw.darude_dankstorm).put("dedotadedwam", R.raw.dedotadedwam).put("deeznuts", R.raw.deeznuts).put("dota", R.raw.dota).put("dropthebass", R.raw.dropthebass).put("fuckherrightinthepussy", R.raw.fuckherrightinthepussy).put("gaylord", R.raw.gaylord).put("getnoscoped", R.raw.getnoscoped).put("hardscoper", R.raw.hardscoper).put("intervention", R.raw.intervention).put("justhitmarker", R.raw.justhitmarker).put("momgetthecamera", R.raw.momgetthecamera).put("ohbabyatriple", R.raw.ohbabyatriple).put("ohhhhhh", R.raw.ohhhhhh).put("oooooooohmygooood", R.raw.oooooooohmygooood).put("quaaad", R.raw.quaaad).put("quickscober", R.raw.quickscober).put("sanic", R.raw.sanic).put("scrubb", R.raw.scrubb).put("shotsfired", R.raw.shotsfired).put("skrillexscary", R.raw.skrillexscary).put("smokeweedeveryday", R.raw.smokeweedeveryday).put("spooky", R.raw.spooky).put("spookyskellys", R.raw.spookyskellys).put("surprisemotherfucker", R.raw.surprisemotherfucker).put("tacticalnuke", R.raw.tacticalnuke).put("turndownforwhat", R.raw.turndownforwhat).put("twosad4me", R.raw.twosad4me).put("twosed4airhorn", R.raw.twosed4airhorn).put("weed", R.raw.weed).put("whatchasay", R.raw.whatchasay).put("wombocombo", R.raw.wombocombo).put("wow", R.raw.wow).build();
 
     protected static Integer getRaw(String key) {
         return map.get(key);

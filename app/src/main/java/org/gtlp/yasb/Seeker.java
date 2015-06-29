@@ -3,7 +3,7 @@ package org.gtlp.yasb;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
-import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
+import static org.gtlp.yasb.SoundApplication.soundPlayerInstance;
 
 public class Seeker extends AsyncTask<Void, Void, Void> {
 
@@ -30,7 +30,7 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
 				SoundActivity.seekBar.setProgress(soundPlayerInstance.get().getCurrentPosition());
 			}
 			if (SoundActivity.timeText != null) {
-				SoundActivity.timeText.setText(SoundActivity.soundPlayerInstance.get().getFormattedProgressText());
+				SoundActivity.timeText.setText(SoundApplication.soundPlayerInstance.get().getFormattedProgressText());
 			}
 		}
 	}

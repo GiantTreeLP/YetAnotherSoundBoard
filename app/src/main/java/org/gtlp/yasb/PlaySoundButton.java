@@ -18,8 +18,7 @@ import java.io.IOException;
 
 import static android.view.View.OnClickListener;
 import static android.widget.RemoteViews.RemoteView;
-import static org.gtlp.yasb.SoundActivity.setUniqueId;
-import static org.gtlp.yasb.SoundActivity.soundPlayerInstance;
+import static org.gtlp.yasb.SoundApplication.soundPlayerInstance;
 
 @RemoteView
 public class PlaySoundButton extends Button implements OnClickListener, View.OnLongClickListener {
@@ -28,8 +27,6 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     public PlaySoundButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setUniqueId(SoundActivity.uniqueId + 1);
-        setId(SoundActivity.uniqueId);
         url = attrs.getAttributeValue("http://schemas.android.com/apk/res-auto", "url");
         setOnClickListener(this);
         setOnLongClickListener(this);
@@ -37,7 +34,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
 
     @Override
     public void onClick(View v) {
-        SoundActivity.log("Hit " + getText());
+        SoundApplication.log("Hit " + getText());
         if (SoundActivity.tracker != null) {
             SoundActivity.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
             SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
@@ -48,7 +45,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         if (soundPlayerInstance.get() == null) {
             soundPlayerInstance.set(new SoundPlayer());
         }
-        SoundActivity.log("SoundPlayer instance is: " + soundPlayerInstance.get().toString());
+        SoundApplication.log("SoundPlayer instance is: " + soundPlayerInstance.get().toString());
         try {
             soundPlayerInstance.get().playSound(getContext(), Uri.parse("android.resource://" + getContext().getPackageName() + "/" + TranslationTable.getRaw(field)));
         } catch (IOException e) {

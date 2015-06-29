@@ -26,7 +26,7 @@ public class ChangelogDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				try {
-					SoundActivity.preferences.edit().putInt(SoundActivity.PREFKEY_VERSION_CODE, getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode).apply();
+					SoundApplication.preferences.edit().putInt(SoundActivity.PREFKEY_VERSION_CODE, getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode).apply();
 				} catch (PackageManager.NameNotFoundException e) {
 					e.printStackTrace();
 				}
