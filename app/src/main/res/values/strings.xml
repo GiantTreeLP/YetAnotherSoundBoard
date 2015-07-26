@@ -13,7 +13,7 @@
     <string name="pref_opt_out">Disable anonymous statistics</string>
     <string name="pref_opt_out_summ">Check this if you do not want to send any anonymous data to improve this application.</string>
     <string name="pref_title">Settings</string>
-    <string name="copyright">GiantTree © 2015. All rights reserved.\nUses Guava library for Android by Google.</string>
+    <string name="copyright">GiantTree © 2015. All rights reserved.\n\nUses Guava library for Android by Google.\nUses Fabric by Twitter.</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="action_github">View project on GitHub.</string>
