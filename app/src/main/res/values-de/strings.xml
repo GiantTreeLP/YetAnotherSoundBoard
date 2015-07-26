@@ -17,6 +17,6 @@
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neuer <b>Offline-Modus!</b></h3><p>Wegen der gro&szlig;en Zahl an Nutzern, die zunehmend Probleme mit der alten Methode hatten, wechseln wir zum Offline-Modus. Mehr Arbeit f&uuml;r uns, aber es zahlt sich aus!</p>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Unsichtbare &Auml;nderungen</h3><p>Wir arbeiten an Verbessrung im Code für zuk&uuml;nftige Updates. Deshalb ver&ouml;ffentlichen wir dieses Update, um unsere Nutzer darauf vorzubereiten.</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar Hintergrund</string>
 </resources>

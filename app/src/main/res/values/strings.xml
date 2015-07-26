@@ -17,7 +17,7 @@
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="action_github">View project on GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>What\'s new:</h2><h3>All, new, <b>offline mode!</b></h3><p>Due to the high amount of user having issues with the old method, we switched to a full offline mode! More work beforehand, but it definitely pays out.</p>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>What\'s new:</h2><h3>Invisible changes!</b></h3><p>We are working on improving the code behind the application for future updates, so we are pushing this update to prepare our users.</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar background</string>
 
 </resources>
