@@ -1,16 +1,16 @@
 package org.gtlp.yasb;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
 public class SoundPlayer extends MediaPlayer {
-	public Uri selectedSound;
+	public String selectedSound;
 	public boolean isPrepared = false;
 	public Seeker seeker;
 
@@ -53,14 +53,16 @@ public class SoundPlayer extends MediaPlayer {
 		return formatMillis(getCurrentPosition()) + "/" + formatMillis(getDuration());
 	}
 
-	public void playSound(@NonNull Context context, @NonNull Uri uri) throws IOException {
-		if (uri.equals(selectedSound) && isPrepared) {
+	public void playSound(@NonNull Context context, @NonNull String assetName) throws IOException {
+		if (assetName.equals(selectedSound) && isPrepared) {
 			seekTo(0);
 			start();
 		} else {
 			reset();
-			setDataSource(context, uri);
-			selectedSound = uri;
+			AssetFileDescriptor assetFileDescriptor = context.getAssets().openFd(assetName);
+			setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
+			assetFileDescriptor.close();
+			selectedSound = assetName;
 			prepare();
 			start();
 		}

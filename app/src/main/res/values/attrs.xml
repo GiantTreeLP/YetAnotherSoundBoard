@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="PlaySoundButton">
         <attr name="url" format="string" />
+        <attr name="file" format="string" />
     </declare-styleable>
 </resources>

@@ -2,7 +2,7 @@ package org.gtlp.yasb;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
+import android.content.res.TypedArray;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -24,10 +24,23 @@ import static org.gtlp.yasb.SoundApplication.soundPlayerInstance;
 public class PlaySoundButton extends Button implements OnClickListener, View.OnLongClickListener {
 
     private String url;
+    private String file;
 
     public PlaySoundButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        url = attrs.getAttributeValue("http://schemas.android.com/apk/res-auto", "url");
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.PlaySoundButton,
+                0, 0);
+
+        try {
+            url = a.getString(R.styleable.PlaySoundButton_url);
+            file = a.getString(R.styleable.PlaySoundButton_file);
+        } finally {
+            a.recycle();
+        }
+
         setOnClickListener(this);
         setOnLongClickListener(this);
     }
@@ -40,14 +53,12 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
 
-        String field = getText().toString().trim().replace(" ", "").replace("'", "").toLowerCase();
-
         if (soundPlayerInstance.get() == null) {
             soundPlayerInstance.set(new SoundPlayer());
         }
         SoundApplication.log("SoundPlayer instance is: " + soundPlayerInstance.get().toString());
         try {
-            soundPlayerInstance.get().playSound(getContext(), Uri.parse("android.resource://" + getContext().getPackageName() + "/" + TranslationTable.getRaw(field)));
+            soundPlayerInstance.get().playSound(getContext(), file);
         } catch (IOException e) {
                 e.printStackTrace();
         }

@@ -25,7 +25,7 @@ android {
         }
     }
     compileSdkVersion 'android-22'
-    buildToolsVersion '23.0.0 rc2'
+    buildToolsVersion '23.0.0 rc3'
     defaultConfig {
         applicationId "org.gtlp.yasb"
         minSdkVersion 9
