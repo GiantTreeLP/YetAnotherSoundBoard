@@ -16,6 +16,8 @@ import io.fabric.sdk.android.Fabric;
 public class SoundApplication extends Application {
 
     protected static final Crashlytics crashlytics = new Crashlytics();
+    protected static final String CLICK_IDENTIFIER = "lastClick";
+    protected static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
     protected static AtomicReference<SoundPlayer> soundPlayerInstance = new AtomicReference<>(new SoundPlayer());
     protected static GoogleAnalytics analytics;
     protected static Tracker tracker;

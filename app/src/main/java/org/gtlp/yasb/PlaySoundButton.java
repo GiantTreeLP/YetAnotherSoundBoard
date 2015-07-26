@@ -52,7 +52,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundActivity.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
             SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
-
+        SoundApplication.crashlytics.core.setString(SoundApplication.CLICK_IDENTIFIER, file);
         if (soundPlayerInstance.get() == null) {
             soundPlayerInstance.set(new SoundPlayer());
         }
@@ -89,6 +89,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundActivity.tracker.setScreenName("InfoDialog-".concat(getText().toString()));
             SoundActivity.tracker.send(new HitBuilders.AppViewBuilder().build());
         }
+        SoundApplication.crashlytics.core.setString(SoundApplication.LONG_CLICK_IDENTIFIER, "Info-".concat(file));
         return true;
     }
 }
