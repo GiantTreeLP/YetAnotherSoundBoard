@@ -15,6 +15,9 @@ import io.fabric.sdk.android.Fabric;
 
 public class SoundApplication extends Application {
 
+    public static final String YASB = "YASB";
+    public static final String PREFKEY_VERSION_CODE = "versionCode";
+    public static final String PREFKEY_FIRSTRUN = "isFirstRun";
     protected static final Crashlytics crashlytics = new Crashlytics();
     protected static final String CLICK_IDENTIFIER = "lastClick";
     protected static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
@@ -24,7 +27,7 @@ public class SoundApplication extends Application {
     static SharedPreferences preferences;
 
     public static void log(String message) {
-        crashlytics.core.log(Log.DEBUG, SoundActivity.YASB, message);
+        crashlytics.core.log(Log.DEBUG, YASB, message);
     }
 
     @Override

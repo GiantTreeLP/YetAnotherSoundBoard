@@ -53,6 +53,7 @@ android {
             pseudoLocalesEnabled true
             zipAlignEnabled true
             signingConfig signingConfigs.config
+            versionNameSuffix '-debug'
         }
     }
     dexOptions {
