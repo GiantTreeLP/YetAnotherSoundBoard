@@ -9,21 +9,18 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import io.fabric.sdk.android.Fabric;
 
-public class SoundApplication extends Application {
+class SoundApplication extends Application {
 
-    public static final String YASB = "YASB";
     public static final String PREFKEY_VERSION_CODE = "versionCode";
     public static final String PREFKEY_FIRSTRUN = "isFirstRun";
-    protected static final Crashlytics crashlytics = new Crashlytics();
-    protected static final String CLICK_IDENTIFIER = "lastClick";
-    protected static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
-    protected static AtomicReference<SoundPlayer> soundPlayerInstance = new AtomicReference<>(new SoundPlayer());
-    protected static GoogleAnalytics analytics;
-    protected static Tracker tracker;
+    static final Crashlytics crashlytics = new Crashlytics();
+    static final String CLICK_IDENTIFIER = "lastClick";
+    static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
+    private static final String YASB = "YASB";
+    static SoundPlayer soundPlayerInstance = new SoundPlayer();
+    static Tracker tracker;
     static SharedPreferences preferences;
 
     public static void log(String message) {
@@ -37,10 +34,10 @@ public class SoundApplication extends Application {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Fabric.with(this, crashlytics);
 
-        analytics = GoogleAnalytics.getInstance(this);
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(this);
-        analytics.setLocalDispatchPeriod(1800);
-        analytics.setAppOptOut(preferences.getBoolean("opt_out", false));
+        analytics.setLocalDispatchPeriod(300);
+        analytics.setAppOptOut(preferences.getBoolean("opt_out", false) || BuildConfig.DEBUG);
         tracker = analytics.newTracker("UA-26925696-3");
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);

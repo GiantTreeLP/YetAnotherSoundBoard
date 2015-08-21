@@ -23,16 +23,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.Tracker;
 
 public class SoundActivity extends AppCompatActivity {
 
-    protected static Tracker tracker;
-    protected static TextView current;
     static SeekBar seekBar;
     static TextView timeText;
     static View playButton;
     static View pauseButton;
+    static TextView current;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -45,10 +43,10 @@ public class SoundActivity extends AppCompatActivity {
         playButton = findViewById(R.id.playButton);
         timeText = (TextView) findViewById(R.id.timetext);
         current = (TextView) findViewById(R.id.current);
-        if (SoundApplication.soundPlayerInstance.get() != null) {
-            SoundApplication.soundPlayerInstance.get().release();
+        if (SoundApplication.soundPlayerInstance != null) {
+            SoundApplication.soundPlayerInstance.release();
         }
-        SoundApplication.soundPlayerInstance.set(new SoundPlayer());
+        SoundApplication.soundPlayerInstance = new SoundPlayer();
         initUI();
     }
 
@@ -73,9 +71,9 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (SoundApplication.soundPlayerInstance.get() != null) {
-            SoundApplication.soundPlayerInstance.get().release();
-            SoundApplication.soundPlayerInstance.set(null);
+        if (SoundApplication.soundPlayerInstance != null) {
+            SoundApplication.soundPlayerInstance.release();
+            SoundApplication.soundPlayerInstance = null;
         }
     }
 
@@ -120,7 +118,6 @@ public class SoundActivity extends AppCompatActivity {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")));
                         return;
                     default:
-                        return;
                 }
             }
         });
@@ -128,8 +125,8 @@ public class SoundActivity extends AppCompatActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SoundApplication.soundPlayerInstance.get() != null && !SoundApplication.soundPlayerInstance.get().isPlaying()) {
-                    SoundApplication.soundPlayerInstance.get().start();
+                if (SoundApplication.soundPlayerInstance != null && !SoundApplication.soundPlayerInstance.isPlaying()) {
+                    SoundApplication.soundPlayerInstance.start();
                 }
             }
         });
@@ -137,8 +134,8 @@ public class SoundActivity extends AppCompatActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SoundApplication.soundPlayerInstance.get() != null && SoundApplication.soundPlayerInstance.get().isPlaying()) {
-                    SoundApplication.soundPlayerInstance.get().pause();
+                if (SoundApplication.soundPlayerInstance != null && SoundApplication.soundPlayerInstance.isPlaying()) {
+                    SoundApplication.soundPlayerInstance.pause();
                 }
             }
         });
@@ -147,22 +144,22 @@ public class SoundActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && SoundApplication.soundPlayerInstance.get() != null)
-                    SoundApplication.soundPlayerInstance.get().seekTo(progress);
+                if (fromUser && SoundApplication.soundPlayerInstance != null)
+                    SoundApplication.soundPlayerInstance.seekTo(progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if (SoundApplication.soundPlayerInstance.get() != null) {
-                    oldState = SoundApplication.soundPlayerInstance.get().isPlaying();
-                    SoundApplication.soundPlayerInstance.get().pause();
+                if (SoundApplication.soundPlayerInstance != null) {
+                    oldState = SoundApplication.soundPlayerInstance.isPlaying();
+                    SoundApplication.soundPlayerInstance.pause();
                 }
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (oldState && SoundApplication.soundPlayerInstance.get() != null)
-                    SoundApplication.soundPlayerInstance.get().start();
+                if (oldState && SoundApplication.soundPlayerInstance != null)
+                    SoundApplication.soundPlayerInstance.start();
             }
         });
     }
@@ -186,17 +183,17 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (SoundApplication.soundPlayerInstance.get() != null) {
-            if (SoundApplication.soundPlayerInstance.get().seeker != null && SoundApplication.soundPlayerInstance.get().seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
-                SoundApplication.soundPlayerInstance.get().seeker.pause = true;
-                SoundApplication.soundPlayerInstance.get().seeker.cancel(true);
+        if (SoundApplication.soundPlayerInstance != null) {
+            if (SoundApplication.soundPlayerInstance.seeker != null && SoundApplication.soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
+                SoundApplication.soundPlayerInstance.seeker.pause = true;
+                SoundApplication.soundPlayerInstance.seeker.cancel(true);
             }
-            if (SoundApplication.soundPlayerInstance.get().isPlaying()) {
-                SoundApplication.soundPlayerInstance.get().pause();
+            if (SoundApplication.soundPlayerInstance.isPlaying()) {
+                SoundApplication.soundPlayerInstance.pause();
             }
 
-            SoundApplication.soundPlayerInstance.get().release();
-            SoundApplication.soundPlayerInstance.set(null);
+            SoundApplication.soundPlayerInstance.release();
+            SoundApplication.soundPlayerInstance = null;
         }
     }
 

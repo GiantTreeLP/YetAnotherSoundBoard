@@ -48,19 +48,19 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     @Override
     public void onClick(View v) {
         SoundApplication.log("Hit " + getText());
-        if (SoundActivity.tracker != null) {
-            SoundActivity.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
-            SoundActivity.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
+        if (SoundApplication.tracker != null) {
+            SoundApplication.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
+            SoundApplication.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
         SoundApplication.crashlytics.core.setString(SoundApplication.CLICK_IDENTIFIER, file);
-        if (soundPlayerInstance.get() == null) {
-            soundPlayerInstance.set(new SoundPlayer());
+        if (soundPlayerInstance == null) {
+            soundPlayerInstance = new SoundPlayer();
         }
-        SoundApplication.log("SoundPlayer instance is: " + soundPlayerInstance.get().toString());
+        SoundApplication.log("SoundPlayer instance is: " + soundPlayerInstance.toString());
         try {
-            soundPlayerInstance.get().playSound(getContext(), file);
+            soundPlayerInstance.playSound(getContext(), file);
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -72,7 +72,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         message += getResources().getString(R.string.msg_source) + url + "\n\n";
         SpannableString msg = new SpannableString(message);
         Linkify.addLinks(msg, Linkify.WEB_URLS);
-        tv.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
+        tv.setTextAppearance(android.R.style.TextAppearance_Medium);
         tv.setText(msg);
         tv.setAutoLinkMask(Linkify.WEB_URLS);
         tv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -85,9 +85,9 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             }
         });
         builder.show();
-        if (SoundActivity.tracker != null) {
-            SoundActivity.tracker.setScreenName("InfoDialog-".concat(getText().toString()));
-            SoundActivity.tracker.send(new HitBuilders.AppViewBuilder().build());
+        if (SoundApplication.tracker != null) {
+            SoundApplication.tracker.setScreenName("InfoDialog-".concat(getText().toString()));
+            SoundApplication.tracker.send(new HitBuilders.AppViewBuilder().build());
         }
         SoundApplication.crashlytics.core.setString(SoundApplication.LONG_CLICK_IDENTIFIER, "Info-".concat(file));
         return true;
