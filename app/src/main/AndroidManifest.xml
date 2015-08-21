@@ -2,8 +2,8 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gtlp.yasb"
-    android:versionCode="632"
-    android:versionName="2.1.632">
+    android:versionCode="634"
+    android:versionName="2.1.634">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
