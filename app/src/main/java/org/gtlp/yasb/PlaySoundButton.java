@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundApplication.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
             SoundApplication.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
-        SoundApplication.crashlytics.core.setString(SoundApplication.CLICK_IDENTIFIER, file);
+        Crashlytics.getInstance().core.setString(SoundApplication.CLICK_IDENTIFIER, file);
         if (soundPlayerInstance == null) {
             soundPlayerInstance = new SoundPlayer();
         }
@@ -89,7 +90,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundApplication.tracker.setScreenName("InfoDialog-".concat(getText().toString()));
             SoundApplication.tracker.send(new HitBuilders.AppViewBuilder().build());
         }
-        SoundApplication.crashlytics.core.setString(SoundApplication.LONG_CLICK_IDENTIFIER, "Info-".concat(file));
+        Crashlytics.getInstance().core.setString(SoundApplication.LONG_CLICK_IDENTIFIER, "Info-".concat(file));
         return true;
     }
 }

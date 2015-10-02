@@ -6,16 +6,16 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
 import io.fabric.sdk.android.Fabric;
 
-class SoundApplication extends Application {
+public class SoundApplication extends Application {
 
     public static final String PREFKEY_VERSION_CODE = "versionCode";
     public static final String PREFKEY_FIRSTRUN = "isFirstRun";
-    static final Crashlytics crashlytics = new Crashlytics();
     static final String CLICK_IDENTIFIER = "lastClick";
     static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
     private static final String YASB = "YASB";
@@ -24,7 +24,7 @@ class SoundApplication extends Application {
     static SharedPreferences preferences;
 
     public static void log(String message) {
-        crashlytics.core.log(Log.DEBUG, YASB, message);
+        Crashlytics.getInstance().core.log(Log.DEBUG, YASB, message);
     }
 
     @Override
@@ -32,7 +32,12 @@ class SoundApplication extends Application {
         super.onCreate();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Fabric.with(this, crashlytics);
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+
+        // Initialize Fabric with the debug-disabled crashlytics.
+        Fabric.with(this, crashlyticsKit);
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(this);

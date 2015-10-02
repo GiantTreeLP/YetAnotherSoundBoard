@@ -2,10 +2,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
+    android:layout_width="320dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
+    android:layout_marginEnd="56dp"
+    android:layout_marginRight="56dp"
+    android:background="@android:color/white"
     android:clickable="true"
+    android:elevation="16dp"
     android:orientation="vertical"
     tools:showIn="@layout/activity_sound">
 
@@ -26,7 +30,7 @@
         android:layout_alignBottom="@id/sidebar_bg"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/background_floating_material_light"
+        android:background="@android:color/white"
         android:contentDescription="@string/app_name"
         android:src="@mipmap/ic_launcher" />
 
@@ -40,7 +44,7 @@
         android:layout_alignTop="@+id/imageView"
         android:layout_toEndOf="@+id/imageView"
         android:layout_toRightOf="@+id/imageView"
-        android:background="@color/background_floating_material_light"
+        android:background="@android:color/white"
         android:gravity="center"
         android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -49,7 +53,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sidebar_bg"
+        android:layout_below="@id/sidebar_bg"
         android:choiceMode="none"
         android:elevation="4dp"
         android:entries="@array/sidebar_entries"

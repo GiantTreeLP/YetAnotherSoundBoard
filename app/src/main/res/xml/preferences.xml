@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout="@layout/activity_settings"
     android:title="@string/pref_title">
     <PreferenceCategory android:title="@string/pref_title">
         <CheckBoxPreference
@@ -8,7 +9,9 @@
             android:summary="@string/pref_opt_out_summ"
             android:title="@string/pref_opt_out" />
     </PreferenceCategory>
-    <Preference
-        android:summary="@string/copyright"
+    <PreferenceCategory android:title="@string/pref_title_misc">
+        <Preference
+            android:summary="@string/copyright"
         android:title="@string/app_name" />
+    </PreferenceCategory>
 </PreferenceScreen>

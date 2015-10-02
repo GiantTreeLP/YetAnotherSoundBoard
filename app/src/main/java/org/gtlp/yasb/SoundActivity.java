@@ -109,13 +109,14 @@ public class SoundActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        startActivity(new Intent(getBaseContext(), SettingsActivity.class));
+                        //new SettingsActivity();
+                        startActivityIfNeeded(new Intent(getApplicationContext(), SettingsActivity.class), 0);
                         return;
                     case 1:
                         new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
                         return;
                     case 2:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")));
+                        startActivityIfNeeded(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")), 0);
                         return;
                     default:
                 }
@@ -144,7 +145,7 @@ public class SoundActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && SoundApplication.soundPlayerInstance != null)
+                if (fromUser && SoundApplication.soundPlayerInstance != null && SoundApplication.soundPlayerInstance.isPrepared)
                     SoundApplication.soundPlayerInstance.seekTo(progress);
             }
 
