@@ -30,22 +30,20 @@ public class SoundApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
-
         // Initialize Fabric with the debug-disabled crashlytics.
         Fabric.with(this, crashlyticsKit);
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(this);
-        analytics.setLocalDispatchPeriod(300);
         analytics.setAppOptOut(preferences.getBoolean("opt_out", false) || BuildConfig.DEBUG);
         tracker = analytics.newTracker("UA-26925696-3");
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
         tracker.enableAutoActivityTracking(true);
+        AnalyticsTrackers.initialize(this);
     }
 }

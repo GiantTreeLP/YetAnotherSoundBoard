@@ -63,6 +63,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         } catch (IOException e) {
             e.printStackTrace();
         }
+        SoundActivity.seekBar.setEnabled(true);
     }
 
     @Override
@@ -73,7 +74,6 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         message += getResources().getString(R.string.msg_source) + url + "\n\n";
         SpannableString msg = new SpannableString(message);
         Linkify.addLinks(msg, Linkify.WEB_URLS);
-        tv.setTextAppearance(android.R.style.TextAppearance_Medium);
         tv.setText(msg);
         tv.setAutoLinkMask(Linkify.WEB_URLS);
         tv.setMovementMethod(LinkMovementMethod.getInstance());

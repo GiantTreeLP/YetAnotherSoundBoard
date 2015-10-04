@@ -12,12 +12,10 @@ public class Seeker extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         while (!isCancelled()) {
-            long sleepTime = System.nanoTime();
             if (!pause && soundPlayerInstance != null && soundPlayerInstance.isPrepared && soundPlayerInstance.isPlaying()) {
                 publishProgress();
             }
-            long toSleep = 19 - (System.nanoTime() - sleepTime) / 1000000;
-            SystemClock.sleep(toSleep > 0 ? toSleep : 19);
+            SystemClock.sleep(pause ? 250 : 19);
         }
         return null;
     }

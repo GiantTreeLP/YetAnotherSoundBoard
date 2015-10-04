@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gtlp.yasb"
-    android:versionCode="674"
-    android:versionName="2.1.674">
+    android:versionCode="711"
+    android:versionName="2.1.711">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -69,13 +69,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SoundActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.PREFERENCE" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SoundActivity" />
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

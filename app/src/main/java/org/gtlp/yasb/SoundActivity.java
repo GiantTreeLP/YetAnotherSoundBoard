@@ -99,7 +99,7 @@ public class SoundActivity extends AppCompatActivity {
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
+        seekBar.setEnabled(false);
         setListeners();
     }
 
@@ -145,7 +145,7 @@ public class SoundActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && SoundApplication.soundPlayerInstance != null && SoundApplication.soundPlayerInstance.isPrepared)
+                if (fromUser && SoundApplication.soundPlayerInstance != null)
                     SoundApplication.soundPlayerInstance.seekTo(progress);
             }
 
