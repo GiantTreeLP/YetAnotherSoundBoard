@@ -4,5 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
+    toolbar:logo="@mipmap/ic_launcher"
     toolbar:theme="@style/ToolbarTheme"
     toolbar:title="@string/app_name" />

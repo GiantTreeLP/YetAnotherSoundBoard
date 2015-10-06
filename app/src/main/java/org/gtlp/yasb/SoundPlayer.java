@@ -181,7 +181,7 @@ class SoundPlayer extends MediaPlayer {
     public void pause() {
         super.pause();
         setState(MediaPlayerState.PAUSED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null) {
             objectAnimator.setTarget(null);
         } else if (seeker != null) {
             seeker.pause = true;
@@ -193,8 +193,8 @@ class SoundPlayer extends MediaPlayer {
     public void seekTo(int time) {
         super.seekTo(time);
         setState(MediaPlayerState.PAUSED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            objectAnimator.setCurrentPlayTime(time);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null && SoundActivity.seekBar != null) {
+            objectAnimator.setTarget(null);
         }
     }
 

@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.util.Linkify;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -37,6 +38,7 @@ public class SoundActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         setContentView(R.layout.activity_sound);
         pauseButton = findViewById(R.id.pauseButton);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
@@ -65,6 +67,13 @@ public class SoundActivity extends AppCompatActivity {
                             SoundApplication.preferences.edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
                         }
                     }).show();
+            try {
+                if (SoundApplication.preferences.getInt(SoundApplication.PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
+                    new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -78,15 +87,9 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        try {
-            if (SoundApplication.preferences.getInt(SoundApplication.PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
-                new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
         playButton.setEnabled(false);
         pauseButton.setEnabled(false);
+        seekBar.setEnabled(false);
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
         AdRequest.Builder adRequest = new AdRequest.Builder();
@@ -94,12 +97,11 @@ public class SoundActivity extends AppCompatActivity {
         adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
         adView.loadAd(adRequest.build());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.bar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        setSupportActionBar(toolbar);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        seekBar.setEnabled(false);
         setListeners();
     }
 
@@ -116,7 +118,7 @@ public class SoundActivity extends AppCompatActivity {
                         new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
                         return;
                     case 2:
-                        startActivityIfNeeded(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")), 0);
+                        startActivityIfNeeded(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
                         return;
                     default:
                 }
@@ -196,6 +198,18 @@ public class SoundActivity extends AppCompatActivity {
             SoundApplication.soundPlayerInstance.release();
             SoundApplication.soundPlayerInstance = null;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

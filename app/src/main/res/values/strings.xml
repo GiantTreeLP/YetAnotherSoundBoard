@@ -22,5 +22,6 @@
     <string name="dialog_data_title">Data collection</string>
     <string name="dialog_data_msg">We are using device identifiers to personalize contents and ads, offer functions for social media and analyze our app\'s usage. Apart form that, we also provide those identifiers and other information about your device to our partners for social media, advertisement and analysis. Learn more: http://www.google.com/intl/policies/privacy/partners/.</string>
     <string name="pref_title_misc" >Misc.</string>
+    <string name="desc_splash_img">Splash Image</string>
 
 </resources>

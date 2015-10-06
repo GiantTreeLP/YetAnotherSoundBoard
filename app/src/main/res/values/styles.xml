@@ -19,6 +19,8 @@
         <item name="android:colorBackground">@color/primary</item>
         <item name="android:background">@color/primary</item>
         <item name="colorControlNormal">@android:color/white</item>
+        <item name="color">@android:color/white</item>
+        <item name="spinBars">true</item>
     </style>
 
     <!-- Application theme. -->

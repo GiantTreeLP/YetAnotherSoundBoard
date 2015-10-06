@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/bar"
+                android:layout_below="@+id/toolbar"
                 ads:adSize="SMART_BANNER"
                 ads:adUnitId="ca-app-pub-3037917426709185/9812879348" />
 
@@ -678,7 +678,7 @@
                 android:typeface="monospace" />
 
             <include
-                android:id="@+id/bar"
+                android:id="@+id/toolbar"
                 layout="@layout/toolbar" />
 
         </RelativeLayout>
