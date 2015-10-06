@@ -20,7 +20,7 @@
     <string name="text_changelog">"<![CDATA[<h2>What\'s new:</h2><h3>New sounds!</b></h3><p>Get hyped for new sounds, including John Cena and more</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar background</string>
     <string name="dialog_data_title">Data collection</string>
-    <string name="dialog_data_msg">We are using device identifiers to personalize contents and ads, offer functions for social media and analyze our app\'s usage. Apart form that, we also provide those identifiers and other information about your device to our partners for social media, advertisement and analysis. Learn more: http://www.google.com/intl/policies/privacy/partners/.</string>
+    <string name="dialog_data_msg">We are using device identifiers to personalize contents and ads, offer functions for social media and analyze our app\'s usage. Apart from that, we also provide those identifiers and other information about your device to our partners for social media, advertisement and analysis. Learn more: http://www.google.com/intl/policies/privacy/partners/.</string>
     <string name="pref_title_misc" >Misc.</string>
     <string name="desc_splash_img">Splash Image</string>
 

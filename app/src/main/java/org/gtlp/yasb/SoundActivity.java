@@ -111,7 +111,6 @@ public class SoundActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        //new SettingsActivity();
                         startActivityIfNeeded(new Intent(getApplicationContext(), SettingsActivity.class), 0);
                         return;
                     case 1:
