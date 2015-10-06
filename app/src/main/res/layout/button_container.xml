@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:psb="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/ctrl_container"
+    android:layout_below="@+id/adView"
+    android:translationZ="-2dp"
+    tools:showIn="@layout/activity_sound">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="AIRHORN"
+                android:textColor="#ffffff"
+                psb:file="airhorn.mp3"
+                psb:url="https://www.youtube.com/watch?v=IpyingiCwV8" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="AIRPORN"
+                android:textColor="#ffffff"
+                psb:file="airporn.mp3"
+                psb:url="https://www.youtube.com/watch?v=Ks5bzvT-D6I" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Aye"
+                android:textColor="#ffffff"
+                psb:file="aye.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="But Im not a rapper"
+                android:textColor="#ffffff"
+                psb:file="butimnotarapper.mp3"
+                psb:url="https://www.youtube.com/watch?v=-ChppfnazzE" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="C'mon mate"
+                android:textColor="#ffffff"
+                psb:file="cmonmate.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="COD Scream"
+                android:textColor="#ffffff"
+                psb:file="codscream.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Crawling in my skin"
+                android:textColor="#ffffff"
+                psb:file="crawlinginmyskin.mp3"
+                psb:url="https://www.youtube.com/watch?v=dRJdwIo41gg" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Damn son"
+                android:textColor="#ffffff"
+                psb:file="damnson.mp3"
+                psb:url="https://www.youtube.com/watch?v=Se8Yq56tSLc" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Darude DankStorm"
+                android:textColor="#ffffff"
+                psb:file="darude_dankstorm.mp3"
+                psb:url="https://www.youtube.com/watch?v=u9ymUX1fJLw" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Dedotadedwam"
+                android:textColor="#ffffff"
+                psb:file="dedotadedwam.mp3"
+                psb:url="https://www.youtube.com/watch?v=wsO-Td0hqXo" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Dota"
+                android:textColor="#ffffff"
+                psb:file="dota.mp3"
+                psb:url="https://www.youtube.com/watch?v=bKmBEdY35mA" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Drop the bass"
+                android:textColor="#ffffff"
+                psb:file="dropthebass.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Fuck her right in the pussy"
+                android:textColor="#ffffff"
+                psb:file="fuckherrightinthepussy.mp3"
+                psb:url="https://www.youtube.com/watch?v=6w1DsOA-1pM" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Gaylord"
+                android:textColor="#ffffff"
+                psb:file="gaylord.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="get noscoped"
+                android:textColor="#ffffff"
+                psb:file="getnoscoped.mp3"
+                psb:url="https://www.youtube.com/watch?v=1mz6y526yCk" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="hardscoper"
+                android:textColor="#ffffff"
+                psb:file="hardscoper.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="intervention"
+                android:textColor="#ffffff"
+                psb:file="intervention.mp3"
+                psb:url="https://www.youtube.com/watch?v=1O-dqWQOc8s" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="just hitmarker"
+                android:textColor="#ffffff"
+                psb:file="justhitmarker.mp3"
+                psb:url="https://www.dropbox.com/s/3nh8u7nrql96k48\/HITMARKER.wav" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Mom get the camera"
+                android:textColor="#ffffff"
+                psb:file="momgetthecamera.mp3"
+                psb:url="https://www.youtube.com/watch?v=gl33V3fh7k0" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Oh Baby a triple"
+                android:textColor="#ffffff"
+                psb:file="ohbabyatriple.mp3"
+                psb:url="https://www.youtube.com/watch?v=B8LpUA06HEo" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Ohhhhhh"
+                android:textColor="#ffffff"
+                psb:file="ohhhhhh.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="oooooooohmygooood"
+                android:textColor="#ffffff"
+                psb:file="oooooooohmygooood.mp3"
+                psb:url="https://www.youtube.com/watch?v=b_yMiLwxae0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Quaaad"
+                android:textColor="#ffffff"
+                psb:file="quaaad.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Quickscober"
+                android:textColor="#ffffff"
+                psb:file="quickscober.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Sanic"
+                android:textColor="#ffffff"
+                psb:file="sanic.mp3"
+                psb:url="https://www.youtube.com/watch?v=hU7EHKFNMQg" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Scrubb"
+                android:textColor="#ffffff"
+                psb:file="scrubb.mp3"
+                psb:url="" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Skrillex scary"
+                android:textColor="#ffffff"
+                psb:file="skrillexscary.mp3"
+                psb:url="https://www.youtube.com/watch?v=WSeNSzJ2-Jw" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Smoke weed everyday"
+                android:textColor="#ffffff"
+                psb:file="smokeweedeveryday.mp3"
+                psb:url="https://www.youtube.com/watch?v=KlujizeNNQM" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Spooky"
+                android:textColor="#ffffff"
+                psb:file="spooky.mp3"
+                psb:url="https://www.youtube.com/watch?v=rbBX6aEzEz8" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Spooky Skellys"
+                android:textColor="#ffffff"
+                psb:file="spookyskellys.mp3"
+                psb:url="" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Surprise Motherfucker"
+                android:textColor="#ffffff"
+                psb:file="surprisemotherfucker.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Tactical Nuke"
+                android:textColor="#ffffff"
+                psb:file="tacticalnuke.mp3"
+                psb:url="https://www.youtube.com/watch?v=cLI8wtbCIkM" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="2Sad4Me"
+                android:textColor="#ffffff"
+                psb:file="twosad4me.mp3"
+                psb:url="https://www.youtube.com/watch?v=JSnR80kY0m0" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="2Sed4Airhorn"
+                android:textColor="#ffffff"
+                psb:file="twosed4airhorn.mp3"
+                psb:url="https://soundcloud.com/gay-bagel/sad-airhorn" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Weed"
+                android:textColor="#ffffff"
+                psb:file="weed.mp3"
+                psb:url="" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Whatcha say"
+                android:textColor="#ffffff"
+                psb:file="whatchasay.mp3"
+                psb:url="https://www.youtube.com/watch?v=thhaf-bKWyg" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Wombocombo"
+                android:textColor="#ffffff"
+                psb:file="wombocombo.mp3"
+                psb:url="https://www.youtube.com/watch?v=pD_imYhNoQ4" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="WOW"
+                android:textColor="#ffffff"
+                psb:file="wow.mp3"
+                psb:url="https://www.youtube.com/watch?v=FzjtPtOH-Hg" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Deez nuts"
+                android:textColor="#ffffff"
+                psb:file="deeznuts.mp3"
+                psb:url="https://www.youtube.com/watch?v=5LlQNty_C8s" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Shots fired"
+                android:textColor="#ffffff"
+                psb:file="shotsfired.mp3"
+                psb:url="http://soundboard.panictank.net/SHOTS%20FIRED.mp3" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="0"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="Turn down for what"
+                android:textColor="#ffffff"
+                psb:file="turndownforwhat.mp3"
+                psb:url="http://montageparodies.net/Turn%20Down%20For%20What.mp3" />
+
+            <org.gtlp.yasb.PlaySoundButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_column="1"
+                android:layout_weight="1"
+                android:background="@drawable/sound_button_shape"
+                android:text="John Cena"
+                android:textColor="#ffffff"
+                psb:file="johncena.mp3"
+                psb:url="https://www.youtube.com/watch?v=enMReCEcHiM" />
+
+
+        </TableRow>
+
+    </TableLayout>
+</ScrollView>
