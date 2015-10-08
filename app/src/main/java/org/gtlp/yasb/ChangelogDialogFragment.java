@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 
 public class ChangelogDialogFragment extends DialogFragment {
     @NonNull
-    public Dialog onCreateDialog(Bundle bundle) {
+    public final Dialog onCreateDialog(Bundle bundle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         ScrollView scrollView = new ScrollView(getActivity());
@@ -26,9 +26,8 @@ public class ChangelogDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    SoundApplication.preferences.edit().putInt(SoundApplication.PREFKEY_VERSION_CODE, getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode).apply();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    SoundApplication.getPreferences().edit().putInt(SoundApplication.PREFKEY_VERSION_CODE, getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode).apply();
+                } catch (PackageManager.NameNotFoundException ignored) {
                 }
                 dialog.dismiss();
             }

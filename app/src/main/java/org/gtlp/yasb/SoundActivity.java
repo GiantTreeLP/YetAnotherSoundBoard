@@ -27,35 +27,59 @@ import com.google.android.gms.ads.AdView;
 
 public class SoundActivity extends AppCompatActivity {
 
-    static SeekBar seekBar;
-    static TextView timeText;
-    static View playButton;
-    static View pauseButton;
-    static TextView current;
+    public static final String CALLER_KEY = "caller";
+    private static SeekBar seekBar;
+    private static TextView timeText;
+    private static View playButton;
+    private static View pauseButton;
+    private static TextView current;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
+    public static SeekBar getSeekBar() {
+        return seekBar;
+    }
+
+    public static TextView getTimeText() {
+        return timeText;
+    }
+
+    public static View getPlayButton() {
+        return playButton;
+    }
+
+    public static View getPauseButton() {
+        return pauseButton;
+    }
+
+    public static TextView getCurrent() {
+        return current;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (getIntent().hasExtra(CALLER_KEY) && getIntent().getCharSequenceExtra(CALLER_KEY).toString().equals(SplashActivity.NAME)) {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        }
         setContentView(R.layout.activity_sound);
         pauseButton = findViewById(R.id.pauseButton);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         playButton = findViewById(R.id.playButton);
         timeText = (TextView) findViewById(R.id.timetext);
         current = (TextView) findViewById(R.id.current);
-        if (SoundApplication.soundPlayerInstance != null) {
-            SoundApplication.soundPlayerInstance.release();
+        if (SoundApplication.getSoundPlayerInstance() != null) {
+            SoundApplication.getSoundPlayerInstance().release();
         }
-        SoundApplication.soundPlayerInstance = new SoundPlayer();
+        SoundApplication.setSoundPlayerInstance(new SoundPlayer());
         initUI();
     }
 
     @Override
-    public void onStart() {
+    public final void onStart() {
         super.onStart();
-        if (SoundApplication.preferences.getBoolean(SoundApplication.PREFKEY_FIRSTRUN, true) || BuildConfig.DEBUG) {
+        if (SoundApplication.getPreferences().getBoolean(SoundApplication.PREFKEY_FIRSTRUN, true) || BuildConfig.DEBUG) {
             SpannableString message = new SpannableString(getText(R.string.dialog_data_msg));
             Linkify.addLinks(message, Linkify.WEB_URLS);
             new AlertDialog.Builder(this)
@@ -64,32 +88,31 @@ public class SoundActivity extends AppCompatActivity {
                     .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SoundApplication.preferences.edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
+                            SoundApplication.getPreferences().edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
                         }
                     }).show();
             try {
-                if (SoundApplication.preferences.getInt(SoundApplication.PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
+                if (SoundApplication.getPreferences().getInt(SoundApplication.PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
                     new ChangelogDialogFragment().show(getSupportFragmentManager(), "ChangelogDialogFragment");
                 }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+            } catch (PackageManager.NameNotFoundException ignored) {
             }
         }
     }
 
     @Override
-    protected void onStop() {
+    protected final void onStop() {
         super.onStop();
-        if (SoundApplication.soundPlayerInstance != null) {
-            SoundApplication.soundPlayerInstance.release();
-            SoundApplication.soundPlayerInstance = null;
+        if (SoundApplication.getSoundPlayerInstance() != null) {
+            SoundApplication.getSoundPlayerInstance().release();
+            SoundApplication.setSoundPlayerInstance(null);
         }
     }
 
     private void initUI() {
-        playButton.setEnabled(false);
-        pauseButton.setEnabled(false);
-        seekBar.setEnabled(false);
+        getPlayButton().setEnabled(false);
+        getPauseButton().setEnabled(false);
+        getSeekBar().setEnabled(false);
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
         AdRequest.Builder adRequest = new AdRequest.Builder();
@@ -124,57 +147,35 @@ public class SoundActivity extends AppCompatActivity {
             }
         });
 
-        playButton.setOnClickListener(new View.OnClickListener() {
+        getPlayButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SoundApplication.soundPlayerInstance != null && !SoundApplication.soundPlayerInstance.isPlaying()) {
-                    SoundApplication.soundPlayerInstance.start();
+                if (SoundApplication.getSoundPlayerInstance() != null && !SoundApplication.getSoundPlayerInstance().isPlaying()) {
+                    SoundApplication.getSoundPlayerInstance().start();
                 }
             }
         });
 
-        pauseButton.setOnClickListener(new View.OnClickListener() {
+        getPauseButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SoundApplication.soundPlayerInstance != null && SoundApplication.soundPlayerInstance.isPlaying()) {
-                    SoundApplication.soundPlayerInstance.pause();
+                if (SoundApplication.getSoundPlayerInstance() != null && SoundApplication.getSoundPlayerInstance().isPlaying()) {
+                    SoundApplication.getSoundPlayerInstance().pause();
                 }
             }
         });
-        seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            boolean oldState;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && SoundApplication.soundPlayerInstance != null)
-                    SoundApplication.soundPlayerInstance.seekTo(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                if (SoundApplication.soundPlayerInstance != null) {
-                    oldState = SoundApplication.soundPlayerInstance.isPlaying();
-                    SoundApplication.soundPlayerInstance.pause();
-                }
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (oldState && SoundApplication.soundPlayerInstance != null)
-                    SoundApplication.soundPlayerInstance.start();
-            }
-        });
+        getSeekBar().setOnSeekBarChangeListener(new SeekBarSoundPlayerController());
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    protected final void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         actionBarDrawerToggle.syncState();
     }
 
     @Override
-    public void onBackPressed() {
+    public final void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
             return;
@@ -183,24 +184,24 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    protected final void onPause() {
         super.onPause();
-        if (SoundApplication.soundPlayerInstance != null) {
-            if (SoundApplication.soundPlayerInstance.seeker != null && SoundApplication.soundPlayerInstance.seeker.getStatus().equals(AsyncTask.Status.RUNNING)) {
-                SoundApplication.soundPlayerInstance.seeker.pause = true;
-                SoundApplication.soundPlayerInstance.seeker.cancel(true);
+        if (SoundApplication.getSoundPlayerInstance() != null) {
+            if (SoundApplication.getSoundPlayerInstance().getSeeker() != null && SoundApplication.getSoundPlayerInstance().getSeeker().getStatus().equals(AsyncTask.Status.RUNNING)) {
+                SoundApplication.getSoundPlayerInstance().getSeeker().setPause(true);
+                SoundApplication.getSoundPlayerInstance().getSeeker().cancel(true);
             }
-            if (SoundApplication.soundPlayerInstance.isPlaying()) {
-                SoundApplication.soundPlayerInstance.pause();
+            if (SoundApplication.getSoundPlayerInstance().isPlaying()) {
+                SoundApplication.getSoundPlayerInstance().pause();
             }
 
-            SoundApplication.soundPlayerInstance.release();
-            SoundApplication.soundPlayerInstance = null;
+            SoundApplication.getSoundPlayerInstance().release();
+            SoundApplication.setSoundPlayerInstance(null);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -211,4 +212,29 @@ public class SoundActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class SeekBarSoundPlayerController implements OnSeekBarChangeListener {
+        private boolean oldState;
+
+        @Override
+        public void onProgressChanged(SeekBar bar, int progress, boolean fromUser) {
+            if (fromUser && SoundApplication.getSoundPlayerInstance() != null) {
+                SoundApplication.getSoundPlayerInstance().seekTo(progress);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar bar) {
+            if (SoundApplication.getSoundPlayerInstance() != null) {
+                oldState = SoundApplication.getSoundPlayerInstance().isPlaying();
+                SoundApplication.getSoundPlayerInstance().pause();
+            }
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar bar) {
+            if (oldState && SoundApplication.getSoundPlayerInstance() != null) {
+                SoundApplication.getSoundPlayerInstance().start();
+            }
+        }
+    }
 }

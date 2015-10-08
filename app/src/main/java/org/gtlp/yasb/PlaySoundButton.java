@@ -19,11 +19,11 @@ import java.io.IOException;
 
 import static android.view.View.OnClickListener;
 import static android.widget.RemoteViews.RemoteView;
-import static org.gtlp.yasb.SoundApplication.soundPlayerInstance;
 
 @RemoteView
 public class PlaySoundButton extends Button implements OnClickListener, View.OnLongClickListener {
 
+    public static final int VIEW_SPACING = 24;
     private String url;
     private String file;
 
@@ -47,27 +47,26 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     }
 
     @Override
-    public void onClick(View v) {
+    public final void onClick(View v) {
         SoundApplication.log("Hit " + getText());
-        if (SoundApplication.tracker != null) {
-            SoundApplication.tracker.setScreenName("YetAnotherSoundBoard ButtonFragment");
-            SoundApplication.tracker.send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
+        if (SoundApplication.getTracker() != null) {
+            SoundApplication.getTracker().setScreenName("YetAnotherSoundBoard ButtonFragment");
+            SoundApplication.getTracker().send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
         Crashlytics.getInstance().core.setString(SoundApplication.CLICK_IDENTIFIER, file);
-        if (soundPlayerInstance == null) {
-            soundPlayerInstance = new SoundPlayer();
+        if (SoundApplication.getSoundPlayerInstance() == null) {
+            SoundApplication.setSoundPlayerInstance(new SoundPlayer());
         }
-        SoundApplication.log("SoundPlayer instance is: " + soundPlayerInstance.toString());
+        SoundApplication.log("SoundPlayer instance is: " + SoundApplication.getSoundPlayerInstance().toString());
         try {
-            soundPlayerInstance.playSound(getContext(), file);
-        } catch (IOException e) {
-            e.printStackTrace();
+            SoundApplication.getSoundPlayerInstance().playSound(getContext(), file);
+        } catch (IOException ignored) {
         }
-        SoundActivity.seekBar.setEnabled(true);
+        SoundActivity.getSeekBar().setEnabled(true);
     }
 
     @Override
-    public boolean onLongClick(View v) {
+    public final boolean onLongClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         TextView tv = new TextView(getContext());
         String message = getResources().getString(R.string.msg_name) + getText() + "\n\n";
@@ -78,7 +77,7 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         tv.setAutoLinkMask(Linkify.WEB_URLS);
         tv.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setTitle(R.string.dialog_info_title);
-        builder.setView(tv, 24, 24, 24, 24);
+        builder.setView(tv, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING);
         builder.setNeutralButton(getContext().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -86,9 +85,9 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             }
         });
         builder.show();
-        if (SoundApplication.tracker != null) {
-            SoundApplication.tracker.setScreenName("InfoDialog-".concat(getText().toString()));
-            SoundApplication.tracker.send(new HitBuilders.AppViewBuilder().build());
+        if (SoundApplication.getTracker() != null) {
+            SoundApplication.getTracker().setScreenName("InfoDialog-".concat(getText().toString()));
+            SoundApplication.getTracker().send(new HitBuilders.AppViewBuilder().build());
         }
         Crashlytics.getInstance().core.setString(SoundApplication.LONG_CLICK_IDENTIFIER, "Info-".concat(file));
         return true;

@@ -19,18 +19,42 @@ public class SoundApplication extends Application {
     static final String CLICK_IDENTIFIER = "lastClick";
     static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
     private static final String YASB = "YASB";
-    static SoundPlayer soundPlayerInstance = new SoundPlayer();
-    static Tracker tracker;
-    static SharedPreferences preferences;
+    private static SoundPlayer soundPlayerInstance = new SoundPlayer();
+    private static Tracker tracker;
+    private static SharedPreferences preferences;
 
     public static void log(String message) {
         Crashlytics.getInstance().core.log(Log.DEBUG, YASB, message);
     }
 
+    public static SoundPlayer getSoundPlayerInstance() {
+        return soundPlayerInstance;
+    }
+
+    public static void setSoundPlayerInstance(SoundPlayer instance) {
+        SoundApplication.soundPlayerInstance = instance;
+    }
+
+    public static Tracker getTracker() {
+        return tracker;
+    }
+
+    public static void setTracker(Tracker t) {
+        SoundApplication.tracker = t;
+    }
+
+    public static SharedPreferences getPreferences() {
+        return preferences;
+    }
+
+    public static void setPreferences(SharedPreferences p) {
+        SoundApplication.preferences = p;
+    }
+
     @Override
-    public void onCreate() {
+    public final void onCreate() {
         super.onCreate();
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setPreferences(PreferenceManager.getDefaultSharedPreferences(this));
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
@@ -39,11 +63,11 @@ public class SoundApplication extends Application {
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(this);
-        analytics.setAppOptOut(preferences.getBoolean("opt_out", false) || BuildConfig.DEBUG);
-        tracker = analytics.newTracker("UA-26925696-3");
-        tracker.enableExceptionReporting(true);
-        tracker.enableAdvertisingIdCollection(true);
-        tracker.enableAutoActivityTracking(true);
+        analytics.setAppOptOut(getPreferences().getBoolean("opt_out", false) || BuildConfig.DEBUG);
+        setTracker(analytics.newTracker("UA-26925696-3"));
+        getTracker().enableExceptionReporting(true);
+        getTracker().enableAdvertisingIdCollection(true);
+        getTracker().enableAutoActivityTracking(true);
         AnalyticsTrackers.initialize(this);
     }
 }

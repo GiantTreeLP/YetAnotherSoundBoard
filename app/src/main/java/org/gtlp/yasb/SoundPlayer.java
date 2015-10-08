@@ -17,12 +17,14 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 class SoundPlayer extends MediaPlayer {
-    public boolean isPrepared = false;
-    public Seeker seeker;
+
+    public static final int MILLIS_PER_SECOND = 1000;
+    public static final int SECONDS_PER_MINUTE = 60;
+    private boolean isPrepared = false;
+    private Seeker seeker;
     private String selectedSound;
     private ObjectAnimator objectAnimator;
     private MediaPlayerState mState;
-
     public SoundPlayer() {
         super();
         setOnPreparedListener(new OnPreparedListener() {
@@ -39,10 +41,10 @@ class SoundPlayer extends MediaPlayer {
                 setState(MediaPlayerState.PLAYBACK_COMPLETED);
                 mp.seekTo(0);
                 if (seeker != null) {
-                    seeker.pause = true;
+                    seeker.setPause(true);
                 }
-                SoundActivity.seekBar.setProgress(0);
-                SoundActivity.timeText.setText(getFormattedProgressText());
+                SoundActivity.getSeekBar().setProgress(0);
+                SoundActivity.getTimeText().setText(getFormattedProgressText());
                 setPlayPauseButtonStates(true, false);
             }
         });
@@ -57,9 +59,17 @@ class SoundPlayer extends MediaPlayer {
     }
 
     private static String formatMillis(int millis) {
-        int minutes = millis / 1000 / 60;
-        int seconds = millis / 1000;
-        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        int minutes = millis / MILLIS_PER_SECOND / SECONDS_PER_MINUTE;
+        int seconds = millis / MILLIS_PER_SECOND;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public boolean isPrepared() {
+        return isPrepared;
+    }
+
+    public Seeker getSeeker() {
+        return seeker;
     }
 
     @Override
@@ -69,43 +79,43 @@ class SoundPlayer extends MediaPlayer {
     }
 
     @Override
-    public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri) throws IOException {
         super.setDataSource(context, uri);
         setState(MediaPlayerState.INITIALIZED);
     }
 
     @Override
-    public void setDataSource(MediaDataSource dataSource) throws IllegalArgumentException, IllegalStateException {
+    public void setDataSource(MediaDataSource dataSource) {
         super.setDataSource(dataSource);
         setState(MediaPlayerState.INITIALIZED);
     }
 
     @Override
-    public void setDataSource(FileDescriptor fd, long offset, long length) throws IOException, IllegalArgumentException, IllegalStateException {
+    public void setDataSource(FileDescriptor fd, long offset, long length) throws IOException {
         super.setDataSource(fd, offset, length);
         setState(MediaPlayerState.INITIALIZED);
     }
 
     @Override
-    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(String path) throws IOException {
         super.setDataSource(path);
         setState(MediaPlayerState.INITIALIZED);
     }
 
     @Override
-    public void prepare() throws IOException, IllegalStateException {
+    public void prepare() throws IOException {
         super.prepare();
         setState(MediaPlayerState.PREPARED);
     }
 
     @Override
-    public void prepareAsync() throws IllegalStateException {
+    public void prepareAsync() {
         super.prepareAsync();
         setState(MediaPlayerState.PREPARING);
     }
 
     @Override
-    public void stop() throws IllegalStateException {
+    public void stop() {
         super.stop();
         setState(MediaPlayerState.STOPPED);
     }
@@ -117,8 +127,8 @@ class SoundPlayer extends MediaPlayer {
     }
 
     private void setPlayPauseButtonStates(boolean playButtonState, boolean pauseButtonState) {
-        SoundActivity.playButton.setEnabled(playButtonState);
-        SoundActivity.pauseButton.setEnabled(pauseButtonState);
+        SoundActivity.getPlayButton().setEnabled(playButtonState);
+        SoundActivity.getPauseButton().setEnabled(pauseButtonState);
     }
 
     public String getFormattedProgressText() {
@@ -138,7 +148,7 @@ class SoundPlayer extends MediaPlayer {
             setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
             assetFileDescriptor.close();
             selectedSound = assetName.replace(".mp3", "");
-            SoundActivity.current.setText(selectedSound);
+            SoundActivity.getCurrent().setText(selectedSound);
             prepare();
         }
         start();
@@ -151,28 +161,25 @@ class SoundPlayer extends MediaPlayer {
         setState(MediaPlayerState.STARTED);
         setPlayPauseButtonStates(false, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            SoundActivity.seekBar.setMax(getDuration());
-            objectAnimator = ObjectAnimator.ofInt(SoundActivity.seekBar, "progress", getCurrentPosition(), getDuration());
+            SoundActivity.getSeekBar().setMax(getDuration());
+            objectAnimator = ObjectAnimator.ofInt(SoundActivity.getSeekBar(), "progress", getCurrentPosition(), getDuration());
             objectAnimator.setDuration(getDuration() - getCurrentPosition());
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    if (SoundActivity.timeText != null) {
-                        SoundActivity.timeText.setText(getFormattedProgressText());
+                    if (SoundActivity.getTimeText() != null) {
+                        SoundActivity.getTimeText().setText(getFormattedProgressText());
                     }
                 }
             });
             objectAnimator.start();
         } else {
-            if (seeker != null) {
-                if (seeker.getStatus() != AsyncTask.Status.RUNNING) {
-                    (seeker = new Seeker()).execute();
-                } else {
-                    seeker.pause = false;
-                }
+            if (getSeeker() != null && getSeeker().getStatus() == AsyncTask.Status.RUNNING) {
+                seeker.setPause(false);
             } else {
-                (seeker = new Seeker()).execute();
+                seeker = new Seeker();
+                seeker.execute();
             }
         }
     }
@@ -184,7 +191,7 @@ class SoundPlayer extends MediaPlayer {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null) {
             objectAnimator.setTarget(null);
         } else if (seeker != null) {
-            seeker.pause = true;
+            seeker.setPause(true);
         }
         setPlayPauseButtonStates(true, false);
     }
@@ -193,7 +200,7 @@ class SoundPlayer extends MediaPlayer {
     public void seekTo(int time) {
         super.seekTo(time);
         setState(MediaPlayerState.PAUSED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null && SoundActivity.seekBar != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null && SoundActivity.getSeekBar() != null) {
             objectAnimator.setTarget(null);
         }
     }

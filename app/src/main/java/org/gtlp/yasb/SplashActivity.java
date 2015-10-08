@@ -13,15 +13,16 @@ public class SplashActivity extends AppCompatActivity {
     public static final int SPLASH_IMG_SCALE_FACTOR = 50;
     public static final float SPLASH_IMG_ALPHA_GOAL = 0.06125f;
     public static final int SPLASH_IMG_ANIM_DURATION = 2000;
+    public static final String NAME = "SplashActivity";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
     }
 
     @Override
-    protected void onStart() {
+    protected final void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             findViewById(R.id.splashImg).setScaleX(SPLASH_IMG_SCALE_FACTOR);
@@ -30,8 +31,8 @@ public class SplashActivity extends AppCompatActivity {
             findViewById(R.id.splashImg).animate().scaleX(1).scaleY(1).alpha(1).setDuration(SPLASH_IMG_ANIM_DURATION).setInterpolator(new DecelerateInterpolator()).setListener(new AnimatorAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    startActivityIfNeeded(new Intent(SplashActivity.this, SoundActivity.class).putExtra(SoundActivity.CALLER_KEY, NAME), 0);
                     finish();
-                    startActivityIfNeeded(new Intent(SplashActivity.this, SoundActivity.class), 0);
                 }
             }).start();
         }

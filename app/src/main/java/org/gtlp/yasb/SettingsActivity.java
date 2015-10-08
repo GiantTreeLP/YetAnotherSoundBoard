@@ -14,7 +14,7 @@ public class SettingsActivity extends PreferenceActivity {
     private AppCompatDelegate mDelegate;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -25,30 +25,30 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    protected final void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         getDelegate().onPostCreate(savedInstanceState);
     }
 
     @Override
-    public void setContentView(@LayoutRes int layoutResID) {
+    public final void setContentView(@LayoutRes int layoutResID) {
         getDelegate().setContentView(layoutResID);
     }
 
     @Override
-    protected void onPostResume() {
+    protected final void onPostResume() {
         super.onPostResume();
         getDelegate().onPostResume();
     }
 
     @Override
-    protected void onStop() {
+    protected final void onStop() {
         super.onStop();
         getDelegate().onStop();
     }
 
     @Override
-    protected void onDestroy() {
+    protected final void onDestroy() {
         super.onDestroy();
         getDelegate().onDestroy();
     }
@@ -58,7 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public final boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
