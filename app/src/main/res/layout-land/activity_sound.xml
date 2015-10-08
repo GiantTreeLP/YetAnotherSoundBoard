@@ -30,18 +30,21 @@
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@+id/ctrl_container"
+                android:layout_toRightOf="@+id/ctrl_container" />
 
-            <include layout="@layout/button_container" />
+            <include
+                android:id="@+id/container"
+                layout="@layout/button_container" />
 
             <TableRow
                 android:id="@+id/ctrl_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/seekBar"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerHorizontal="true">
+                android:layout_alignParentStart="true">
 
                 <ImageButton
                     android:id="@+id/playButton"
