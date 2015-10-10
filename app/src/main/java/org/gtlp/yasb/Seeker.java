@@ -3,7 +3,7 @@ package org.gtlp.yasb;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
-public class Seeker extends AsyncTask<Void, Void, Void> {
+class Seeker extends AsyncTask<Void, Void, Void> {
 
     public static final int IDLE_SLEEP_TIME = 250;
     public static final int SLEEP_TIME = 19;

@@ -17,7 +17,7 @@
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
-    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neue Sounds!</h3><p>Seid gespannt auf neue Sounds, unter Anderem mit John Cena and weiteren.</p>]]>"</string>
+    <string name="text_changelog">"<![CDATA[<h2>Was gibt es Neues:</h2><h3>Neue Sounds!</h3><p>Seid gespannt auf neue Sounds, unter Anderem mit John Cena und weiteren.</p>]]>"</string>
     <string name="desc_sidebar_bg">Sidebar Hintergrund</string>
     <string name="dialog_data_title">Datenerhebung</string>
     <string name="dialog_data_msg">Wir verwenden Gerätekennungen, um Inhalte und Anzeigen zu personalisieren, Funktionen für soziale Medien anbieten zu können und die Zugriffe auf unsere App zu analysieren. Außerdem geben wir diese Kennungen und andere Informationen über Ihr Gerät an unsere Partner für soziale Medien, Werbung und Analysen weiter. Details ansehen: http://www.google.com/intl/de/policies/privacy/partners/</string>
