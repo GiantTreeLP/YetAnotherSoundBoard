@@ -14,7 +14,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final float SPLASH_IMG_ALPHA_GOAL = 0.06125f;
     public static final int SPLASH_IMG_ANIM_DURATION = 2000;
     public static final String NAME = "SplashActivity";
-    public static final float TENSION = 0.6f;
+    public static final float TENSION = 0.3f;
     public static final AnticipateOvershootInterpolator INTERPOLATOR = new AnticipateOvershootInterpolator(TENSION);
 
     @Override

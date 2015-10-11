@@ -1,6 +1,5 @@
 package org.gtlp.yasb;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,7 +15,6 @@ import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -85,11 +83,8 @@ public class SoundActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.dialog_data_title)
                     .setMessage(message)
-                    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SoundApplication.getPreferences().edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
-                        }
+                    .setNeutralButton(android.R.string.ok, (dialog, which) -> {
+                        SoundApplication.getPreferences().edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
                     }).show();
             try {
                 if (SoundApplication.getPreferences().getInt(SoundApplication.PREFKEY_VERSION_CODE, 0) < getPackageManager().getPackageInfo(getPackageName(), 0).versionCode) {
@@ -118,6 +113,7 @@ public class SoundActivity extends AppCompatActivity {
         AdRequest.Builder adRequest = new AdRequest.Builder();
         adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
         adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
+        adRequest.addTestDevice("CE877D36AC47F29D483AC1D279071D9F");
         adView.loadAd(adRequest.build());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -129,39 +125,30 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        ((ListView) findViewById(R.id.listView)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        startActivityIfNeeded(new Intent(getApplicationContext(), SettingsActivity.class), 0);
-                        return;
-                    case 1:
-                        new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
-                        return;
-                    case 2:
-                        startActivityIfNeeded(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
-                        return;
-                    default:
-                }
+        ((ListView) findViewById(R.id.listView)).setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 0:
+                    startActivityIfNeeded(new Intent(getApplicationContext(), SettingsActivity.class), 0);
+                    return;
+                case 1:
+                    new AboutDialogFragment().show(getSupportFragmentManager(), "AboutDialogFragment");
+                    return;
+                case 2:
+                    startActivityIfNeeded(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GiantTreeLP/YetAnotherSoundBoard/")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 0);
+                    return;
+                default:
             }
         });
 
-        getPlayButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SoundApplication.getSoundPlayerInstance() != null && !SoundApplication.getSoundPlayerInstance().isPlaying()) {
-                    SoundApplication.getSoundPlayerInstance().start();
-                }
+        getPlayButton().setOnClickListener(v -> {
+            if (SoundApplication.getSoundPlayerInstance() != null && !SoundApplication.getSoundPlayerInstance().isPlaying()) {
+                SoundApplication.getSoundPlayerInstance().start();
             }
         });
 
-        getPauseButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (SoundApplication.getSoundPlayerInstance() != null && SoundApplication.getSoundPlayerInstance().isPlaying()) {
-                    SoundApplication.getSoundPlayerInstance().pause();
-                }
+        getPauseButton().setOnClickListener(v -> {
+            if (SoundApplication.getSoundPlayerInstance() != null && SoundApplication.getSoundPlayerInstance().isPlaying()) {
+                SoundApplication.getSoundPlayerInstance().pause();
             }
         });
         getSeekBar().setOnSeekBarChangeListener(new SeekBarSoundPlayerController());

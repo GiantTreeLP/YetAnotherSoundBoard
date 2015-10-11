@@ -1,7 +1,6 @@
 package org.gtlp.yasb;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
@@ -25,35 +24,27 @@ class SoundPlayer extends MediaPlayer {
     private String selectedSound;
     private ObjectAnimator objectAnimator;
     private MediaPlayerState mState;
+
     public SoundPlayer() {
         super();
-        setOnPreparedListener(new OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                SoundApplication.log("SoundPlayer prepared");
-                setState(MediaPlayerState.PREPARED);
-                isPrepared = true;
-            }
+        setOnPreparedListener(mp -> {
+            SoundApplication.log("SoundPlayer prepared");
+            setState(MediaPlayerState.PREPARED);
+            isPrepared = true;
         });
-        setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                setState(MediaPlayerState.PLAYBACK_COMPLETED);
-                mp.seekTo(0);
-                if (seeker != null) {
-                    seeker.setPause(true);
-                }
-                SoundActivity.getSeekBar().setProgress(0);
-                SoundActivity.getTimeText().setText(getFormattedProgressText());
-                setPlayPauseButtonStates(true, false);
+        setOnCompletionListener(mp -> {
+            setState(MediaPlayerState.PLAYBACK_COMPLETED);
+            mp.seekTo(0);
+            if (seeker != null) {
+                seeker.setPause(true);
             }
+            SoundActivity.getSeekBar().setProgress(0);
+            SoundActivity.getTimeText().setText(getFormattedProgressText());
+            setPlayPauseButtonStates(true, false);
         });
-        setOnErrorListener(new OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                setState(MediaPlayerState.ERROR);
-                return false;
-            }
+        setOnErrorListener((mp, what, extra) -> {
+            setState(MediaPlayerState.ERROR);
+            return false;
         });
         setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
@@ -165,12 +156,9 @@ class SoundPlayer extends MediaPlayer {
             objectAnimator = ObjectAnimator.ofInt(SoundActivity.getSeekBar(), "progress", getCurrentPosition(), getDuration());
             objectAnimator.setDuration(getDuration() - getCurrentPosition());
             objectAnimator.setInterpolator(new LinearInterpolator());
-            objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    if (SoundActivity.getTimeText() != null) {
-                        SoundActivity.getTimeText().setText(getFormattedProgressText());
-                    }
+            objectAnimator.addUpdateListener(animation -> {
+                if (SoundActivity.getTimeText() != null) {
+                    SoundActivity.getTimeText().setText(getFormattedProgressText());
                 }
             });
             objectAnimator.start();

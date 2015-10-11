@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gtlp.yasb"
-    android:versionCode="778"
-    android:versionName="2.1.778">
+    android:versionCode="794"
+    android:versionName="2.1.794" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +16,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
         <!-- Add the following meta-data for devices running Google Play service. -->
         <meta-data
@@ -29,7 +29,7 @@
         -->
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
@@ -46,7 +46,7 @@
         -->
         <receiver
             android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -56,11 +56,11 @@
 
         <activity
             android:name=".SoundActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".SoundActivity">
+            android:parentActivityName=".SoundActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SoundActivity" />
@@ -78,7 +78,7 @@
             android:name="io.fabric.ApiKey"
             android:value="34f8fe1dee5160fe8f1397f945db7417a25e50be" />
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
