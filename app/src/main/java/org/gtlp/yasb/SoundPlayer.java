@@ -1,6 +1,7 @@
 package org.gtlp.yasb;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
@@ -29,24 +30,33 @@ class SoundPlayer extends MediaPlayer {
     public SoundPlayer(SoundActivity parent) {
         super();
         parentActivity = parent;
-        setOnPreparedListener(mp -> {
-            SoundApplication.log("SoundPlayer prepared");
-            setState(MediaPlayerState.PREPARED);
-            isPrepared = true;
-        });
-        setOnCompletionListener(mp -> {
-            setState(MediaPlayerState.PLAYBACK_COMPLETED);
-            mp.seekTo(0);
-            if (seeker != null) {
-                seeker.setPause(true);
+        setOnPreparedListener(new OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                SoundApplication.log("SoundPlayer prepared");
+                SoundPlayer.this.setState(MediaPlayerState.PREPARED);
+                isPrepared = true;
             }
-            parentActivity.getSeekBar().setProgress(0);
-            parentActivity.getTimeText().setText(getFormattedProgressText());
-            setPlayPauseButtonStates(true, false);
         });
-        setOnErrorListener((mp, what, extra) -> {
-            setState(MediaPlayerState.ERROR);
-            return false;
+        setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                SoundPlayer.this.setState(MediaPlayerState.PLAYBACK_COMPLETED);
+                mp.seekTo(0);
+                if (seeker != null) {
+                    seeker.setPause(true);
+                }
+                parentActivity.getSeekBar().setProgress(0);
+                parentActivity.getTimeText().setText(SoundPlayer.this.getFormattedProgressText());
+                SoundPlayer.this.setPlayPauseButtonStates(true, false);
+            }
+        });
+        setOnErrorListener(new OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                SoundPlayer.this.setState(MediaPlayerState.ERROR);
+                return false;
+            }
         });
         setAudioStreamType(AudioManager.STREAM_MUSIC);
     }
@@ -153,14 +163,18 @@ class SoundPlayer extends MediaPlayer {
         super.start();
         setState(MediaPlayerState.STARTED);
         setPlayPauseButtonStates(false, true);
+        parentActivity.getSeekBar().setEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             parentActivity.getSeekBar().setMax(getDuration());
             objectAnimator = ObjectAnimator.ofInt(parentActivity.getSeekBar(), "progress", getCurrentPosition(), getDuration());
             objectAnimator.setDuration(getDuration() - getCurrentPosition());
             objectAnimator.setInterpolator(new LinearInterpolator());
-            objectAnimator.addUpdateListener(animation -> {
-                if (parentActivity.getTimeText() != null) {
-                    parentActivity.getTimeText().setText(getFormattedProgressText());
+            objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if (parentActivity.getTimeText() != null) {
+                        parentActivity.getTimeText().setText(SoundPlayer.this.getFormattedProgressText());
+                    }
                 }
             });
             objectAnimator.start();

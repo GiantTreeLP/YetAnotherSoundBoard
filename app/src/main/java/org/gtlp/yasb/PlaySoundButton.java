@@ -1,6 +1,7 @@
 package org.gtlp.yasb;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
@@ -61,7 +62,6 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         Crashlytics.getInstance().core.setString(SoundApplication.CLICK_IDENTIFIER, file);
         if (SoundApplication.getSoundPlayerInstance() == null && getContext() instanceof SoundActivity) {
             SoundApplication.setSoundPlayerInstance(new SoundPlayer(parent));
-            parent.getSeekBar().setEnabled(true);
         }
         SoundApplication.log("SoundPlayer instance is: " + SoundApplication.getSoundPlayerInstance().toString());
         try {
@@ -83,8 +83,11 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         tv.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setTitle(R.string.dialog_info_title);
         builder.setView(tv, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING);
-        builder.setNeutralButton(getContext().getString(android.R.string.ok), (dialog, which) -> {
-            dialog.dismiss();
+        builder.setNeutralButton(getContext().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
         });
         builder.show();
         if (SoundApplication.getTracker() != null) {
