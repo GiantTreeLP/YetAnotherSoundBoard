@@ -19,7 +19,7 @@ public class SoundApplication extends Application {
     static final String CLICK_IDENTIFIER = "lastClick";
     static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
     private static final String YASB = "YASB";
-    private static SoundPlayer soundPlayerInstance = new SoundPlayer();
+    private static SoundPlayer soundPlayerInstance;
     private static Tracker tracker;
     private static SharedPreferences preferences;
 

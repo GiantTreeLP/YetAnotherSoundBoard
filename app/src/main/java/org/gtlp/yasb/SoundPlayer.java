@@ -24,9 +24,11 @@ class SoundPlayer extends MediaPlayer {
     private String selectedSound;
     private ObjectAnimator objectAnimator;
     private MediaPlayerState mState;
+    private SoundActivity parentActivity;
 
-    public SoundPlayer() {
+    public SoundPlayer(SoundActivity parent) {
         super();
+        parentActivity = parent;
         setOnPreparedListener(mp -> {
             SoundApplication.log("SoundPlayer prepared");
             setState(MediaPlayerState.PREPARED);
@@ -38,8 +40,8 @@ class SoundPlayer extends MediaPlayer {
             if (seeker != null) {
                 seeker.setPause(true);
             }
-            SoundActivity.getSeekBar().setProgress(0);
-            SoundActivity.getTimeText().setText(getFormattedProgressText());
+            parentActivity.getSeekBar().setProgress(0);
+            parentActivity.getTimeText().setText(getFormattedProgressText());
             setPlayPauseButtonStates(true, false);
         });
         setOnErrorListener((mp, what, extra) -> {
@@ -118,8 +120,8 @@ class SoundPlayer extends MediaPlayer {
     }
 
     private void setPlayPauseButtonStates(boolean playButtonState, boolean pauseButtonState) {
-        SoundActivity.getPlayButton().setEnabled(playButtonState);
-        SoundActivity.getPauseButton().setEnabled(pauseButtonState);
+        parentActivity.getPlayButton().setEnabled(playButtonState);
+        parentActivity.getPauseButton().setEnabled(pauseButtonState);
     }
 
     public String getFormattedProgressText() {
@@ -139,7 +141,7 @@ class SoundPlayer extends MediaPlayer {
             setDataSource(assetFileDescriptor.getFileDescriptor(), assetFileDescriptor.getStartOffset(), assetFileDescriptor.getLength());
             assetFileDescriptor.close();
             selectedSound = assetName.replace(".mp3", "");
-            SoundActivity.getCurrent().setText(selectedSound);
+            parentActivity.getCurrent().setText(selectedSound);
             prepare();
         }
         start();
@@ -152,13 +154,13 @@ class SoundPlayer extends MediaPlayer {
         setState(MediaPlayerState.STARTED);
         setPlayPauseButtonStates(false, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            SoundActivity.getSeekBar().setMax(getDuration());
-            objectAnimator = ObjectAnimator.ofInt(SoundActivity.getSeekBar(), "progress", getCurrentPosition(), getDuration());
+            parentActivity.getSeekBar().setMax(getDuration());
+            objectAnimator = ObjectAnimator.ofInt(parentActivity.getSeekBar(), "progress", getCurrentPosition(), getDuration());
             objectAnimator.setDuration(getDuration() - getCurrentPosition());
             objectAnimator.setInterpolator(new LinearInterpolator());
             objectAnimator.addUpdateListener(animation -> {
-                if (SoundActivity.getTimeText() != null) {
-                    SoundActivity.getTimeText().setText(getFormattedProgressText());
+                if (parentActivity.getTimeText() != null) {
+                    parentActivity.getTimeText().setText(getFormattedProgressText());
                 }
             });
             objectAnimator.start();
@@ -166,7 +168,7 @@ class SoundPlayer extends MediaPlayer {
             if (getSeeker() != null && getSeeker().getStatus() == AsyncTask.Status.RUNNING) {
                 seeker.setPause(false);
             } else {
-                seeker = new Seeker();
+                seeker = new Seeker(parentActivity);
                 seeker.execute();
             }
         }
@@ -188,7 +190,7 @@ class SoundPlayer extends MediaPlayer {
     public void seekTo(int time) {
         super.seekTo(time);
         setState(MediaPlayerState.PAUSED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null && SoundActivity.getSeekBar() != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && objectAnimator != null && parentActivity.getSeekBar() != null) {
             objectAnimator.setTarget(null);
         }
     }

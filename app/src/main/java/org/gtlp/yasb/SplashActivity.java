@@ -10,9 +10,9 @@ import android.view.animation.AnticipateOvershootInterpolator;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final int SPLASH_IMG_SCALE_FACTOR = 50;
-    public static final float SPLASH_IMG_ALPHA_GOAL = 0.06125f;
-    public static final int SPLASH_IMG_ANIM_DURATION = 2000;
+    public static final float SPLASH_IMG_SCALE_FACTOR = 16.0f;
+    public static final float SPLASH_IMG_ALPHA = 0.0f;
+    public static final long SPLASH_IMG_ANIM_DURATION = 750;
     public static final String NAME = "SplashActivity";
     public static final float TENSION = 0.3f;
     public static final AnticipateOvershootInterpolator INTERPOLATOR = new AnticipateOvershootInterpolator(TENSION);
@@ -29,11 +29,11 @@ public class SplashActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             findViewById(R.id.splashImg).setScaleX(SPLASH_IMG_SCALE_FACTOR);
             findViewById(R.id.splashImg).setScaleY(SPLASH_IMG_SCALE_FACTOR);
-            findViewById(R.id.splashImg).setAlpha(SPLASH_IMG_ALPHA_GOAL);
+            findViewById(R.id.splashImg).setAlpha(SPLASH_IMG_ALPHA);
             findViewById(R.id.splashImg).animate().scaleX(1).scaleY(1).alpha(1).setDuration(SPLASH_IMG_ANIM_DURATION).setInterpolator(INTERPOLATOR).setListener(new AnimatorAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    startActivityIfNeeded(new Intent(SplashActivity.this, SoundActivity.class).putExtra(SoundActivity.CALLER_KEY, NAME), 0);
+                    startActivity(new Intent(SplashActivity.this, SoundActivity.class).putExtra(SoundActivity.CALLER_KEY, NAME));
                     finish();
                 }
             }).start();

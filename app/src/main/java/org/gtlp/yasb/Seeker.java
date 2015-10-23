@@ -8,6 +8,11 @@ class Seeker extends AsyncTask<Void, Void, Void> {
     public static final int IDLE_SLEEP_TIME = 250;
     public static final int SLEEP_TIME = 19;
     private boolean pause = false;
+    private SoundActivity parentActivity;
+
+    public Seeker(SoundActivity parent) {
+        parentActivity = parent;
+    }
 
     public final void setPause(boolean bPause) {
         this.pause = bPause;
@@ -27,12 +32,12 @@ class Seeker extends AsyncTask<Void, Void, Void> {
     @Override
     protected final synchronized void onProgressUpdate(Void... values) {
         if (SoundApplication.getSoundPlayerInstance() != null) {
-            if (SoundActivity.getSeekBar() != null) {
-                SoundActivity.getSeekBar().setMax(SoundApplication.getSoundPlayerInstance().getDuration());
-                SoundActivity.getSeekBar().setProgress(SoundApplication.getSoundPlayerInstance().getCurrentPosition());
+            if (parentActivity.getSeekBar() != null) {
+                parentActivity.getSeekBar().setMax(SoundApplication.getSoundPlayerInstance().getDuration());
+                parentActivity.getSeekBar().setProgress(SoundApplication.getSoundPlayerInstance().getCurrentPosition());
             }
-            if (SoundActivity.getTimeText() != null) {
-                SoundActivity.getTimeText().setText(SoundApplication.getSoundPlayerInstance().getFormattedProgressText());
+            if (parentActivity.getTimeText() != null) {
+                parentActivity.getTimeText().setText(SoundApplication.getSoundPlayerInstance().getFormattedProgressText());
             }
         }
     }

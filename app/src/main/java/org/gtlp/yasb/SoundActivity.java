@@ -26,31 +26,31 @@ import com.google.android.gms.ads.AdView;
 public class SoundActivity extends AppCompatActivity {
 
     public static final String CALLER_KEY = "caller";
-    private static SeekBar seekBar;
-    private static TextView timeText;
-    private static View playButton;
-    private static View pauseButton;
-    private static TextView current;
+    private SeekBar seekBar;
+    private TextView timeText;
+    private View playButton;
+    private View pauseButton;
+    private TextView current;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
-    public static SeekBar getSeekBar() {
+    public SeekBar getSeekBar() {
         return seekBar;
     }
 
-    public static TextView getTimeText() {
+    public TextView getTimeText() {
         return timeText;
     }
 
-    public static View getPlayButton() {
+    public View getPlayButton() {
         return playButton;
     }
 
-    public static View getPauseButton() {
+    public View getPauseButton() {
         return pauseButton;
     }
 
-    public static TextView getCurrent() {
+    public TextView getCurrent() {
         return current;
     }
 
@@ -70,7 +70,7 @@ public class SoundActivity extends AppCompatActivity {
         if (SoundApplication.getSoundPlayerInstance() != null) {
             SoundApplication.getSoundPlayerInstance().release();
         }
-        SoundApplication.setSoundPlayerInstance(new SoundPlayer());
+        SoundApplication.setSoundPlayerInstance(new SoundPlayer(this));
         initUI();
     }
 
