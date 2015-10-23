@@ -1,7 +1,6 @@
 package org.gtlp.yasb;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
@@ -26,9 +25,15 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
     public static final int VIEW_SPACING = 24;
     private String url;
     private String file;
+    private SoundActivity parent;
 
     public PlaySoundButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        if (context instanceof SoundActivity) {
+            parent = (SoundActivity) context;
+        } else {
+            parent = null;
+        }
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
@@ -54,15 +59,15 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
             SoundApplication.getTracker().send(new HitBuilders.EventBuilder().setCategory("Sound").setAction("Play").setLabel(getText().toString()).build());
         }
         Crashlytics.getInstance().core.setString(SoundApplication.CLICK_IDENTIFIER, file);
-        if (SoundApplication.getSoundPlayerInstance() == null) {
-            SoundApplication.setSoundPlayerInstance(new SoundPlayer());
+        if (SoundApplication.getSoundPlayerInstance() == null && getContext() instanceof SoundActivity) {
+            SoundApplication.setSoundPlayerInstance(new SoundPlayer(parent));
+            parent.getSeekBar().setEnabled(true);
         }
         SoundApplication.log("SoundPlayer instance is: " + SoundApplication.getSoundPlayerInstance().toString());
         try {
             SoundApplication.getSoundPlayerInstance().playSound(getContext(), file);
         } catch (IOException ignored) {
         }
-        SoundActivity.getSeekBar().setEnabled(true);
     }
 
     @Override
@@ -78,11 +83,8 @@ public class PlaySoundButton extends Button implements OnClickListener, View.OnL
         tv.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setTitle(R.string.dialog_info_title);
         builder.setView(tv, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING, VIEW_SPACING);
-        builder.setNeutralButton(getContext().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setNeutralButton(getContext().getString(android.R.string.ok), (dialog, which) -> {
+            dialog.dismiss();
         });
         builder.show();
         if (SoundApplication.getTracker() != null) {
