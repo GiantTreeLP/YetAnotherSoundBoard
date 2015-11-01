@@ -115,10 +115,7 @@ public class SoundActivity extends AppCompatActivity {
         getSeekBar().setEnabled(false);
 
         AdView adView = (AdView) this.findViewById(R.id.adView);
-        AdRequest.Builder adRequest = new AdRequest.Builder();
-        adRequest.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-        adRequest.addTestDevice("E31615C89229AEDC2A9763B4301C3196");
-        adRequest.addTestDevice("CE877D36AC47F29D483AC1D279071D9F");
+        AdRequest.Builder adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("E31615C89229AEDC2A9763B4301C3196").addTestDevice("CE877D36AC47F29D483AC1D279071D9F").addTestDevice("61486F517CDF205893C2DAB54DC114BB");
         adView.loadAd(adRequest.build());
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -195,9 +192,6 @@ public class SoundActivity extends AppCompatActivity {
             if (SoundApplication.getSoundPlayerInstance().isPlaying()) {
                 SoundApplication.getSoundPlayerInstance().pause();
             }
-
-            SoundApplication.getSoundPlayerInstance().release();
-            SoundApplication.setSoundPlayerInstance(null);
         }
     }
 
