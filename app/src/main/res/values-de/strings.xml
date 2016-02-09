@@ -13,7 +13,7 @@
     <string name="pref_opt_out">Anonyme Statistiken deaktivieren</string>
     <string name="pref_opt_out_summ">Aktiviere dies, damit keine anonymen Daten zur Verbesserung dieser App gesammelt werden.</string>
     <string name="pref_title">Einstellungen</string>
-    <string name="copyright">GiantTree © 2015. Alle Rechte vorbehalten.\n\nBenutzt die Guava-Bibliothek für Android von Google.\nBenutzt Fabric von Twitter.</string>
+    <string name="copyright">GiantTree © 2016. Alle Rechte vorbehalten.\n\nBenutzt die Guava-Bibliothek für Android von Google.\nBenutzt Fabric von Twitter.</string>
     <string name="drawer_open">Drawer öffnen</string>
     <string name="drawer_close">Drawer schließen</string>
     <string name="action_github">Erkunde das Projekt auf GitHub.</string>
