@@ -16,6 +16,8 @@ public class SoundApplication extends Application {
 
     public static final String PREFKEY_VERSION_CODE = "versionCode";
     public static final String PREFKEY_FIRSTRUN = "isFirstRun";
+    public static final String TRACKING_ID = "UA-26925696-3";
+    public static final String KEY_OPT_OUT = "opt_out";
     static final String CLICK_IDENTIFIER = "lastClick";
     static final String LONG_CLICK_IDENTIFIER = "lastLongClick";
     private static final String YASB = "YASB";
@@ -63,8 +65,8 @@ public class SoundApplication extends Application {
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         analytics.enableAutoActivityReports(this);
-        analytics.setAppOptOut(getPreferences().getBoolean("opt_out", false) || BuildConfig.DEBUG);
-        setTracker(analytics.newTracker("UA-26925696-3"));
+        analytics.setAppOptOut(getPreferences().getBoolean(KEY_OPT_OUT, false) || BuildConfig.DEBUG);
+        setTracker(analytics.newTracker(TRACKING_ID));
         getTracker().enableExceptionReporting(true);
         getTracker().enableAdvertisingIdCollection(true);
         getTracker().enableAutoActivityTracking(true);
