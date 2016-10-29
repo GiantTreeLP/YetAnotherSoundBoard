@@ -5,32 +5,32 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.19.2'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
 }
-
 
 android {
     signingConfigs {
         config {
             keyAlias 'gianttree'
             keyPassword 'Birth1997'
-            storeFile file('E:/ADT/eclipse/keystore')
+            storeFile file('D:/ADT/eclipse/keystore')
             storePassword 'Birth1997'
         }
     }
-    compileSdkVersion 'Google Inc.:Google APIs:23'
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 'android-25'
+    buildToolsVersion '25'
     defaultConfig {
         applicationId "org.gtlp.yasb"
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 25
         signingConfig signingConfigs.config
     }
     buildTypes {
@@ -62,14 +62,15 @@ android {
 
 
 dependencies {
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:support-annotations:23.2.0'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile "com.android.support:support-core-utils:25.0.0"
+    compile 'com.android.support:support-annotations:25.0.0'
     compile 'com.google.code.findbugs:jsr305:2.0.2'
-    compile 'com.google.android.gms:play-services-base:8.4.0'
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
+    compile 'com.google.android.gms:play-services-base:9.8.0'
+    compile 'com.google.android.gms:play-services-ads:9.8.0'
+    compile 'com.google.android.gms:play-services-analytics:9.8.0'
     compile 'com.google.guava:guava:18.0'
 }

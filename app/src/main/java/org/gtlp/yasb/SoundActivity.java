@@ -88,7 +88,7 @@ public class SoundActivity extends AppCompatActivity {
                     .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SoundApplication.getPreferences().edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).commit();
+                            SoundApplication.getPreferences().edit().putBoolean(SoundApplication.PREFKEY_FIRSTRUN, false).apply();
                         }
                     }).show();
             try {
@@ -122,7 +122,7 @@ public class SoundActivity extends AppCompatActivity {
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         setSupportActionBar(toolbar);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         setListeners();
     }
 

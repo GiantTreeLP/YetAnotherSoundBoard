@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.ImageView;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -16,21 +17,23 @@ public class SplashActivity extends AppCompatActivity {
     public static final String NAME = "SplashActivity";
     public static final float TENSION = 0.3f;
     public static final AnticipateOvershootInterpolator INTERPOLATOR = new AnticipateOvershootInterpolator(TENSION);
+    private ImageView splashImg;
 
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        splashImg = (ImageView) findViewById(R.id.splashImg);
     }
 
     @Override
     protected final void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            findViewById(R.id.splashImg).setScaleX(SPLASH_IMG_SCALE_FACTOR);
-            findViewById(R.id.splashImg).setScaleY(SPLASH_IMG_SCALE_FACTOR);
-            findViewById(R.id.splashImg).setAlpha(SPLASH_IMG_ALPHA);
-            findViewById(R.id.splashImg).animate().scaleX(1).scaleY(1).alpha(1).setDuration(SPLASH_IMG_ANIM_DURATION).setInterpolator(INTERPOLATOR).setListener(new AnimatorAdapter() {
+            splashImg.setScaleX(SPLASH_IMG_SCALE_FACTOR);
+            splashImg.setScaleY(SPLASH_IMG_SCALE_FACTOR);
+            splashImg.setAlpha(SPLASH_IMG_ALPHA);
+            splashImg.animate().scaleX(1).scaleY(1).alpha(1).setDuration(SPLASH_IMG_ANIM_DURATION).setInterpolator(INTERPOLATOR).setListener(new AnimatorAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     startActivity(new Intent(SplashActivity.this, SoundActivity.class).putExtra(SoundActivity.CALLER_KEY, NAME));
